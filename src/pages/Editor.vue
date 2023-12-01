@@ -8,6 +8,50 @@ import EditorActionNav from "../components/EditorActionNav.vue";
 
 const workspace = ref();
 
+document.addEventListener("DOMContentLoaded", () => {
+  const iframeView = document.getElementById("previewIframe");
+  iframeView.addEventListener("load", function () {
+    iframeView.contentWindow.runCode(`  const app = new PIXI.Application({
+    background: "#1099bb",
+    resizeTo: window,
+  });
+
+  document.body.appendChild(app.view);
+
+  const container = new PIXI.Container();
+
+  app.stage.addChild(container);
+
+  // Create a new texture
+  const texture = PIXI.Texture.from("https://pixijs.com/assets/bunny.png");
+
+  // Create a 5x5 grid of bunnies
+  for (let i = 0; i < 25; i++) {
+    const bunny = new PIXI.Sprite(texture);
+
+    bunny.anchor.set(0.5);
+    bunny.x = (i % 5) * 40;
+    bunny.y = Math.floor(i / 5) * 40;
+    container.addChild(bunny);
+  }
+
+  // Move container to the center
+  container.x = app.screen.width / 2;
+  container.y = app.screen.height / 2;
+
+  // Center bunny sprite in local container coordinates
+  container.pivot.x = container.width / 2;
+  container.pivot.y = container.height / 2;
+
+  // Listen for animate update
+  app.ticker.add((delta) => {
+    // rotate the container!
+    // use delta to create frame-independent transform
+    container.rotation -= 0.01 * delta;
+  });`);
+  });
+});
+
 const options = {
   media: "https://blockly-demo.appspot.com/static/media/",
   grid: {
@@ -35,7 +79,7 @@ const options = {
   },
   toolbox: blocksToolbox,
   renderer: "zelos",
-  theme: utils.getCurrentTheme(true) == "dark" ? DarkTheme : "",
+  theme: utils.getCurrentTheme(true) == "dark" ? DarkTheme : "zelos",
 };
 
 console.log(workspace);
@@ -45,7 +89,7 @@ console.log(workspace);
   <div class="w-full grid grid-cols-3 gap-3" style="height: calc(100vh - 70px)">
     <div class="col-span-2 mt-3 mb-3 ml-3">
       <div
-        class="dark:bg-neutral-700 bg-neutral-300 rounded-xl mb-3"
+        class="dark:bg-neutral-700 bg-neutral-100 rounded-xl mb-3"
         style="min-height: 40px; display: flex; align-items: center"
       >
         <EditorActionNav />
@@ -55,7 +99,7 @@ console.log(workspace);
     <div class="flex flex-col">
       <div class="flex-1 mr-3 mb-3">
         <div
-          class="dark:bg-neutral-700 bg-neutral-300 rounded-t-xl mt-3"
+          class="dark:bg-neutral-700 bg-neutral-100 rounded-t-xl mt-3"
           style="min-height: 40px; display: flex; align-items: center"
         >
           <div class="border-b border-gray-200 dark:border-gray-700 ml-3">
@@ -118,7 +162,8 @@ console.log(workspace);
         <iframe
           class="w-full rounded-b-xl mb-3"
           style="height: calc(100% - 40px - 0.75rem)"
-          src="https://example.com"
+          src="/pixyView.html"
+          id="previewIframe"
         ></iframe>
       </div>
       <div class="flex-1 bg-yellow-400 rounded-xl mr-3 mb-3 h-full"></div>

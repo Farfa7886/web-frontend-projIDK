@@ -861,5 +861,19 @@ export default {
       custom: "PROCEDURE",
       categorystyle: "procedure_category",
     },
+    {
+      kind: "sep",
+    },
+    {
+      kind: "category",
+      name: "Events",
+      colour: "#d6c333",
+      contents: [
+        {
+          type: "project_loaded",
+          kind: "block",
+        },
+      ],
+    },
   ],
 };

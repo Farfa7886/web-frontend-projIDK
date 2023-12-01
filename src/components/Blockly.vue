@@ -9,6 +9,7 @@ import "@blockly/toolbox-search";
 import { Minimap } from "@blockly/workspace-minimap";
 
 import "../helpers/blocklyEditor/customCategory";
+import "../helpers/blocklyEditor/blocks";
 
 const props = defineProps(["options"]);
 const blocklyToolbox = ref();
@@ -23,6 +24,8 @@ onMounted(() => {
     options.toolbox = blocklyToolbox.value;
   }
   workspace = Blockly.inject(blocklyDiv.value, options);
+  workspace.addChangeListener(Blockly.Events.disableOrphans);
+
   const workspaceSearch = new WorkspaceSearch(workspace);
   const backpack = new Backpack(workspace, {
     allowEmptyBackpackOpen: false,
