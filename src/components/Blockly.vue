@@ -36,7 +36,7 @@ onMounted(() => {
   crossTabCopyPaste.init(options, (err) => {
     console.error(err);
   });
-  //minimap.init();
+  minimap.init();
 
   Blockly.ContextMenuRegistry.registry.unregister("blockDuplicate");
 
@@ -75,13 +75,13 @@ onMounted(() => {
 
 .blockly-minimap {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  top: 0;
+  right: 0;
   box-shadow: none;
   width: 200px;
   height: 150px;
-  margin-left: 120px;
-  margin-bottom: 10px;
+  margin-right: 100px;
+  margin-top: 20px;
 }
 
 /* .blocklyWorkspace rect[class="blocklyMainBackground"] {
