@@ -71,14 +71,6 @@ export default {
           },
         },
         {
-          type: "controls_repeat",
-          kind: "block",
-          enabled: true,
-          fields: {
-            TIMES: 10,
-          },
-        },
-        {
           type: "controls_whileUntil",
           kind: "block",
           fields: {

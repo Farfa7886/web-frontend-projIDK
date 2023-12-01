@@ -1,11 +1,12 @@
 <script setup>
 import { onMounted, ref, shallowRef } from "vue";
 import Blockly from "blockly";
+
+import { CrossTabCopyPaste } from "@blockly/plugin-cross-tab-copy-paste";
 import { WorkspaceSearch } from "@blockly/plugin-workspace-search";
 import { Backpack } from "@blockly/workspace-backpack";
 import "@blockly/toolbox-search";
-
-import { CrossTabCopyPaste } from "@blockly/plugin-cross-tab-copy-paste";
+import { Minimap } from "@blockly/workspace-minimap";
 
 import "../helpers/blocklyEditor/customCategory";
 
@@ -26,10 +27,13 @@ onMounted(() => {
   const backpack = new Backpack(workspace, {
     allowEmptyBackpackOpen: false,
   });
+  const minimap = new Minimap(workspace);
   const crossTabCopyPaste = new CrossTabCopyPaste();
-  crossTabCopyPaste.init(options, () => {
-    console.log("Use this error callback to handle TypeError while pasting");
+
+  crossTabCopyPaste.init(options, (err) => {
+    console.error(err);
   });
+  //minimap.init();
 
   Blockly.ContextMenuRegistry.registry.unregister("blockDuplicate");
 
@@ -43,6 +47,7 @@ onMounted(() => {
     <div
       class="blocklyDiv h-full rounded-xl"
       ref="blocklyDiv"
+      id="blocksEditor"
       style="height: 100%"
     ></div>
     <xml ref="blocklyToolbox" style="display: none">
@@ -60,6 +65,26 @@ onMounted(() => {
 </style>
 
 <style>
+#blocksEditor {
+  position: relative;
+  /* other styles */
+}
+
+.blockly-minimap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  box-shadow: none;
+  width: 200px;
+  height: 150px;
+  margin-left: 120px;
+  margin-bottom: 10px;
+}
+
+/* .blocklyWorkspace rect[class="blocklyMainBackground"] {
+  fill: black !important;
+} */
+
 .blocklyTreeRow {
   border-radius: 5px;
   margin-bottom: 8px;
