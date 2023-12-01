@@ -1,0 +1,32 @@
+:root {
+  --light-bg: rgb(255, 255, 255);
+  --dark-bg: rgb(38 38 38);
+}
+
+.htmlBG {
+  background-color: var(--light-bg);
+}
+div:not([class]):not([style]) {
+  background-color: var(--light-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  .htmlBG {
+    background-color: var(--dark-bg);
+  }
+  div:not([class]):not([style]) {
+    background-color: var(--dark-bg);
+  }
+  p {
+    color: white;
+    @apply opacity-90;
+  }
+}
+
+/* Blockly toolbox fix, do not remove */
+svg[display="none"] {
+  display: none;
+}
+.injectionDiv {
+  @apply rounded-xl;
+}
