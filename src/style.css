@@ -17,7 +17,13 @@ div:not([class]):not([style]) {
   div:not([class]):not([style]) {
     background-color: var(--dark-bg);
   }
-  p {
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     color: white;
     @apply opacity-90;
   }

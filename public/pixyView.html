@@ -11,11 +11,28 @@
       height: 100vh;
       margin: 0;
     "
-  ></body>
+  >
+    <div style="width: 100%; height: 100%; background-color: black"></div>
+  </body>
+  <p id="erroLBL" style="display: none"></p>
 </html>
 
 <script>
   function runCode(string) {
-    eval(string);
+    localStorage.setItem("prevCode", string);
+    location.reload();
   }
+  if (localStorage.getItem("prevCode") != null) {
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.innerHTML = "";
+      document.getElementById("erroLBL").innerHTML = "eeee";
+      eval(localStorage.getItem("prevCode"));
+      localStorage.removeItem("prevCode");
+    });
+  }
+
+  window.onerror = function (message, url, lineNumber) {
+    console.log("eror");
+    document.getElementById("erroLBL").innerHTML = message;
+  };
 </script>

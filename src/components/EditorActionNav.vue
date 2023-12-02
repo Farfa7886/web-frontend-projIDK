@@ -1,8 +1,28 @@
+<script setup>
+import { eventBus } from "../event-bus";
+
+function toggleDrawer(name) {
+  let element = document.getElementById(`drawer-${name}`);
+  if (element.classList.contains("show")) {
+    element.classList.remove("show");
+  } else {
+    element.classList.add("show");
+  }
+}
+
+function testCode() {
+  eventBus.dispatchEvent(new Event("testCode"));
+}
+</script>
+
 <template>
   <div class="flex" style="width: 100%">
     <div class="flex" style="width: 80%">
       <p class="font-bold text-xl ml-5">[PROJECT NAME]</p>
-      <div class="dropdown info ml-5">
+      <label class="btn solid info w-fit sm ml-6" @click="toggleDrawer('right')"
+        >Dev options</label
+      >
+      <div class="dropdown info ml-5 hidden">
         <label class="btn solid sm" tabindex="0"
           >Scene 1
           <svg
@@ -47,7 +67,9 @@
         class="tooltip bw bottom"
         data-tooltip="Compiles project into Javascript"
       >
-        <button class="btn light warn sm mr-3">Compile & run</button>
+        <button class="btn light warn sm mr-3" @click="testCode()">
+          Compile & run
+        </button>
       </span>
       <span class="tooltip bw bottom" data-tooltip="Saves the project">
         <button class="btn solid info sm">Save project</button>

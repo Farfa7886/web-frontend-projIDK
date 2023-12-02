@@ -23,14 +23,14 @@ onMounted(() => {
   if (!options.toolbox) {
     options.toolbox = blocklyToolbox.value;
   }
-  workspace = Blockly.inject(blocklyDiv.value, options);
-  workspace.addChangeListener(Blockly.Events.disableOrphans);
+  workspace.value = Blockly.inject(blocklyDiv.value, options);
+  workspace.value.addChangeListener(Blockly.Events.disableOrphans);
 
-  const workspaceSearch = new WorkspaceSearch(workspace);
-  const backpack = new Backpack(workspace, {
+  const workspaceSearch = new WorkspaceSearch(workspace.value);
+  const backpack = new Backpack(workspace.value, {
     allowEmptyBackpackOpen: false,
   });
-  const minimap = new Minimap(workspace);
+  const minimap = new Minimap(workspace.value);
   const crossTabCopyPaste = new CrossTabCopyPaste();
 
   crossTabCopyPaste.init(options, (err) => {

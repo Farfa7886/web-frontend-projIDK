@@ -3,7 +3,7 @@ import javascript from "blockly/javascript";
 
 Blockly.Blocks["project_loaded"] = {
   init: function () {
-    this.appendDummyInput().appendField("On project loaded");
+    this.appendDummyInput().appendField("On page load");
     this.appendStatementInput("actions").setCheck(null).appendField("do");
     this.setColour("#d6c333");
     this.setTooltip("Emitted when the project gets loaded");
@@ -16,7 +16,7 @@ javascript.javascriptGenerator.forBlock["project_loaded"] = function (
   generator
 ) {
   var statements_actions = generator.statementToCode(block, "actions");
-  // TODO: Assemble javascript into code variable.
-  var code = "...\n";
+
+  var code = statements_actions;
   return code;
 };
