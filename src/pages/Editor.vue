@@ -9,6 +9,7 @@ import EditorActionNav from "../components/EditorActionNav.vue";
 import { javascriptGenerator } from "blockly/javascript";
 import compiler from "../helpers/compiler";
 import { eventBus } from "../event-bus";
+import templates from "../helpers/templates";
 
 let workspace = ref();
 let iframeView;
@@ -19,9 +20,30 @@ document.addEventListener("DOMContentLoaded", () => {
     var innerDoc =
       iframeView.contentDocument || iframeView.contentWindow.document;
     var erroLB = innerDoc.getElementById("erroLBL");
-    console.log(erroLB);
+
+    log(erroLB.innerText, "error");
   });
 });
+
+function log(text, type) {
+  const fId = Math.random().toString(36).substring(2, 7);
+  if (type == "error") {
+    document.getElementById("logsDiv").innerHTML += templates.errorTemplate(
+      text,
+      fId
+    );
+  } else {
+    document.getElementById("logsDiv").innerHTML += templates.logTemplate(
+      text,
+      fId
+    );
+  }
+  document.getElementById(fId).scrollIntoView();
+}
+
+function clearConsole() {
+  document.getElementById("logsDiv").innerHTML = "";
+}
 
 const options = {
   media: "https://blockly-demo.appspot.com/static/media/",
@@ -81,7 +103,26 @@ function printWorkspace() {
 }
 
 eventBus.addEventListener("testCode", () => {
-  iframeView.contentWindow.runCode(getCode());
+  document.getElementById("testCodeBtn").classList.add("is-loading");
+  document.getElementById("testCodeBtn").disabled = true;
+  //iframeView.contentWindow.runCode(getCode());
+  var iframeDocument = iframeView.contentWindow.document;
+
+  iframeView.addEventListener("load", function loadScript() {
+    var iframeDocument =
+      iframeView.contentDocument || iframeView.contentWindow.document;
+    iframeDocument.body.innerHTML = "";
+    var script = iframeDocument.createElement("script");
+    script.innerHTML = getCode();
+    script.type = "text/javascript";
+    iframeDocument.body.appendChild(script);
+    iframeView.removeEventListener("load", loadScript);
+  });
+  iframeView.contentWindow.location.reload();
+  setTimeout(() => {
+    document.getElementById("testCodeBtn").classList.remove("is-loading");
+    document.getElementById("testCodeBtn").disabled = false;
+  }, 1000);
 });
 
 function logIframeError(err) {}

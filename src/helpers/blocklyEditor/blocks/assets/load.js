@@ -35,7 +35,7 @@ javascript.javascriptGenerator.forBlock["assets_load"] = function (
   var statements_actions = generator.statementToCode(block, "actions");
   const replacerStr = generateRandomString(10);
 
-  var code = `PIXI.Assets.load('${text_assetname}').then((${textureCost}) => {
+  var code = `PIXI.Assets.load('${text_assetname}').then(async (${textureCost}) => {
 ${statements_actions}});\n`;
 
   code = code.replaceAll(textureCost, replacerStr);

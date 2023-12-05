@@ -17,22 +17,25 @@
   <p id="erroLBL" style="display: none"></p>
 </html>
 
+<script defer>
+  // function runCode(string) {
+  //   localStorage.setItem("prevCode", string);
+  //   location.reload();
+  // }
+  // if (localStorage.getItem("prevCode") != null) {
+  //   document.addEventListener("DOMContentLoaded", () => {
+  //     try {
+  //       eval(localStorage.getItem("prevCode"));
+  //     } catch (error) {
+  //       console.log("error");
+  //       document.getElementById("erroLBL").innerHTML = error;
+  //     }
+  //     localStorage.removeItem("prevCode");
+  //   });
+  // }
+</script>
 <script>
-  function runCode(string) {
-    localStorage.setItem("prevCode", string);
-    location.reload();
-  }
-  if (localStorage.getItem("prevCode") != null) {
-    document.addEventListener("DOMContentLoaded", () => {
-      document.body.innerHTML = "";
-      document.getElementById("erroLBL").innerHTML = "eeee";
-      eval(localStorage.getItem("prevCode"));
-      localStorage.removeItem("prevCode");
-    });
-  }
-
-  window.onerror = function (message, url, lineNumber) {
-    console.log("eror");
-    document.getElementById("erroLBL").innerHTML = message;
+  window.onerror = function (errorMsg, url, lineNumber) {
+    alert("Error: " + errorMsg + " Script: " + url + " Line: " + lineNumber);
   };
 </script>

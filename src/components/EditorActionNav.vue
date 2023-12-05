@@ -67,8 +67,12 @@ function testCode() {
         class="tooltip bw bottom"
         data-tooltip="Compiles project into Javascript"
       >
-        <button class="btn light warn sm mr-3" @click="testCode()">
-          Compile & run
+        <button
+          class="btn warn sm mr-3 light"
+          id="testCodeBtn"
+          @click="testCode()"
+        >
+          Compile & test
         </button>
       </span>
       <span class="tooltip bw bottom" data-tooltip="Saves the project">

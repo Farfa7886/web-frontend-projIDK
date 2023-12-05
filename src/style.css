@@ -3,6 +3,26 @@
   --dark-bg: rgb(38 38 38);
 }
 
+/* :root[data-theme="dark"] {
+  .fieldColourSliderContainer {
+    color: white;
+    background-color: gb(#ffffff22 / 75);
+  }
+  .blocklyDropDownDiv {
+    @apply bg-neutral-900;
+    border: rgb(#ffffff09 / 75);
+  }
+  .fieldColourSlider {
+    background-color: rgb(#ffffff22 / 75);
+  }
+  .fieldColourSliderLabel {
+    @apply opacity-80;
+  }
+  .fieldColourEyedropper {
+    @apply opacity-80;
+  }
+} */
+
 .htmlBG {
   background-color: var(--light-bg);
 }
