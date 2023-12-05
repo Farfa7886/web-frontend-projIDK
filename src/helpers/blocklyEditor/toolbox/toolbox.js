@@ -473,6 +473,21 @@ xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: n
       </shadow>
     </value>
   </block>
+  <block type="force" />
+  <block type="try_catch">
+    <value name="errorVar">
+      <block type="variables_get">
+        <field name="VAR" id="mYY-a+56c~!s[V{BBCB7">error</field>
+      </block>
+    </value>
+  </block>
+  <block type="try_catch_finally">
+    <value name="errorVar">
+      <block type="variables_get">
+        <field name="VAR" id="mYY-a+56c~!s[V{BBCB7">error</field>
+      </block>
+    </value>
+  </block>
 </category>
 <category name="Variables" colour="#a55b80" custom="VARIABLE"/>
 <category name="Functions" colour="#995ba5" custom="PROCEDURE"/>
@@ -591,7 +606,11 @@ xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: n
   <block type="assets_load" />
   <block type="assets_load_texture" />
 </category>
-<category name="Sprites" colour="#8c1c43">
+<category name="Sprites" colour="#7a1739">
+  <category name="Data" colour="#69112f">
+    <block type="sprite_get_dimentions" />
+  </category>
+  <category name="Actions" colour="#8c1c43">
   <block type="sprite_new" />
   <block type="sprite_anchor_set">
     <field name="spriteVar">character</field>
@@ -602,6 +621,16 @@ xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: n
     </value>
   </block>
   <block type="sprite_set_position" />
+  <block type="sprite_set_dimentions">
+    <field name="sprite">character</field>
+    <field name="idk">width</field>
+    <value name="value">
+      <block type="math_number">
+        <field name="NUM">32</field>
+      </block>
+    </value>
+  </block>
   <block type="sprite_set_texture" />
+  </category>
 </category>
 </xml>`;

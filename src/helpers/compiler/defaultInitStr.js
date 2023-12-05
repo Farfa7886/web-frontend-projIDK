@@ -1,3 +1,3 @@
-const appDlc = `const app = new PIXI.Application({resizeTo: window});\ndocument.body.appendChild(app.view);\n`;
+const appDlc = `const app = new PIXI.Application({resizeTo: window});\ndocument.getElementById("contentDIV").appendChild(app.view);\n`;
 
 export default { appDlc };

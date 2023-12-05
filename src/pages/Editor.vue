@@ -21,7 +21,16 @@ document.addEventListener("DOMContentLoaded", () => {
       iframeView.contentDocument || iframeView.contentWindow.document;
     var erroLB = innerDoc.getElementById("erroLBL");
 
-    log(erroLB.innerText, "error");
+    let observer = new MutationObserver((mutationsList, observer) => {
+      for (let mutation of mutationsList) {
+        if (mutation.type === "childList") {
+          log(erroLB.innerHTML, "error");
+        }
+      }
+    });
+
+    observer.observe(erroLB, { childList: true, subtree: true });
+    // observer.disconnect();
   });
 });
 
@@ -84,9 +93,9 @@ function toggleDrawer(name) {
   }
 }
 
-function getCode() {
+function getCode(prod) {
   return compiler.finalize(
-    javascriptGenerator.workspaceToCode(workspace.value.workspace)
+    javascriptGenerator.workspaceToCode(workspace.value.workspace, prod)
   );
 }
 
@@ -103,17 +112,20 @@ function printWorkspace() {
 }
 
 eventBus.addEventListener("testCode", () => {
+  clearConsole();
   document.getElementById("testCodeBtn").classList.add("is-loading");
   document.getElementById("testCodeBtn").disabled = true;
-  //iframeView.contentWindow.runCode(getCode());
-  var iframeDocument = iframeView.contentWindow.document;
 
   iframeView.addEventListener("load", function loadScript() {
     var iframeDocument =
       iframeView.contentDocument || iframeView.contentWindow.document;
-    iframeDocument.body.innerHTML = "";
+    //iframeDocument.body.innerHTML = "";
     var script = iframeDocument.createElement("script");
-    script.innerHTML = getCode();
+
+    iframeDocument.getElementById("contentDIV").style.display = "flex";
+    iframeDocument.getElementById("tmpDIV").style.display = "none";
+
+    script.innerHTML = getCode(true);
     script.type = "text/javascript";
     iframeDocument.body.appendChild(script);
     iframeView.removeEventListener("load", loadScript);
@@ -225,6 +237,9 @@ function delPrevCode() {
           class="rounded-b-xl dark:bg-neutral-600 bg-neutral-300"
           style="height: calc(100% - 40px - 0.75rem)"
         >
+          <button class="btn ghost warn sm m-2" @click="clearConsole()">
+            Clear console
+          </button>
           <div
             id="logsDiv"
             class="bg-transparent"

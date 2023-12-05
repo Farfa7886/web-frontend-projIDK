@@ -53,9 +53,9 @@ onMounted(() => {
       id="blocksEditor"
       style="height: 100%"
     ></div>
-    <xml ref="blocklyToolbox" style="display: none">
+    <!-- <xml ref="blocklyToolbox" style="display: none">
       <slot></slot>
-    </xml>
+    </xml> -->
   </div>
 </template>
 
