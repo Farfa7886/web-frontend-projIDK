@@ -36,6 +36,7 @@ div:not([class]):not([style]) {
   }
   div:not([class]):not([style]) {
     background-color: var(--dark-bg);
+    color: white;
   }
   p,
   h1,

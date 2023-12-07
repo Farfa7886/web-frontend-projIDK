@@ -33,7 +33,8 @@ javascript.javascriptGenerator.forBlock["console_log_uo"] = function (
     javascript.Order.ATOMIC
   );
 
-  var code = `console.log(${value_data});\n
-document.getElementById("logLBL").innerHTML = typeof ${value_data} == 'object' ? (JSON.stringify(${value_data}, null, 2)).replaceAll("\\n", "<br />") : ${value_data};\n`;
+  var code = `console.log(${value_data});
+document.getElementById("logLBL").innerHTML = typeof ${value_data} == 'object' ? (JSON.stringify(${value_data}, null, 2)).replaceAll("\\n", "<br />") : String(${value_data});
+await delay(0.01);\n`;
   return code;
 };

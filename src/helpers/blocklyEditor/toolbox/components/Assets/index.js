@@ -7,7 +7,4 @@ export default `<category name="Assets" colour="#729e26">
     </shadow>
   </value>
 </block>
-<label text="Force asset load" />
-<block type="assets_load" />
-<block type="assets_load_texture" />
 </category>`;

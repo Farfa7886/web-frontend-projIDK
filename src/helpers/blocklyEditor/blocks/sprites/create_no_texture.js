@@ -2,27 +2,19 @@ import * as Blockly from "blockly/core";
 import javascript from "blockly/javascript";
 
 const blockData = {
-  type: "sprite_set_texture",
-  message0: "To sprite %1 %2 Set texture to asset %3",
+  type: "sprite_new_notexture",
+  message0: "Create a sprite %1",
   args0: [
     {
       type: "field_variable",
       name: "spriteVar",
       variable: "character",
     },
-    {
-      type: "input_dummy",
-    },
-    {
-      type: "field_input",
-      name: "assetName",
-      text: "asset",
-    },
   ],
   previousStatement: null,
   nextStatement: null,
   colour: "#8c1c43",
-  tooltip: "",
+  tooltip: "Creates a sprite without loading a texture",
   helpUrl: "",
 };
 
@@ -32,7 +24,7 @@ Blockly.Blocks[blockData.type] = {
   },
 };
 
-javascript.javascriptGenerator.forBlock["sprite_set_texture"] = function (
+javascript.javascriptGenerator.forBlock["sprite_new_notexture"] = function (
   block,
   generator
 ) {
@@ -40,8 +32,6 @@ javascript.javascriptGenerator.forBlock["sprite_set_texture"] = function (
     block.getFieldValue("spriteVar"),
     "VARIABLE"
   );
-  var text_assetname = block.getFieldValue("assetName");
-
-  var code = `${variable_spritevar}.texture = await PIXI.Assets.load("${text_assetname}");\n`;
+  var code = `${variable_spritevar} = new PIXI.Sprite();\n${variable_spritevar}.anchor.set(0.5);\napp.stage.addChild(character);\n`;
   return code;
 };

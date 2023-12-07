@@ -74,7 +74,7 @@ const options = {
   },
   zoom: {
     controls: true,
-    wheel: false,
+    wheel: true,
     startScale: 1.0,
     maxScale: 3,
     minScale: 0.3,
@@ -148,16 +148,18 @@ eventBus.addEventListener("testCode", () => {
   }, 1000);
 });
 
-function logIframeError(err) {}
-
 function delPrevCode() {
   localStorage.removeItem("prevCode");
 }
 </script>
 
 <template>
-  <div class="w-full grid grid-cols-3 gap-3" style="height: calc(100vh - 70px)">
-    <div class="col-span-2 mt-3 mb-3 ml-3">
+  <p class="hidden blue-950 blue-500"></p>
+  <div
+    class="w-full grid lg:grid-cols-3 md:grid-cols-1 grid-cols-1 gap-3"
+    style="height: calc(100vh - 70px)"
+  >
+    <div class="lg:col-span-2 mt-3 mb-3 ml-3 lg:h-auto h-screen">
       <div
         class="dark:bg-neutral-700 bg-neutral-100 rounded-xl mb-3"
         style="min-height: 40px; display: flex; align-items: center"

@@ -2,7 +2,8 @@ export default `<category name="Sprites" colour="#8c1c43">
 <label text="Data" />
 <block type="sprite_get_dimentions" />
 <label text="Actions" />
-<block type="sprite_new" />
+<block type="sprite_new_notexture" />
+<block type="sprite_set_texture" />
 <block type="sprite_anchor_set">
   <field name="spriteVar">character</field>
   <value name="anchor">
@@ -21,5 +22,4 @@ export default `<category name="Sprites" colour="#8c1c43">
     </block>
   </value>
 </block>
-<block type="sprite_set_texture" />
 </category>`;

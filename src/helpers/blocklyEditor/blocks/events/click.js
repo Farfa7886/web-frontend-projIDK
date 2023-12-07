@@ -2,8 +2,8 @@ import * as Blockly from "blockly/core";
 import javascript from "blockly/javascript";
 
 const blockData = {
-  type: "sprite_set_texture",
-  message0: "To sprite %1 %2 Set texture to asset %3",
+  type: "sprite_click",
+  message0: "On sprite %1 click %2 %3",
   args0: [
     {
       type: "field_variable",
@@ -14,15 +14,12 @@ const blockData = {
       type: "input_dummy",
     },
     {
-      type: "field_input",
-      name: "assetName",
-      text: "asset",
+      type: "input_statement",
+      name: "actions",
     },
   ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: "#8c1c43",
-  tooltip: "",
+  colour: "#ab9916",
+  tooltip: "Triggered when the sprite gets clicked",
   helpUrl: "",
 };
 
@@ -32,7 +29,7 @@ Blockly.Blocks[blockData.type] = {
   },
 };
 
-javascript.javascriptGenerator.forBlock["sprite_set_texture"] = function (
+javascript.javascriptGenerator.forBlock["sprite_click"] = function (
   block,
   generator
 ) {
@@ -40,8 +37,11 @@ javascript.javascriptGenerator.forBlock["sprite_set_texture"] = function (
     block.getFieldValue("spriteVar"),
     "VARIABLE"
   );
-  var text_assetname = block.getFieldValue("assetName");
+  var statements_actions = generator.statementToCode(block, "actions");
 
-  var code = `${variable_spritevar}.texture = await PIXI.Assets.load("${text_assetname}");\n`;
+  var code = `//bottom
+${variable_spritevar}.eventMode = 'static';
+${variable_spritevar}.on("pointertap", async () => {\n${statements_actions}});
+//end-bottom\n`;
   return code;
 };

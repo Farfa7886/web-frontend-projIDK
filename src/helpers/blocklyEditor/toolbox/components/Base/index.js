@@ -6,4 +6,6 @@ export default `<category name="Base" colour="#148563">
       </shadow>
     </value>
   </block>
+  <label text="Infos about current player" />
+  <block type="usertheme_get" />
 </category>`;

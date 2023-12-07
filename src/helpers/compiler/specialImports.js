@@ -42,8 +42,32 @@ function resolveInline(code) {
   return code;
 }
 
+function toBottom(code) {
+  var lines = code.split("\n");
+  var startIndex, endIndex;
+
+  // Find the start and end indices of the block of code to move
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].includes("//bottom")) {
+      startIndex = i;
+    } else if (lines[i].includes("//end-bottom")) {
+      endIndex = i;
+    }
+  }
+
+  // Remove the block of code from its original position
+  var block = lines.splice(startIndex, endIndex - startIndex + 1).join("\n");
+
+  // Join the remaining lines back together into a string
+  var newCode = lines.join("\n");
+
+  // Add the block of code to the end of the new string
+  newCode += "\n" + block;
+  return newCode + "\n";
+}
+
 function resolveImports(code) {
-  return resolveBlocks(resolveInline(code));
+  return toBottom(resolveBlocks(resolveInline(code)));
 }
 
 export { resolveImports };
