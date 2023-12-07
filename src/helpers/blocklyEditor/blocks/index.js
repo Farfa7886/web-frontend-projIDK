@@ -5,3 +5,4 @@ import "./app";
 import "./objects";
 import "./other";
 import "./color";
+import "./CustomEvents";

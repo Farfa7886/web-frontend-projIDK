@@ -22,6 +22,7 @@ function testCode() {
       <label class="btn solid info w-fit sm ml-6" @click="toggleDrawer('right')"
         >Dev options</label
       >
+      <button class="btn solid success sm ml-3">Snippets</button>
       <div class="dropdown info ml-5 hidden">
         <label class="btn solid sm" tabindex="0"
           >Scene 1

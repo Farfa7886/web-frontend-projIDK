@@ -95,12 +95,13 @@ function toggleDrawer(name) {
 
 function getCode(prod) {
   return compiler.finalize(
-    javascriptGenerator.workspaceToCode(workspace.value.workspace, prod)
+    javascriptGenerator.workspaceToCode(workspace.value.workspace),
+    prod
   );
 }
 
 function printCode() {
-  console.log(getCode());
+  console.log(getCode(false));
 }
 
 function printWorkspace() {

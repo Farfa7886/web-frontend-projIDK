@@ -1,5 +1,6 @@
 import defaults from "./defaultInitStr";
 import imports from "./imports";
+import { resolveImports } from "./specialImports";
 
 function generateRandomString(length) {
   var result = "";
@@ -15,7 +16,8 @@ function finalize(code, prod) {
   const errorVarName = generateRandomString(10);
   code = defaults.appDlc + code;
   code = imports.resolveImports(code);
-  if (!prod) {
+  code = resolveImports(code);
+  if (prod == true) {
     code = `try {
       ${code}
       } catch (${errorVarName}) {
