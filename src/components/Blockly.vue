@@ -46,7 +46,12 @@ onMounted(() => {
   backpack.init();
 
   function emitEvent(event) {
-    if (event.type == "move") {
+    console.log(event.type);
+    if (
+      event.type == "move" ||
+      event.type == "change" ||
+      event.type == "block_field_intermediate_change"
+    ) {
       eventBus.dispatchEvent(new Event("workspaceChange"));
     }
   }

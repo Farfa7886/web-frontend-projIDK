@@ -14,7 +14,7 @@ function generateRandomString(length) {
 
 function finalize(code, prod) {
   const errorVarName = generateRandomString(10);
-  code = defaults.appDlc + code;
+  if (prod) code = defaults.appDlc + code;
   code = imports.resolveImports(code);
   code = resolveImports(code);
   if (prod == true) {
