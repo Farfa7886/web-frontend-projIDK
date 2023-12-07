@@ -13,6 +13,7 @@ export default `<category name="Sprites" colour="#8c1c43">
   </value>
 </block>
 <block type="sprite_set_position" />
+<block type="sprite_set_scale" />
 <block type="sprite_set_dimentions">
   <field name="sprite">character</field>
   <field name="idk">width</field>

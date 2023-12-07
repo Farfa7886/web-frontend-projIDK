@@ -8,6 +8,8 @@ import { Backpack } from "@blockly/workspace-backpack";
 import "@blockly/toolbox-search";
 import { Minimap } from "@blockly/workspace-minimap";
 
+import { eventBus } from "../event-bus";
+
 import "../helpers/blocklyEditor/customCategory";
 import "../helpers/blocklyEditor/blocks";
 
@@ -42,6 +44,14 @@ onMounted(() => {
 
   workspaceSearch.init();
   backpack.init();
+
+  function emitEvent(event) {
+    if (event.type == "move") {
+      eventBus.dispatchEvent(new Event("workspaceChange"));
+    }
+  }
+
+  workspace.value.addChangeListener(emitEvent);
 });
 </script>
 

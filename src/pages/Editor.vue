@@ -10,7 +10,9 @@ import { javascriptGenerator } from "blockly/javascript";
 import compiler from "../helpers/compiler";
 import { eventBus } from "../event-bus";
 import templates from "../helpers/templates";
+import CodeMirroView from "../components/CodemirrorView.vue";
 
+let currentTab = "console";
 let workspace = ref();
 let iframeView;
 
@@ -122,6 +124,14 @@ function printWorkspace() {
   );
 }
 
+eventBus.addEventListener("workspaceChange", () => {
+  if (currentTab != "code") return;
+  const compiledTestCode = getCode();
+  eventBus.dispatchEvent(
+    new CustomEvent("updateCode", { detail: compiledTestCode })
+  );
+});
+
 eventBus.addEventListener("testCode", () => {
   clearConsole();
   document.getElementById("testCodeBtn").classList.add("is-loading");
@@ -136,7 +146,13 @@ eventBus.addEventListener("testCode", () => {
     iframeDocument.getElementById("contentDIV").style.display = "flex";
     iframeDocument.getElementById("tmpDIV").style.display = "none";
 
-    script.innerHTML = getCode(true);
+    const compiledCode = getCode(true);
+    const compiledTestCode = getCode();
+    // eventBus.dispatchEvent(
+    //   new CustomEvent("updateCode", { detail: compiledTestCode })
+    // );
+
+    script.innerHTML = compiledCode;
     script.type = "text/javascript";
     iframeDocument.body.appendChild(script);
     iframeView.removeEventListener("load", loadScript);
@@ -150,6 +166,29 @@ eventBus.addEventListener("testCode", () => {
 
 function delPrevCode() {
   localStorage.removeItem("prevCode");
+}
+
+function switchTabs(tab) {
+  currentTab = tab;
+  document.getElementById("codeDiv").classList.add("hidden");
+  document.getElementById("consoleDiv").classList.add("hidden");
+
+  document.getElementById("codeTab").classList.remove("tab-active");
+  document.getElementById("consoleTab").classList.remove("tab-active");
+  document.getElementById("codeTab").classList.add("tab-inactive");
+  document.getElementById("consoleTab").classList.add("tab-inactive");
+
+  if (tab == "code") {
+    const compiledTestCode = getCode();
+    eventBus.dispatchEvent(
+      new CustomEvent("updateCode", { detail: compiledTestCode })
+    );
+    document.getElementById("codeDiv").classList.remove("hidden");
+    document.getElementById("codeTab").classList.add("tab-active");
+  } else {
+    document.getElementById("consoleDiv").classList.remove("hidden");
+    document.getElementById("consoleTab").classList.add("tab-active");
+  }
 }
 </script>
 
@@ -195,8 +234,10 @@ function delPrevCode() {
               <li class="me-2">
                 <a
                   href="#"
-                  class="inline-flex items-center justify-center p-2 border-b-2 rounded-t-lg group tab-active"
+                  class="inline-flex items-center justify-center p-2 border-b-2 border-transparent rounded-t-lg group tab-active"
                   aria-current="page"
+                  id="consoleTab"
+                  @click="switchTabs('console')"
                 >
                   <svg
                     fill="currentColor"
@@ -221,26 +262,22 @@ function delPrevCode() {
                 <a
                   href="#"
                   class="inline-flex items-center justify-center p-2 border-b-2 border-transparent rounded-t-lg group tab-inactive"
+                  id="codeTab"
+                  @click="switchTabs('code')"
                 >
                   <svg
                     fill="currentColor"
                     xmlns="http://www.w3.org/2000/svg"
-                    class="w-4 h-4 me-2"
-                    viewBox="0 0 52 52"
+                    class="w-5 h-5 me-2"
+                    viewBox="0 0 512 512"
                     enable-background="new 0 0 52 52"
                     xml:space="preserve"
                   >
-                    <g>
-                      <path
-                        d="M51.8,25.1C47.1,15.6,37.3,9,26,9S4.9,15.6,0.2,25.1c-0.3,0.6-0.3,1.3,0,1.8C4.9,36.4,14.7,43,26,43
-		s21.1-6.6,25.8-16.1C52.1,26.3,52.1,25.7,51.8,25.1z M26,37c-6.1,0-11-4.9-11-11s4.9-11,11-11s11,4.9,11,11S32.1,37,26,37z"
-                      />
-                      <path
-                        d="M26,19c-3.9,0-7,3.1-7,7s3.1,7,7,7s7-3.1,7-7S29.9,19,26,19z"
-                      />
-                    </g>
+                    <path
+                      d="M48 256L192 112 224 144 112 256 224 368 192 400 48 256ZM288 368L400 256 288 144 320 112 464 256 320 400 288 368Z"
+                    />
                   </svg>
-                  JavaScript
+                  Code
                 </a>
               </li>
             </ul>
@@ -249,6 +286,7 @@ function delPrevCode() {
         <div
           class="rounded-b-xl dark:bg-neutral-600 bg-neutral-300"
           style="height: calc(100% - 40px - 0.75rem)"
+          id="consoleDiv"
         >
           <button class="btn ghost warn sm m-2" @click="clearConsole()">
             Clear console
@@ -256,8 +294,15 @@ function delPrevCode() {
           <div
             id="logsDiv"
             class="bg-transparent"
-            style="overflow-y: auto; height: 40vh"
+            style="overflow-y: auto; height: calc(40vh - 32.63px - 1rem)"
           ></div>
+        </div>
+        <div
+          class="rounded-b-xl dark:bg-neutral-600 bg-neutral-300 hidden"
+          style="height: 40vh"
+          id="codeDiv"
+        >
+          <CodeMirroView />
         </div>
       </div>
     </div>
