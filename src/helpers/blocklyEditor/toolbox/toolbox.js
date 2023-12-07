@@ -5,11 +5,13 @@ import Events from "./components/Events";
 import Snippets from "./components/Snippets";
 import DefaultToolbox from "./components/DefaultToolbox";
 import CustomEvents from "./components/CustomEvents";
+import Base from "./components/Base";
 
 export default `<xml
 xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
 ${DefaultToolbox}
 <sep />
+${Base}
 ${Snippets}
 ${Events}
 ${CustomEvents}

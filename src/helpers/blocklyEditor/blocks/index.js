@@ -6,3 +6,4 @@ import "./objects";
 import "./other";
 import "./color";
 import "./CustomEvents";
+import "./Base";

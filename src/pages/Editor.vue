@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     var innerDoc =
       iframeView.contentDocument || iframeView.contentWindow.document;
     var erroLB = innerDoc.getElementById("erroLBL");
+    let logsLB = innerDoc.getElementById("logLBL");
 
     let observer = new MutationObserver((mutationsList, observer) => {
       for (let mutation of mutationsList) {
@@ -30,7 +31,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     observer.observe(erroLB, { childList: true, subtree: true });
-    // observer.disconnect();
+
+    let observerLogs = new MutationObserver((mutationsList, observer) => {
+      for (let mutation of mutationsList) {
+        if (mutation.type === "childList") {
+          log(logsLB.innerHTML);
+        }
+      }
+    });
+
+    observerLogs.observe(logsLB, { childList: true, subtree: true });
   });
 });
 
@@ -183,7 +193,7 @@ function delPrevCode() {
               <li class="me-2">
                 <a
                   href="#"
-                  class="inline-flex items-center justify-center p-2 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 group"
+                  class="inline-flex items-center justify-center p-2 border-b-2 rounded-t-lg group tab-active"
                   aria-current="page"
                 >
                   <svg
@@ -208,7 +218,7 @@ function delPrevCode() {
               <li class="me-2">
                 <a
                   href="#"
-                  class="inline-flex items-center justify-center p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
+                  class="inline-flex items-center justify-center p-2 border-b-2 border-transparent rounded-t-lg group tab-inactive"
                 >
                   <svg
                     fill="currentColor"
@@ -269,3 +279,13 @@ function delPrevCode() {
     </div>
   </div>
 </template>
+
+<style>
+.tab-active {
+  @apply text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500 active;
+}
+
+.tab-inactive {
+  @apply hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300;
+}
+</style>
