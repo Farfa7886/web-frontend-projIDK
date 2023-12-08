@@ -24,7 +24,9 @@ const fixedHeightEditor = EditorView.theme({
   ".cm-content, .cm-gutter": {
     minHeight: "40vh",
   },
-  "&": { maxHeight: "40vh" },
+  "&": {
+    maxHeight: "40vh",
+  },
   ".cm-scroller": { overflow: "auto" },
 });
 

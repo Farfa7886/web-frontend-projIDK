@@ -6,3 +6,4 @@ import "./set_dimension";
 import "./get_dimentions";
 import "./create_no_texture";
 import "./set_scale";
+import "./slide";

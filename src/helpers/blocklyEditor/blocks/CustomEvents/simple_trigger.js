@@ -1,6 +1,7 @@
 import * as Blockly from "blockly/core";
 import javascript from "blockly/javascript";
 import values from "./values";
+import utils from "../../../utils";
 
 const blockData = {
   type: "simple_cevents_make",
@@ -34,7 +35,7 @@ javascript.javascriptGenerator.forBlock["simple_cevents_make"] = function (
   block,
   generator
 ) {
-  var text_evname = block.getFieldValue("evName");
+  var text_evname = utils.sanitizeInput(block.getFieldValue("evName"));
   var statements_actions = generator.statementToCode(block, "actions");
 
   const evName = values.idkConst2 + text_evname + values.idkConst;

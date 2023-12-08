@@ -6,6 +6,7 @@ import Snippets from "./components/Snippets";
 import DefaultToolbox from "./components/DefaultToolbox";
 import CustomEvents from "./components/CustomEvents";
 import Base from "./components/Base";
+import Misc from "./components/Misc";
 
 export default `<xml
 xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">

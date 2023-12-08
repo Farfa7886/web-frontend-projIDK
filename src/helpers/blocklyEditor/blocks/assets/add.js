@@ -1,5 +1,6 @@
 import * as Blockly from "blockly/core";
 import javascript from "blockly/javascript";
+import utils from "../../../utils";
 
 Blockly.Blocks["assets_add"] = {
   init: function () {
@@ -22,7 +23,7 @@ javascript.javascriptGenerator.forBlock["assets_add"] = function (
   block,
   generator
 ) {
-  var text_assetname = block.getFieldValue("assetName");
+  var text_assetname = utils.sanitizeInput(block.getFieldValue("assetName"));
   var value_texture = generator.valueToCode(
     block,
     "texture",

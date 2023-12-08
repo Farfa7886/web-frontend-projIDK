@@ -162,6 +162,27 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString(undefined, options);
 }
 
+// Used in blocks
+function sanitizeInput(input, options) {
+  if (!options) options = {};
+  let safeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  safeChars = safeChars.split("");
+  if (options.allowNumbers) {
+    let numbers = "0123456789";
+    numbers = numbers.split("");
+    safeChars = [...safeChars, ...numbers];
+  }
+  if (options.allowSpaces) {
+    safeChars.push(" ");
+  }
+  input = input.split("");
+  input = input.filter((character) => safeChars.includes(character));
+  input = input.join("");
+  input = input.replaceAll('"', "");
+  input = input.replaceAll("'", "");
+  return input;
+}
+
 export default {
   onSpecificPageLoad,
   onLoad,
@@ -176,4 +197,5 @@ export default {
   cutText,
   showAlert,
   formatDate,
+  sanitizeInput,
 };

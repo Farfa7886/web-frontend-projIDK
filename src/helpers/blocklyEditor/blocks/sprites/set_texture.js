@@ -1,5 +1,6 @@
 import * as Blockly from "blockly/core";
 import javascript from "blockly/javascript";
+import utils from "../../../utils";
 
 const blockData = {
   type: "sprite_set_texture",
@@ -40,7 +41,7 @@ javascript.javascriptGenerator.forBlock["sprite_set_texture"] = function (
     block.getFieldValue("spriteVar"),
     "VARIABLE"
   );
-  var text_assetname = block.getFieldValue("assetName");
+  var text_assetname = utils.sanitizeInput(block.getFieldValue("assetName"));
 
   var code = `${variable_spritevar}.texture = await PIXI.Assets.load("${text_assetname}");\n`;
   return code;

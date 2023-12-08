@@ -23,4 +23,23 @@ export default `<category name="Sprites" colour="#8c1c43">
     </block>
   </value>
 </block>
+<block type="slide_sprite_easy">
+<field name="spriteVar">character</field>
+<field name="timeFormat">seconds</field>
+<value name="x">
+  <shadow type="math_number">
+    <field name="NUM">0</field>
+  </shadow>
+</value>
+<value name="y">
+  <shadow type="math_number">
+    <field name="NUM">0</field>
+  </shadow>
+</value>
+<value name="time">
+  <shadow type="math_number">
+    <field name="NUM">1</field>
+  </shadow>
+</value>
+</block>
 </category>`;

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Blockly from "blockly";
 import BlocklyComponent from "../components/Blockly.vue";
 import blocksToolbox from "../helpers/blocklyEditor/toolbox/toolbox";
@@ -15,9 +15,59 @@ import CodeMirroView from "../components/CodemirrorView.vue";
 let currentTab = "console";
 let workspace = ref();
 let iframeView;
+let innerIframe;
+
+function handleXandY(x, y) {
+  const containerW = document.getElementById("iframeContainer").clientWidth;
+  const containerH = document.getElementById("iframeContainer").clientHeight;
+  const percentageW = Math.round((x / containerW) * 100);
+  const percentageH = Math.round((y / containerH) * 100);
+  document.getElementById(
+    "labelCoords"
+  ).innerText = `x: ${x} (${percentageW}%) | y: ${y} (${percentageH}%)`;
+}
+
+onMounted(() => {
+  iframeView = document.getElementById("previewIframe");
+  const iframeContainer = document.getElementById("iframeContainer");
+
+  iframeContainer.addEventListener("mouseenter", () => {
+    document.getElementById("infoCoords").classList.remove("hidden");
+  });
+  iframeContainer.addEventListener("mouseleave", () => {
+    document.getElementById("infoCoords").classList.add("hidden");
+  });
+  iframeView.addEventListener("load", function () {
+    innerIframe =
+      iframeView.contentDocument || iframeView.contentWindow.document;
+    innerIframe
+      .getElementById("contentDIV")
+      .addEventListener("mousemove", function (event) {
+        let rect = innerIframe
+          .getElementById("contentDIV")
+          .getBoundingClientRect();
+        let x = event.clientX - rect.left; // x position within the parent container
+        let y = event.clientY - rect.top; // y position within the parent container
+        handleXandY(x, y);
+      });
+    innerIframe
+      .getElementById("tmpDIV")
+      .addEventListener("mousemove", function (event) {
+        let rect = innerIframe.getElementById("tmpDIV").getBoundingClientRect();
+        let x = event.clientX - rect.left; // x position within the parent container
+        let y = event.clientY - rect.top; // y position within the parent container
+        handleXandY(x, y);
+      });
+    iframeContainer.addEventListener("mousemove", function (event) {
+      let rect = iframeContainer.getBoundingClientRect();
+      let x = event.clientX - rect.left; // x position within the parent container
+      let y = event.clientY - rect.top; // y position within the parent container
+      handleXandY(x, y);
+    });
+  });
+});
 
 document.addEventListener("DOMContentLoaded", () => {
-  iframeView = document.getElementById("previewIframe");
   iframeView.addEventListener("load", function () {
     var innerDoc =
       iframeView.contentDocument || iframeView.contentWindow.document;
@@ -194,11 +244,8 @@ function switchTabs(tab) {
 
 <template>
   <p class="hidden blue-950 blue-500"></p>
-  <div
-    class="w-full grid lg:grid-cols-3 md:grid-cols-1 grid-cols-1 gap-3"
-    style="height: calc(100vh - 70px)"
-  >
-    <div class="lg:col-span-2 mt-3 mb-3 ml-3 lg:h-auto h-screen">
+  <div class="w-full grid grid-cols-3 gap-3" style="height: calc(100vh - 70px)">
+    <div class="col-span-2 mt-3 mb-3 ml-3 h-auto">
       <div
         class="dark:bg-neutral-700 bg-neutral-100 rounded-xl mb-3"
         style="min-height: 40px; display: flex; align-items: center"
@@ -213,7 +260,18 @@ function switchTabs(tab) {
     </div>
     <div class="flex flex-col">
       <div class="flex-1 mr-3 mb-3">
-        <div class="rounded-b-xl" style="height: 100%">
+        <div
+          class="rounded-b-xl"
+          style="height: 100%; position: relative"
+          id="iframeContainer"
+        >
+          <div
+            class="bg-white h-5 text-black rounded-tr-xl rounded-bl-lg opacity-80 hidden"
+            id="infoCoords"
+            style="position: absolute; top: 0; right: 0"
+          >
+            <p class="mr-1 ml-1 text-black" id="labelCoords">x: 0 | y: 0</p>
+          </div>
           <iframe
             class="w-full rounded-xl mt-3"
             style="height: 100%"
@@ -326,6 +384,8 @@ function switchTabs(tab) {
     </div>
   </div>
 </template>
+
+<style scoped></style>
 
 <style>
 .tab-active {

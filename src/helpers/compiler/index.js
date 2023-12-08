@@ -15,8 +15,8 @@ function generateRandomString(length) {
 function finalize(code, prod) {
   const errorVarName = generateRandomString(10);
   if (prod) code = defaults.appDlc + code;
-  code = imports.resolveImports(code);
   code = resolveImports(code);
+  code = imports.resolveImports(code);
   if (prod == true) {
     code = `try {
       ${code}
