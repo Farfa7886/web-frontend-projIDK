@@ -1,5 +1,6 @@
 import * as Blockly from "blockly/core";
 import javascript from "blockly/javascript";
+import utils from "../../../utils";
 
 const blockData = {
   type: "console_log_uo",
@@ -27,14 +28,16 @@ javascript.javascriptGenerator.forBlock["console_log_uo"] = function (
   block,
   generator
 ) {
+  const tmpStr = utils.generateRandomString(10);
   var value_data = generator.valueToCode(
     block,
     "data",
     javascript.Order.ATOMIC
   );
 
-  var code = `console.log(${value_data});
-document.getElementById("logLBL").innerHTML = typeof ${value_data} == 'object' ? (JSON.stringify(${value_data}, null, 2)).replaceAll("\\n", "<br />") : String(${value_data});
+  var code = `const ${tmpStr} = ${value_data}
+console.log(${tmpStr});
+document.getElementById("logLBL").innerHTML = typeof ${tmpStr} == 'object' ? (JSON.stringify(${tmpStr}, null, 2)).replaceAll("\\n", "<br />") : String(${tmpStr});
 await delay(0.01);\n`;
   return code;
 };

@@ -153,6 +153,7 @@ export default `<category name="Logic" colour="#5b80a5">
 <block type="text">
   <field name="TEXT"/>
 </block>
+<block type="text_multiline" />
 <block type="text_join">
   <mutation items="2"/>
 </block>

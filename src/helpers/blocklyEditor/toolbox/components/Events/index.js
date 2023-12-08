@@ -3,4 +3,8 @@ export default `<category name="Events" colour="#c7b634">
 <block type="project_loaded" />
 <label text="Sprite events" />
 <block type="sprite_click" />
+<block type="on_mouseover" />
+<block type="on_mouseleave" />
+<block type="on_mousedown" />
+<block type="on_mouseup" />
 </category>`;

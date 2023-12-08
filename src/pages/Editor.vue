@@ -11,6 +11,7 @@ import compiler from "../helpers/compiler";
 import { eventBus } from "../event-bus";
 import templates from "../helpers/templates";
 import CodeMirroView from "../components/CodemirrorView.vue";
+import beautifier from "js-beautify";
 
 let currentTab = "console";
 let workspace = ref();
@@ -182,7 +183,8 @@ eventBus.addEventListener("workspaceChange", () => {
   );
 });
 
-eventBus.addEventListener("testCode", () => {
+//🤙 sweg
+function testDaCode() {
   clearConsole();
   document.getElementById("testCodeBtn").classList.add("is-loading");
   document.getElementById("testCodeBtn").disabled = true;
@@ -202,7 +204,11 @@ eventBus.addEventListener("testCode", () => {
     //   new CustomEvent("updateCode", { detail: compiledTestCode })
     // );
 
-    script.innerHTML = compiledCode;
+    script.innerHTML = beautifier.js_beautify(compiledCode, {
+      indent_size: 2,
+      space_in_empty_paren: true,
+      max_preserve_newlines: "2",
+    });
     script.type = "text/javascript";
     iframeDocument.body.appendChild(script);
     iframeView.removeEventListener("load", loadScript);
@@ -212,6 +218,10 @@ eventBus.addEventListener("testCode", () => {
     document.getElementById("testCodeBtn").classList.remove("is-loading");
     document.getElementById("testCodeBtn").disabled = false;
   }, 1000);
+}
+
+eventBus.addEventListener("testCode", () => {
+  testDaCode();
 });
 
 function delPrevCode() {
