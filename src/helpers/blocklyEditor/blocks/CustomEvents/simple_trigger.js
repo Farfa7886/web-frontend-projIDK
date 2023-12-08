@@ -35,7 +35,9 @@ javascript.javascriptGenerator.forBlock["simple_cevents_make"] = function (
   block,
   generator
 ) {
-  var text_evname = utils.sanitizeInput(block.getFieldValue("evName"));
+  var text_evname = utils.sanitizeInput(block.getFieldValue("evName"), {
+    allowNumbers: true,
+  });
   var statements_actions = generator.statementToCode(block, "actions");
 
   const evName = values.idkConst2 + text_evname + values.idkConst;

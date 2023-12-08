@@ -1,6 +1,7 @@
 export default `<category name="Sprites" colour="#8c1c43">
 <label text="Data" />
 <block type="sprite_get_dimentions" />
+<block type="sprite_get_pos" />
 <label text="Actions" />
 <block type="sprite_new_notexture" />
 <block type="sprite_set_texture" />
@@ -34,6 +35,35 @@ export default `<category name="Sprites" colour="#8c1c43">
 <value name="y">
   <shadow type="math_number">
     <field name="NUM">0</field>
+  </shadow>
+</value>
+<value name="time">
+  <shadow type="math_number">
+    <field name="NUM">1</field>
+  </shadow>
+</value>
+</block>
+<block type="slide_sprite">
+<field name="spriteVar">character</field>
+<field name="timeFormat">seconds</field>
+<value name="initX">
+  <shadow type="math_number">
+    <field name="NUM">0</field>
+  </shadow>
+</value>
+<value name="initY">
+  <shadow type="math_number">
+    <field name="NUM">0</field>
+  </shadow>
+</value>
+<value name="finalX">
+  <shadow type="math_number">
+    <field name="NUM">100</field>
+  </shadow>
+</value>
+<value name="finalY">
+  <shadow type="math_number">
+    <field name="NUM">100</field>
   </shadow>
 </value>
 <value name="time">

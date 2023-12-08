@@ -235,9 +235,11 @@ function switchTabs(tab) {
     );
     document.getElementById("codeDiv").classList.remove("hidden");
     document.getElementById("codeTab").classList.add("tab-active");
+    document.getElementById("codeTab").classList.remove("tab-inactive");
   } else {
     document.getElementById("consoleDiv").classList.remove("hidden");
     document.getElementById("consoleTab").classList.add("tab-active");
+    document.getElementById("consoleTab").classList.remove("tab-inactive");
   }
 }
 </script>

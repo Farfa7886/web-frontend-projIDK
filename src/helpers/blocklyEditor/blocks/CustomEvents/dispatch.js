@@ -30,7 +30,9 @@ javascript.javascriptGenerator.forBlock["cevents_dispatch"] = function (
   block,
   generator
 ) {
-  var text_evname = utils.sanitizeInput(block.getFieldValue("evName"));
+  var text_evname = utils.sanitizeInput(block.getFieldValue("evName"), {
+    allowNumbers: true,
+  });
   const evName = values.idkConst2 + text_evname + values.idkConst;
 
   var code = `document.dispatchEvent(${evName});\n`;

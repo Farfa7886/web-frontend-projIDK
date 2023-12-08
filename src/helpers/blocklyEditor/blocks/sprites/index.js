@@ -7,3 +7,5 @@ import "./get_dimentions";
 import "./create_no_texture";
 import "./set_scale";
 import "./slide";
+import "./slide_hard";
+import "./get_position";
