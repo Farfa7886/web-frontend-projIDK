@@ -26,7 +26,7 @@ const blockData = {
   ],
   previousStatement: null,
   nextStatement: null,
-  colour: "#8c1c43",
+  colour: "#104f9c",
   tooltip: "You can scale up or down a sprite with this block",
   helpUrl: "",
 };

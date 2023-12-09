@@ -14,7 +14,7 @@ const blockData = {
   previousStatement: null,
   nextStatement: null,
   colour: "#8c1c43",
-  tooltip: "Creates a sprite without loading a texture",
+  tooltip: "Creates a sprite",
   helpUrl: "",
 };
 
@@ -32,6 +32,6 @@ javascript.javascriptGenerator.forBlock["sprite_new_notexture"] = function (
     block.getFieldValue("spriteVar"),
     "VARIABLE"
   );
-  var code = `${variable_spritevar} = new PIXI.Sprite();\n${variable_spritevar}.anchor.set(0.5);\napp.stage.addChild(character);\n`;
+  var code = `${variable_spritevar} = new PIXI.Sprite();\n${variable_spritevar}.anchor.set(0.5);\napp.stage.addChild(character);\n${variable_spritevar}.zIndex = 0;\napp.stage.children.sort((a, b) => a.zIndex - b.zIndex);\n`;
   return code;
 };

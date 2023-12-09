@@ -252,6 +252,13 @@ function switchTabs(tab) {
     document.getElementById("consoleTab").classList.remove("tab-inactive");
   }
 }
+
+function ifxd() {
+  const parser = new DOMParser();
+  const xmlStr = document.getElementById("xmlDEV").value;
+  const xmlDom = parser.parseFromString(xmlStr, "text/xml");
+  Blockly.Xml.domToWorkspace(xmlDom.documentElement, workspace.value.workspace);
+}
 </script>
 
 <template>
@@ -391,6 +398,10 @@ function switchTabs(tab) {
         </button>
         <button class="btn light info mt-4" @click="delPrevCode()">
           Delete "prevCode" in localStorage
+        </button>
+        <textarea class="input mt-5" id="xmlDEV" placeholder="XML" />
+        <button class="btn light info mt-4" @click="ifxd()">
+          Import workspace from XML
         </button>
       </div>
     </div>

@@ -7,3 +7,5 @@ import "./other";
 import "./color";
 import "./CustomEvents";
 import "./Base";
+import "./text";
+import "./elements";

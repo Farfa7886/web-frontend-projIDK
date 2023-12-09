@@ -2,20 +2,20 @@ import * as Blockly from "blockly/core";
 import javascript from "blockly/javascript";
 
 const blockData = {
-  type: "sprite_set_position",
-  message0: "Set %1 's %2 position to %3",
+  type: "sprite_set_dimentions",
+  message0: "Set %1 's %2 to %3 pixels",
   args0: [
     {
       type: "field_variable",
-      name: "selSprite",
+      name: "sprite",
       variable: "character",
     },
     {
       type: "field_dropdown",
-      name: "axis",
+      name: "idk",
       options: [
-        ["x", "x"],
-        ["y", "y"],
+        ["width", "width"],
+        ["height", "height"],
       ],
     },
     {
@@ -26,8 +26,8 @@ const blockData = {
   ],
   previousStatement: null,
   nextStatement: null,
-  colour: "#8c1c43",
-  tooltip: "Sets the position of a sprite",
+  colour: "#104f9c",
+  tooltip: "",
   helpUrl: "",
 };
 
@@ -37,21 +37,21 @@ Blockly.Blocks[blockData.type] = {
   },
 };
 
-javascript.javascriptGenerator.forBlock["sprite_set_position"] = function (
+javascript.javascriptGenerator.forBlock["sprite_set_dimentions"] = function (
   block,
   generator
 ) {
-  var variable_selsprite = generator.nameDB_.getName(
-    block.getFieldValue("selSprite"),
+  var variable_sprite = generator.nameDB_.getName(
+    block.getFieldValue("sprite"),
     "VARIABLE"
   );
-  var dropdown_axis = block.getFieldValue("axis");
+  var dropdown_idk = block.getFieldValue("idk");
   var value_value = generator.valueToCode(
     block,
     "value",
     javascript.Order.ATOMIC
   );
 
-  var code = `${variable_selsprite}.${dropdown_axis} = ${value_value};\n`;
+  var code = `${variable_sprite}.${dropdown_idk} = ${value_value};\n`;
   return code;
 };

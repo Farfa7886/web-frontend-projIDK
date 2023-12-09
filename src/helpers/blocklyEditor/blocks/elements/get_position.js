@@ -20,7 +20,7 @@ const blockData = {
     },
   ],
   output: "Number",
-  colour: "#69112f",
+  colour: "#0b376e",
   tooltip: "Returns the position of a sprite on the specified axis",
   helpUrl: "",
 };

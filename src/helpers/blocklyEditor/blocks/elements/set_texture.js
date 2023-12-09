@@ -4,7 +4,7 @@ import utils from "../../../utils";
 
 const blockData = {
   type: "sprite_set_texture",
-  message0: "To sprite %1 %2 Set texture to asset %3",
+  message0: "To element %1 %2 Set texture to asset %3",
   args0: [
     {
       type: "field_variable",
@@ -22,7 +22,7 @@ const blockData = {
   ],
   previousStatement: null,
   nextStatement: null,
-  colour: "#8c1c43",
+  colour: "#104f9c",
   tooltip: "",
   helpUrl: "",
 };

@@ -7,6 +7,8 @@ import DefaultToolbox from "./components/DefaultToolbox";
 import CustomEvents from "./components/CustomEvents";
 import Base from "./components/Base";
 import Misc from "./components/Misc";
+import Text from "./components/Text";
+import Elements from "./components/Elements";
 
 export default `<xml
 xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
@@ -16,7 +18,9 @@ ${Base}
 ${Snippets}
 ${Events}
 ${CustomEvents}
+${Elements}
 ${App}
 ${Assets}
 ${Sprites}
+${Text}
 </xml>`;

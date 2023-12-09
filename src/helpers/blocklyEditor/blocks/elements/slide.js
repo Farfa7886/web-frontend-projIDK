@@ -3,9 +3,8 @@ import javascript from "blockly/javascript";
 import utils from "../../../utils";
 
 const blockData = {
-  type: "slide_sprite",
-  message0:
-    "Make %1 slide %2 initial X %3 initial Y %4 final X %5 final Y %6 in time %7 %8",
+  type: "slide_sprite_easy",
+  message0: "Make %1 slide to %2 X axis %3 Y axis %4 in time %5 %6",
   args0: [
     {
       type: "field_variable",
@@ -17,22 +16,12 @@ const blockData = {
     },
     {
       type: "input_value",
-      name: "initX",
+      name: "x",
       check: "Number",
     },
     {
       type: "input_value",
-      name: "initY",
-      check: "Number",
-    },
-    {
-      type: "input_value",
-      name: "finalX",
-      check: "Number",
-    },
-    {
-      type: "input_value",
-      name: "finalY",
+      name: "y",
       check: "Number",
     },
     {
@@ -52,7 +41,7 @@ const blockData = {
   inputsInline: false,
   previousStatement: null,
   nextStatement: null,
-  colour: "#8c1c43",
+  colour: "#104f9c",
   tooltip: "Makes a character slide to a position",
   helpUrl: "",
 };
@@ -63,7 +52,7 @@ Blockly.Blocks[blockData.type] = {
   },
 };
 
-javascript.javascriptGenerator.forBlock["slide_sprite"] = function (
+javascript.javascriptGenerator.forBlock["slide_sprite_easy"] = function (
   block,
   generator
 ) {
@@ -71,34 +60,16 @@ javascript.javascriptGenerator.forBlock["slide_sprite"] = function (
     block.getFieldValue("spriteVar"),
     "VARIABLE"
   );
-  var value_initx = generator.valueToCode(
-    block,
-    "initX",
-    javascript.Order.ATOMIC
-  );
-  var value_inity = generator.valueToCode(
-    block,
-    "initY",
-    javascript.Order.ATOMIC
-  );
-  var value_finalx = generator.valueToCode(
-    block,
-    "finalX",
-    javascript.Order.ATOMIC
-  );
-  var value_finaly = generator.valueToCode(
-    block,
-    "finalY",
-    javascript.Order.ATOMIC
-  );
-  var dropdown_timeformat = block.getFieldValue("timeFormat");
+  var value_x = generator.valueToCode(block, "x", javascript.Order.ATOMIC);
+  var value_y = generator.valueToCode(block, "y", javascript.Order.ATOMIC);
   var value_time = generator.valueToCode(
     block,
     "time",
     javascript.Order.ATOMIC
   );
+  var dropdown_timeformat = block.getFieldValue("timeFormat");
 
-  var code = `await slideSprite(${variable_spritevar}, { startX: ${value_initx}, startY: ${value_inity}, endX: ${value_finalx}, endY: ${value_finaly}, duration: ${
+  var code = `await slideSprite(${variable_spritevar}, { startX: ${variable_spritevar}.x, startY: ${variable_spritevar}.y, endX: ${value_x}, endY: ${value_y}, duration: ${
     dropdown_timeformat == "milliseconds" ? value_time : value_time + " * 1000"
   }});\n`;
   return code;
