@@ -9,3 +9,4 @@ import "./slide_hard";
 import "./get_position";
 import "./set_skew";
 import "./set_zindex";
+import "./set_visibility";

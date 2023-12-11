@@ -157,6 +157,7 @@ export default `<category name="Logic" colour="#5b80a5">
 <block type="text_join">
   <mutation items="2"/>
 </block>
+<block type="string_convert" />
 <block type="text_append">
   <field name="VAR" id="Rb1},~A7oHL@PL7IUSj!">item</field>
   <value name="TEXT">
@@ -473,6 +474,9 @@ export default `<category name="Logic" colour="#5b80a5">
   </value>
 </block>
 <block type="force" />
+<block type="typeof_bol">
+  <field name="types">string</field>
+</block>
 <block type="try_catch">
   <value name="errorVar">
     <block type="variables_get">

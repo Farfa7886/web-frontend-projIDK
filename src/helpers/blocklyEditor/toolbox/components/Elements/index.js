@@ -39,6 +39,7 @@ export default `<category name="Elements" colour="#104f9c">
     </shadow>
   </value>
 </block>
+<block type="set_visibility" />
 <block type="set_z_index">
 <field name="varName">character</field>
 <value name="zValue">
