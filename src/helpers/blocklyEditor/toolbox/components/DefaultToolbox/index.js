@@ -1,4 +1,6 @@
-export default `<category name="Logic" colour="#5b80a5">
+export default `<category kind="search" colour="black" />
+<sep />
+<category name="Logic" colour="#5b80a5">
 <block type="controls_if"/>
 <block type="logic_compare">
   <field name="OP">EQ</field>
@@ -11,6 +13,7 @@ export default `<category name="Logic" colour="#5b80a5">
   <field name="BOOL">TRUE</field>
 </block>
 <block type="logic_null"/>
+<block type="logic_nan" />
 <block type="logic_ternary"/>
 </category>
 <category name="Loops" colour="#5ba55b">
@@ -66,6 +69,7 @@ export default `<category name="Logic" colour="#5b80a5">
     </shadow>
   </value>
 </block>
+<block type="number_convert" />
 <block type="math_single">
   <field name="OP">ROOT</field>
   <value name="NUM">
@@ -222,22 +226,6 @@ export default `<category name="Logic" colour="#5b80a5">
 </block>
 <block type="text_trim">
   <field name="MODE">BOTH</field>
-  <value name="TEXT">
-    <shadow type="text">
-      <field name="TEXT">abc</field>
-    </shadow>
-  </value>
-</block>
-<block type="text_print">
-  <value name="TEXT">
-    <shadow type="text">
-      <field name="TEXT">abc</field>
-    </shadow>
-  </value>
-</block>
-<block type="text_prompt_ext">
-  <mutation type="TEXT"/>
-  <field name="TYPE">TEXT</field>
   <value name="TEXT">
     <shadow type="text">
       <field name="TEXT">abc</field>

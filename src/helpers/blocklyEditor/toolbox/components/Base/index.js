@@ -6,6 +6,15 @@ export default `<category name="Base" colour="#148563">
       </shadow>
     </value>
   </block>
+  <block type="text_prompt_ext">
+    <mutation type="TEXT"/>
+    <field name="TYPE">TEXT</field>
+    <value name="TEXT">
+      <shadow type="text">
+        <field name="TEXT">abc</field>
+      </shadow>
+    </value>
+  </block>
   <label text="Infos about current player" />
   <block type="usertheme_get" />
   <label text="Intervals" />

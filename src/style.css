@@ -57,3 +57,31 @@ svg[display="none"] {
 .injectionDiv {
   @apply rounded-xl;
 }
+
+/* Scrollbar */
+:root {
+  --scrollbarBG: transparent;
+  --scrollbarColor: gray;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbarColor) var(--scrollbarBG);
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbarColor);
+  border-radius: 14px;
+  border: 3px solid var(--scrollbarBG);
+}

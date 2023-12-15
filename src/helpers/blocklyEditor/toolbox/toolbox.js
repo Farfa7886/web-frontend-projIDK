@@ -9,6 +9,7 @@ import Base from "./components/Base";
 import Misc from "./components/Misc";
 import Text from "./components/Text";
 import Elements from "./components/Elements";
+import Containers from "./components/Containers";
 
 export default `<xml
 xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
@@ -20,6 +21,7 @@ ${Events}
 ${CustomEvents}
 ${Elements}
 ${App}
+${Containers}
 ${Assets}
 ${Sprites}
 ${Text}

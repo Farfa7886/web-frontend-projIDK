@@ -38,7 +38,7 @@ onMounted(() => {
   crossTabCopyPaste.init(options, (err) => {
     console.error(err);
   });
-  minimap.init();
+  //minimap.init();
 
   Blockly.ContextMenuRegistry.registry.unregister("blockDuplicate");
 
