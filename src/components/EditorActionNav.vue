@@ -1,13 +1,13 @@
-<script stup>
+<script>
 import { eventBus } from "../event-bus";
 
-function testCode() {
-  console.log("hi");
-  //eventBus.dispatchEvent(new Event("testCode"));
-}
-function ee() {
-  console.log("bubu");
-}
+export default {
+  methods: {
+    ee() {
+      eventBus.dispatchEvent(new Event("testCode"));
+    },
+  },
+};
 </script>
 
 <template>
@@ -17,7 +17,11 @@ function ee() {
   >
     <div class="flex">
       <h4 class="font-bold text-xl ml-2 hover:opacity-60">[PROJECT NAME]</h4>
-      <button class="btn solid warn compact light sm ml-3" @click="ee()">
+      <button
+        class="btn solid warn compact light sm ml-3"
+        @click="ee()"
+        id="testCodeBtn"
+      >
         Compile & test
       </button>
     </div>
