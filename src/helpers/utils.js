@@ -138,25 +138,6 @@ function cutText(text, maxLength) {
   }
 }
 
-function showAlert(title, description, onDismiss) {
-  document.getElementById("modal-alert-title").innerText = title;
-  document.getElementById("modal-alert-content").innerText = description;
-  if (onDismiss && typeof onDismiss == "function") {
-    document
-      .getElementById("btn_primary_confirm")
-      .addEventListener("click", () => {
-        onDismiss();
-      });
-    document
-      .getElementById("modal_overlay_dismiss")
-      .addEventListener("click", () => {
-        onDismiss();
-      });
-  }
-
-  document.getElementById("modal-alert").checked = true;
-}
-
 function formatDate(date) {
   const options = { year: "numeric", month: "long", day: "numeric" };
   return new Date(date).toLocaleDateString(undefined, options);
@@ -193,6 +174,17 @@ function generateRandomString(length) {
   return result;
 }
 
+function toggleModal(modal) {
+  let ele = document.getElementById(modal);
+  console.debug("toggleModal", modal, ele);
+  let show = ele.classList.contains("show");
+  if (show) {
+    ele.classList.remove("show");
+  } else {
+    ele.classList.add("show");
+  }
+}
+
 export default {
   onSpecificPageLoad,
   onLoad,
@@ -205,8 +197,8 @@ export default {
   getCurrentTheme,
   mathRandomInt,
   cutText,
-  showAlert,
   formatDate,
   sanitizeInput,
   generateRandomString,
+  toggleModal,
 };

@@ -1,5 +1,12 @@
 <script setup>
 import config from "../../projectConfig";
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("token") !== null) {
+    document.getElementById("acc-opts").classList.remove("hidden");
+    document.getElementById("acc-login").classList.add("hidden");
+  }
+});
 </script>
 
 <template>
@@ -91,6 +98,116 @@ import config from "../../projectConfig";
               aria-current="page"
               >Create</a
             >
+          </li>
+          <li id="acc-login">
+            <a
+              href="/login"
+              class="block py-2 px-3 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
+              style="height: 35px; width: 80px; line-height: 35px"
+              aria-current="page"
+            >
+              <div class="flex">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 48 48"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="mt-2 mr-2"
+                  style="margin-left: 0.35rem"
+                >
+                  <path d="M0 0h48v48H0z" fill="none" />
+                  <path
+                    fill="currentColor"
+                    d="M31.278 25.525C34.144 23.332 36 19.887 36 16c0-6.627-5.373-12-12-12S12 9.373 12 16c0 3.887 1.856 7.332 4.722 9.525C9.84 28.531 5 35.665 5 44h38c0-8.335-4.84-15.469-11.722-18.475M16 16c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8-8-3.589-8-8m8 12c6.977 0 12.856 5.107 14.525 12H9.475C11.144 33.107 17.023 28 24 28"
+                  />
+                </svg>
+                Login
+              </div>
+            </a>
+          </li>
+          <li id="acc-opts" class="hidden">
+            <button
+              class="block cursor-pointer py-2 px-3 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
+              style="height: 35px; width: 120px; line-height: 35px"
+              aria-current="page"
+              data-dropdown-toggle="dropdownHover"
+              data-dropdown-trigger="hover"
+              type="button"
+            >
+              <div class="flex">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 48 48"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="mt-2 mr-2"
+                  style="margin-left: 0.35rem"
+                >
+                  <path d="M0 0h48v48H0z" fill="none" />
+                  <path
+                    fill="currentColor"
+                    d="M31.278 25.525C34.144 23.332 36 19.887 36 16c0-6.627-5.373-12-12-12S12 9.373 12 16c0 3.887 1.856 7.332 4.722 9.525C9.84 28.531 5 35.665 5 44h38c0-8.335-4.84-15.469-11.722-18.475M16 16c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8-8-3.589-8-8m8 12c6.977 0 12.856 5.107 14.525 12H9.475C11.144 33.107 17.023 28 24 28"
+                  />
+                </svg>
+                Account
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 48 48"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="mt-[0.55rem] mr-2"
+                  style="margin-left: 0.35rem"
+                >
+                  <path
+                    d="M37 18 25 30 13 18"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <!-- Dropdown menu -->
+            <div
+              id="dropdownHover"
+              class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+            >
+              <ul
+                class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                aria-labelledby="dropdownHoverButton"
+              >
+                <li>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >Dashboard</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >Settings</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >Earnings</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >Sign out</a
+                  >
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
       </div>

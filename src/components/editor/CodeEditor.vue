@@ -1,10 +1,10 @@
 <script setup>
 import * as monaco from "monaco-editor";
-import utils from "../helpers/utils";
-import EditorActionNav from "../components/EditorActionNav.vue";
-import { eventBus } from "../event-bus";
-import "../userWorker.ts";
-import templates from "../helpers/templates";
+import utils from "../../helpers/utils";
+import EditorActionNav from "../CodeEditorActionNav.vue";
+import { eventBus } from "../../event-bus";
+import "../../userWorker";
+import templates from "../../helpers/templates";
 
 let iframeView;
 
