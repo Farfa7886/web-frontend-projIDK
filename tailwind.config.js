@@ -8,7 +8,7 @@ module.exports = {
     require("@sira-ui/tailwind")({
       themes: [
         {
-          name: "custom",
+          name: "dark",
           colorScheme: "dark",
           prefersColorScheme: true,
           colors: {

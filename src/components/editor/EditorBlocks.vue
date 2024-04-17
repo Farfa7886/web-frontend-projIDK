@@ -298,7 +298,7 @@ function ifxd() {
             <iframe
               class="w-full rounded-xl mt-3"
               style="height: 100%"
-              src="/pixyView.html"
+              src="/pixyViewBlocks.html"
               id="previewIframe"
             ></iframe>
           </div>

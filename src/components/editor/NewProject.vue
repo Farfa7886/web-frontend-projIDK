@@ -1,10 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import utils from "../../helpers/utils";
 import CreateBtn from "./CreateBtn.vue";
-utils.onLoad(() => {
-  if (localStorage.getItem("token") === null) utils.toggleModal("modal-login");
-  else utils.toggleModal("modal-create");
-});
+import axios from "axios";
 
 let projectData = {
   name: "",
@@ -12,40 +9,45 @@ let projectData = {
   type: "", // quiz, iframe, blocks, code
   data: {},
 };
+let isCreating: boolean = false;
 
 function showAdvanced() {
   utils.hide("premade");
   utils.show("advanced");
 }
 
-function step2(projectType) {
+function step2(projectType: string) {
   if (projectType) projectData.type = projectType;
   utils.hide("step1");
   utils.show("step2");
 }
+
+function create() {
+  event.preventDefault();
+  document.getElementById("errordiv").classList.add("hidden");
+  if (isCreating) return;
+  projectData.name = (
+    document.getElementById("name-input") as HTMLInputElement
+  ).value;
+  document.getElementById("create-btn").classList.add("is-loading");
+  axios
+    .post("/project/create", projectData, {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((response) => {
+      document.getElementById("err-content").innerText =
+        response.response.data.error;
+      document.getElementById("errordiv").classList.remove("hidden");
+      document.getElementById("create-btn").classList.remove("is-loading");
+      isCreating = false;
+    });
+}
 </script>
 
 <template>
-  <!-- LOGIN MODAL -->
-  <div>
-    <div
-      class="modal flex flex-col gap-5"
-      style="min-width: 250px"
-      id="modal-login"
-    >
-      <h2 class="text-xl">Login necessario</h2>
-      <span>È necessario effettuare il login per creare un progetto</span>
-      <div class="flex gap-3">
-        <a href="/login" class="w-full">
-          <button class="btn solid info flex-1 w-full">Login</button></a
-        >
-        <a class="w-full" href="/register">
-          <button class="btn solid bw flex-1 w-full">Registrati</button>
-        </a>
-      </div>
-    </div>
-  </div>
-  <!-- END LOGIN MODAL -->
   <div
     class="modal flex flex-col gap-5 w-full max-w-lg"
     style="min-width: 350px"
@@ -55,7 +57,7 @@ function step2(projectType) {
     <div id="step1" class="none">
       <span>Seleziona il tipo di progetto</span>
 
-      <div class="gap-3 mt-4">
+      <div class="gap-3 mt-2">
         <div id="premade" class="none">
           <CreateBtn
             img="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Blue_question_mark_icon.svg/2048px-Blue_question_mark_icon.svg.png"
@@ -84,16 +86,37 @@ function step2(projectType) {
           <CreateBtn
             img="/code-icon.png"
             text="Codice"
+            subtitle="PixiJS v7"
+            @click="step2('code')"
+          />
+          <CreateBtn
+            img="/code-icon.png"
+            text="Codice"
+            subtitle="KaboomJS"
             @click="step2('code')"
           />
         </div>
       </div>
     </div>
     <div id="step2" class="none hidden">
+      <div class="prompt danger ghost mb-2 hidden" id="errordiv">
+        <div class="content">
+          <p id="err-content">err</p>
+        </div>
+      </div>
       <span>Nome del progetto</span>
-      <form>
-        <input class="input bw mt-2 mb-2" required />
-        <button class="btn solid success w-full" type="submit">Crea</button>
+      <form @submit="create()">
+        <input
+          class="input bw mt-2 mb-2"
+          required
+          id="name-input"
+          minlength="3"
+          maxlength="40"
+          autocomplete="off"
+        />
+        <button class="btn solid success w-full" type="submit" id="create-btn">
+          Crea
+        </button>
       </form>
     </div>
   </div>

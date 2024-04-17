@@ -7,6 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("acc-login").classList.add("hidden");
   }
 });
+
+function logout() {
+  localStorage.removeItem("token");
+  window.location.reload();
+}
 </script>
 
 <template>
@@ -73,21 +78,21 @@ document.addEventListener("DOMContentLoaded", () => {
             </label>
           </li>
           <li>
-            <a
-              href="/"
+            <RouterLink
+              to="/"
               class="block py-2 px-3 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
               style="height: 35px; width: 70px; line-height: 35px"
               aria-current="page"
-              >Home</a
+              >Home</RouterLink
             >
           </li>
           <li>
-            <a
-              href="/explore"
+            <RouterLink
+              to="/explore"
               class="block py-2 px-3 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
               style="height: 35px; width: 80px; line-height: 35px"
               aria-current="page"
-              >Explore</a
+              >Explore</RouterLink
             >
           </li>
           <li>
@@ -100,8 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
             >
           </li>
           <li id="acc-login">
-            <a
-              href="/login"
+            <RouterLink
+              to="/login"
               class="block py-2 px-3 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
               style="height: 35px; width: 80px; line-height: 35px"
               aria-current="page"
@@ -123,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </svg>
                 Login
               </div>
-            </a>
+            </RouterLink>
           </li>
           <li id="acc-opts" class="hidden">
             <button
@@ -179,31 +184,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 aria-labelledby="dropdownHoverButton"
               >
                 <li>
-                  <a
-                    href="#"
+                  <RouterLink
+                    to="/projects"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >Dashboard</a
+                    >Progetti</RouterLink
                   >
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <RouterLink
+                    to="#"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >Settings</a
+                    >Crea</RouterLink
                   >
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <RouterLink
+                    to="#"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >Earnings</a
+                    >Notifiche</RouterLink
                   >
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <RouterLink
+                    to="#"
+                    @click="logout()"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >Sign out</a
+                    >Esci</RouterLink
                   >
                 </li>
               </ul>
