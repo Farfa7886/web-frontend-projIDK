@@ -2,13 +2,28 @@
 import { useRoute } from "vue-router";
 import utils from "../helpers/utils";
 import NewProject from "../components/editor/NewProject.vue";
+import EditorBlocks from "../components/editor/EditorBlocks.vue";
+import CodeEditor from "../components/editor/CodeEditor.vue";
+import axios from "axios";
 
 const route = useRoute();
+let projectType = route.query.type;
+let projectData = {};
+
 const isLogged = localStorage.getItem("token") != null;
-utils.onLoad(() => {
+utils.onLoad(async () => {
   if (localStorage.getItem("token") === null) utils.toggleModal("modal-login");
   else if (route.params.projectId == "new") utils.toggleModal("modal-create");
-  else {
+  else if (!route.query.type) {
+    const response = (
+      await axios.get(`/project/${route.params.projectId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+    ).data.data;
+    projectType = response.type;
+    window.location.href = window.location.href + `?type=${response.type}`;
+  } else {
+    document.getElementById("loader").classList.add("hidden");
   }
 });
 </script>
@@ -51,4 +66,6 @@ utils.onLoad(() => {
     </div>
   </div>
   <NewProject v-if="route.params.projectId == 'new' && isLogged" />
+  <EditorBlocks v-if="projectType == 'blocks'" :projectData="projectData" />
+  <CodeEditor v-if="projectType == 'code'" :projectData="projectData" />
 </template>

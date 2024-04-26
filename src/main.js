@@ -5,6 +5,7 @@ import App from "./App.vue";
 import { router } from "./router";
 import axios from "axios";
 import config from "../projectConfig";
+import "notyf/notyf.min.css";
 
 axios.defaults.baseURL = config.baseAPIUrl;
 

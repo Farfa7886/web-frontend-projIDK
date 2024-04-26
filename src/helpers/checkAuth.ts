@@ -3,7 +3,10 @@ import config from "../../projectConfig";
 
 axios.defaults.baseURL = config.baseAPIUrl;
 const checkAuth = () => {
-  if (localStorage.getItem("token") !== null) return;
+  if (localStorage.getItem("token") == null) {
+    window.location.href = "/";
+    return;
+  }
   axios
     .post(
       "/checkAuth",

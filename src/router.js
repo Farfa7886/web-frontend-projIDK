@@ -8,6 +8,7 @@ import Login from "./pages/Login.vue";
 import Register from "./pages/Register.vue";
 import FirstSetup from "./pages/FirstSetup.vue";
 import Projects from "./pages/Projects.vue";
+import ProjectPage from "./pages/ProjectPage.vue";
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -19,6 +20,7 @@ export const router = createRouter({
     { path: "/register", component: Register },
     { path: "/firstSetup", component: FirstSetup },
     { path: "/projects", component: Projects },
+    { path: "/project/:projectId", component: ProjectPage },
 
     { path: "/:pathMatch(.*)*", component: NotFoundPage },
   ],

@@ -13,6 +13,10 @@ import templates from "../../helpers/templates";
 import CodeMirroView from "../CodemirrorView.vue";
 import beautifier from "js-beautify";
 
+const props = defineProps({
+  projectData: Object,
+});
+
 let currentTab = "console";
 let workspace = ref();
 let iframeView;
@@ -298,7 +302,7 @@ function ifxd() {
             <iframe
               class="w-full rounded-xl mt-3"
               style="height: 100%"
-              src="/pixyViewBlocks.html"
+              src="/pixiViewBlocks.html"
               id="previewIframe"
             ></iframe>
           </div>

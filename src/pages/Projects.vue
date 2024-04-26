@@ -31,11 +31,21 @@ utils.onLoad(async () => {
   document.getElementById("content").classList.remove("hidden");
   console.log(projectsList);
   forceRerender();
+  if (projectsList.length == 0) {
+    document.getElementById("content").classList.add("flex");
+    document.getElementById("content").classList.remove("grid");
+    document.getElementById("content").innerHTML = "Nessun progetto :(";
+    document.getElementById("content").style.height =
+      "calc(100vh - 70px - 0.75rem)";
+  }
 });
 </script>
 
 <template>
-  <div class="flex bg-neutral-900" style="height: calc(100vh - 70px)">
+  <div
+    class="flex dark:bg-neutral-900 bg-neutral-200"
+    style="height: calc(100vh - 70px)"
+  >
     <div class="dark:bg-neutral-900 bg-neutral-200 h-full" style="width: 300px">
       <div class="ml-3 mr-3">
         <button
@@ -139,7 +149,7 @@ utils.onLoad(async () => {
         </div>
       </div>
       <div
-        class="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 col-span-6 m-3 hidden"
+        class="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 col-span-6 m-3 hidden items-center justify-center"
         id="content"
       >
         <Card
@@ -151,6 +161,8 @@ utils.onLoad(async () => {
           :updated="new Date(i.lastUpdate)"
           :thumbnail="i.thumbnail"
           :id="i._id"
+          :type="i.type"
+          :engine="i.engine"
         />
       </div>
     </div>

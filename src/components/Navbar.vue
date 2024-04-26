@@ -1,10 +1,12 @@
 <script setup>
 import config from "../../projectConfig";
+import checkAuth from "../helpers/checkAuth";
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("token") !== null) {
+  if (localStorage.getItem("token") != null) {
     document.getElementById("acc-opts").classList.remove("hidden");
     document.getElementById("acc-login").classList.add("hidden");
+    checkAuth();
   }
 });
 
@@ -66,7 +68,7 @@ function logout() {
               <input
                 type="email"
                 id="UserEmail"
-                placeholder="Email"
+                placeholder="Search..."
                 class="peer w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 dark:text-white sm:text-sm bg-gray-100"
               />
 

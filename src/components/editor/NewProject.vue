@@ -8,6 +8,7 @@ let projectData = {
   description: "",
   type: "", // quiz, iframe, blocks, code
   data: {},
+  engine: "",
 };
 let isCreating: boolean = false;
 
@@ -16,8 +17,9 @@ function showAdvanced() {
   utils.show("advanced");
 }
 
-function step2(projectType: string) {
+function step2(projectType: string, engine?: string) {
   if (projectType) projectData.type = projectType;
+  if (engine) projectData.engine = engine;
   utils.hide("step1");
   utils.show("step2");
 }
@@ -35,7 +37,7 @@ function create() {
       headers: { Authorization: "Bearer " + localStorage.getItem("token") },
     })
     .then((response) => {
-      console.log(response.data);
+      window.location.assign("/projects");
     })
     .catch((response) => {
       document.getElementById("err-content").innerText =
@@ -82,18 +84,20 @@ function create() {
             text="Blocchi"
             subtitle="PixyJS v7, Potrai convertire a codice"
             @click="step2('blocks')"
+            :disabled="true"
           />
           <CreateBtn
             img="/code-icon.png"
             text="Codice"
             subtitle="PixiJS v7"
-            @click="step2('code')"
+            @click="step2('code', 'pixi7')"
+            :disabled="true"
           />
           <CreateBtn
             img="/code-icon.png"
             text="Codice"
-            subtitle="KaboomJS"
-            @click="step2('code')"
+            subtitle="KaboomJS v3000.0"
+            @click="step2('code', 'kaboom3000')"
           />
         </div>
       </div>
