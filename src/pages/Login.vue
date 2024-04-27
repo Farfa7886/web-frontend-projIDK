@@ -23,6 +23,13 @@ function login() {
     .post("/login", userData)
     .then((response) => {
       localStorage.setItem("token", response.data.data.token);
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          username: response.data.data.username,
+          id: response.data.data.userId,
+        })
+      );
       if (!response.data.data.completedSetup) {
         window.location.href = "/firstSetup";
       }
