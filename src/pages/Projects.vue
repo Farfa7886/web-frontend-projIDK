@@ -28,6 +28,7 @@ utils.onLoad(async () => {
   projectsList = response.data.data;
   document.getElementById("loader").classList.add("hidden");
   document.getElementById("content").classList.remove("hidden");
+  document.getElementById("content").classList.add("grid");
   console.log(projectsList);
   forceRerender();
   if (projectsList.length == 0) {
@@ -148,7 +149,7 @@ utils.onLoad(async () => {
         </div>
       </div>
       <div
-        class="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 col-span-6 m-3 hidden items-center justify-center"
+        class="xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 col-span-6 m-3 hidden items-center justify-center"
         id="content"
       >
         <Card

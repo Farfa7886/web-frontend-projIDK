@@ -16,6 +16,22 @@ const route = useRoute();
 let currentPage = 1;
 let maxPages = 1;
 
+interface ProjectInfo {
+  name: string;
+  description: string;
+  type: string;
+  engine: string;
+  createdAt: string;
+  lastUpdate: string;
+  owner: {
+    _id: string;
+    username: string;
+  };
+  forked: boolean;
+  embedUrl: string;
+}
+let projectInfo: ProjectInfo;
+
 interface Comment {
   author: {
     _id: string;
@@ -78,15 +94,48 @@ async function loadMore() {
 
 utils.onLoad(async () => {
   renderComments(true);
+
+  projectInfo = (await axios.get(`/view/${route.params.projectId}`)).data.data;
+  document.getElementById("projectName").innerText = projectInfo.name;
+  document.getElementById("projectAuthor").innerText =
+    projectInfo.owner.username;
+  document.getElementById("projectDesc").innerText = projectInfo.description;
+  (document.getElementById("project-player") as HTMLIFrameElement).src =
+    projectInfo.embedUrl;
+
+  document.getElementById("mainDiv").classList.remove("hidden");
+  document.getElementById("mainDiv").classList.add("flex");
+  document.getElementById("loader").classList.add("hidden");
 });
 
 eventBus.addEventListener("rerenderComments", async () => {
   renderComments(true);
 });
+
+function reloadIframe() {
+  const iframeView = document.getElementById(
+    "project-player"
+  ) as HTMLIFrameElement;
+  iframeView.src = "/loading.html";
+  iframeView.src = projectInfo.embedUrl;
+}
+
+function openFullscreen() {
+  document.getElementById("project-player").requestFullscreen();
+  reloadIframe();
+}
 </script>
 
 <template>
-  <div id="mainDiv" class="w-full h-full flex justify-center mt-3">
+  <div
+    id="loader"
+    class="w-full h-[calc(100vh-70px)] flex justify-center items-center"
+  >
+    <div class="loader bw">
+      <div class="bar-bounce" />
+    </div>
+  </div>
+  <div id="mainDiv" class="w-full h-full justify-center mt-3 hidden">
     <div>
       <div
         class="dark:bg-neutral-900 bg-neutral-300 h-[60px] w-full rounded-xl flex items-center"
@@ -97,8 +146,8 @@ eventBus.addEventListener("rerenderComments", async () => {
           style="object-fit: cover; height: 35px; width: 35px"
         />
         <div class="ml-2 w-full">
-          <h2 class="font-bold text-xl">Project name</h2>
-          <p>Author</p>
+          <h2 class="font-bold text-xl" id="projectName">Project name</h2>
+          <p id="projectAuthor">Author</p>
         </div>
         <button class="btn solid info mr-3">Pubblica</button>
         <button class="btn solid warn mr-3">Aggiorna</button>
@@ -106,37 +155,57 @@ eventBus.addEventListener("rerenderComments", async () => {
       <div class="grid lg:grid-cols-2 grid-cols-1 gap-6 mt-3">
         <div>
           <div
-            class="bg-black rounded-xl lg:w-[calc(100vw_/_3)] h-[calc((100vh_-_70px)_/_2)] w-[90vw] min-h-[433px]"
-            id="tmpDIV"
-          ></div>
+            class="rounded-xl lg:w-[calc(100vw_/_3)] h-[calc((100vh_-_70px)_/_2)] w-[90vw] min-h-[433px]"
+            id="playerDIV"
+          >
+            <iframe
+              class="w-full h-full rounded-xl"
+              src="/loading.html"
+              id="project-player"
+              sandbox="allow-scripts"
+            />
+          </div>
           <div
             class="dark:bg-neutral-900 bg-neutral-300 rounded-xl h-[60px] mt-3 flex items-center"
           >
+            <svg
+              height="35"
+              width="35"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              xml:space="preserve"
+              fill="currentColor"
+              class="opacity-65 ml-5"
+            >
+              <path
+                d="M12 21C7 21 3.2 18.2.2 12.5L0 12l.2-.5C3.2 5.8 7 3 12 3s8.8 2.8 11.8 8.5l.2.5-.2.5C20.8 18.2 17 21 12 21m-9.7-9c2.5 4.7 5.7 7 9.7 7s7.2-2.3 9.7-7C19.2 7.3 16 5 12 5s-7.2 2.3-9.7 7"
+              />
+              <path
+                d="M12 17c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5m0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3"
+              />
+            </svg>
+            <p class="ml-2 font-bold text-lg opacity-65" id="viewsCounter">0</p>
             <div class="w-full">
               <LikeBtn :count="16" :liked="store.liked" @click="like()" />
               <ForkBtn />
             </div>
             <div class="mr-3 flex items-center">
-              <svg
-                height="35"
-                width="35"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                xml:space="preserve"
-                fill="currentColor"
-                class="opacity-65"
-              >
-                <path
-                  d="M12 21C7 21 3.2 18.2.2 12.5L0 12l.2-.5C3.2 5.8 7 3 12 3s8.8 2.8 11.8 8.5l.2.5-.2.5C20.8 18.2 17 21 12 21m-9.7-9c2.5 4.7 5.7 7 9.7 7s7.2-2.3 9.7-7C19.2 7.3 16 5 12 5s-7.2 2.3-9.7 7"
-                />
-                <path
-                  d="M12 17c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5m0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3"
-                />
-              </svg>
-              <p class="ml-2 font-bold text-lg opacity-65" id="viewsCounter">
-                0
-              </p>
-              <button class="ml-2 hover:opacity-30">
+              <button class="hover:opacity-30" @click="reloadIframe()">
+                <svg
+                  width="35"
+                  height="35"
+                  viewBox="0 0 16 16"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  class="opacity-65 ml-2 mr-2"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M7.248 1.307A.75.75 0 1 1 8.252.193l2.5 2.25a.75.75 0 0 1 0 1.114l-2.5 2.25a.75.75 0 0 1-1.004-1.114l1.29-1.161a4.5 4.5 0 1 0 3.655 2.832.75.75 0 1 1 1.398-.546A6 6 0 1 1 8.018 2z"
+                  />
+                </svg>
+              </button>
+              <button class="ml-2 hover:opacity-30" @click="openFullscreen()">
                 <svg
                   fill="currentColor"
                   class="opacity-65"
@@ -158,7 +227,7 @@ eventBus.addEventListener("rerenderComments", async () => {
           class="dark:bg-neutral-900 bg-neutral-300 rounded-xl lg:w-full w-[90vw] min-h-[433px]"
           style="height: 100%"
         >
-          <p class="m-3 h-full w-full">Hello gays</p>
+          <p class="m-3 h-full w-full" id="projectDesc">Desc</p>
         </div>
         <div
           class="lg:col-span-2 rounded-xl dark:bg-neutral-900 bg-neutral-300 mb-5"
