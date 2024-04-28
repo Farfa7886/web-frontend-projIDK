@@ -1,0 +1,193 @@
+<script setup>
+import DOMPurify from "isomorphic-dompurify";
+import utils from "../../helpers/utils";
+import { eventBus } from "../../event-bus";
+import axios from "axios";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+let customId = Math.floor(Math.random() * 100000000000000);
+function updateInputCounter() {
+  const textarea = document.getElementById("replyInput" + customId);
+  const counter = document.getElementById("counter-reply" + customId);
+  counter.innerText = textarea.value.length + "/250";
+  if (textarea.value.length >= 1 && !utils.isEmpty(textarea.value))
+    document.getElementById("reply-btn" + customId).disabled = false;
+  else document.getElementById("reply-btn" + customId).disabled = true;
+}
+
+const props = defineProps({
+  username: String,
+  comment: String,
+  id: String,
+  totalReplies: Number,
+  replies: Array,
+});
+
+function reply() {
+  event.preventDefault();
+  document.getElementById("reply-btn" + customId).classList.add("is-loading");
+
+  const textarea = document.getElementById("replyInput" + customId);
+  console.log(props.comment);
+  axios
+    .post(
+      `/comments/${route.params.projectId}`,
+      {
+        content: textarea.value,
+        replyTo: props.id,
+      },
+      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+    )
+    .then((response) => {
+      document
+        .getElementById("reply-btn" + customId)
+        .classList.remove("is-loading");
+      textarea.value = "";
+      eventBus.dispatchEvent(new Event("rerenderComments"));
+      utils.toggleModal("replyModal" + customId);
+    });
+}
+</script>
+
+<template>
+  <div class="flex mt-4">
+    <img src="/no-icon.png" style="height: 50px; width: 50px" />
+    <div
+      class="ml-3 rounded-b-xl rounded-tr-xl dark:bg-neutral-800 bg-neutral-100"
+      style="width: 100%; max-width: 500px"
+    >
+      <h5 class="font-bold text-lg m-2 w-full">
+        {{ DOMPurify.sanitize(username) }}
+      </h5>
+      <p
+        class="m-2"
+        style="
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          white-space: pre-wrap;
+        "
+      >
+        {{ DOMPurify.sanitize(comment) }}
+      </p>
+      <div style="height: 2px" class="dark:bg-neutral-700 bg-neutral-400 m-3" />
+      <div class="flex ml-2 mb-2">
+        <button
+          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg"
+          @click="utils.toggleModal('replyModal' + customId)"
+        >
+          <div class="flex items-center m-1">
+            <svg
+              width="24"
+              height="24"
+              fill="currentColor"
+              class="opacity-75"
+              viewBox="0 0 32 32"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m4.687 11.119 9.287 8.933V14.64c2.813 0 9.973.062 9.973 7.426a7.98 7.98 0 0 1-6.369 7.816c5.842-.792 10.359-5.747 10.359-11.806 0-11.256-12.026-11.352-13.963-11.352V2.118z"
+              />
+            </svg>
+            <p class="ml-2">Rispondi</p>
+          </div>
+        </button>
+        <button
+          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg ml-2"
+        >
+          <div class="flex items-center m-1">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              class="opacity-75"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="3"
+                d="M13.253 5.98 12 13.5l-1.253-7.52a1.27 1.27 0 1 1 2.506 0"
+              />
+              <circle
+                cx="12"
+                cy="19"
+                r="1"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+            <p>Segnala</p>
+          </div>
+        </button>
+        <button
+          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg ml-2"
+        >
+          <div class="flex items-center m-1">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              class="opacity-75"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+            >
+              <path d="M5.75 4.25v-2.5h4.5v2.5m-6.5 1v9h8.5v-9m-9.5-.5h10.5" />
+            </svg>
+            <p class="ml-1">Elimina</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div style="margin-left: calc(50px + 0.75rem)">
+    <slot></slot>
+  </div>
+
+  <div>
+    <label
+      class="modal-overlay"
+      @click="utils.toggleModal('replyModal' + customId)"
+    ></label>
+    <div class="modal flex flex-col gap-5" :id="'replyModal' + customId">
+      <button
+        class="absolute right-4 top-3"
+        @click="utils.toggleModal('replyModal' + customId)"
+      >
+        ✕
+      </button>
+      <h2 class="text-xl">Rispondi</h2>
+      <form>
+        <p>Testo</p>
+        <textarea
+          class="input bw w-full"
+          style="min-height: 100px; max-height: 200px"
+          @input="updateInputCounter()"
+          maxlength="250"
+          :id="'replyInput' + customId"
+        />
+        <p class="w-full text-right mt-2" :id="'counter-reply' + customId">
+          0/250
+        </p>
+
+        <div class="flex gap-3 mt-3">
+          <button
+            class="btn solid info flex-1"
+            @click="reply()"
+            :id="'reply-btn' + customId"
+            disabled
+          >
+            Invia
+          </button>
+          <button class="btn solid bw flex-1">Annulla</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>

@@ -4,6 +4,7 @@
     "outDir": "./dist",
     "allowJs": true,
     "target": "es5",
+    "lib": ["ES2015", "DOM"],
     "allowUnreachableCode": false,
     "noImplicitReturns": true,
     "noImplicitAny": true,

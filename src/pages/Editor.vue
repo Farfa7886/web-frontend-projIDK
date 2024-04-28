@@ -21,7 +21,9 @@ utils.onLoad(async () => {
       })
     ).data.data;
     projectType = response.type;
-    window.location.href = window.location.href + `?type=${response.type}`;
+    let engine = response.engine;
+    window.location.href =
+      window.location.href + `?type=${response.type}&engine=${engine}`;
   } else {
     document.getElementById("loader").classList.add("hidden");
   }

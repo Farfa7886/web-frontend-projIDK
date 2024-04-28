@@ -1,12 +1,37 @@
 <script setup lang="ts">
 import LikeBtn from "../components/ProjectPage/LikeBtn.vue";
 import ForkBtn from "../components/ProjectPage/ForkBtn.vue";
-import CommentBox from "../components/ProjectPage/CommentBoxInput.vue";
+import CommentBoxInput from "../components/ProjectPage/CommentBoxInput.vue";
+import CommentsRenderer from "../components/ProjectPage/CommentsRenderer.vue";
+
+import axios from "axios";
 import utils from "../helpers/utils";
+import { useRoute } from "vue-router";
 import { useLikesStore } from "../stores/ProjectPageStore"; // It's my first time using stores lol
-import { ref } from "vue";
+import { reactive } from "vue";
+import { eventBus } from "../event-bus";
 
 const store = useLikesStore();
+const route = useRoute();
+let currentPage = 1;
+let maxPages = 1;
+
+interface Comment {
+  author: {
+    _id: string;
+    username: string;
+  };
+  content: string;
+  _id: string;
+  replies: number;
+  isReply: boolean;
+  replyTo: string;
+  projectId: string;
+  createdAt: string;
+  __v: number;
+}
+
+let comments: Comment[] = reactive([]);
 
 function like() {
   if (!store.liked) {
@@ -15,6 +40,49 @@ function like() {
     store.unlike();
   }
 }
+
+async function renderComments(fetchAgain: boolean) {
+  comments.splice(0, comments.length);
+  document.getElementById("commentsContainer").classList.add("hidden");
+  document.getElementById("commentsLoader").classList.remove("hidden");
+  if (fetchAgain) {
+    const response = await axios.get(`/comments/${route.params.projectId}`);
+    response.data.docs.forEach((doc: Comment) => {
+      comments.push(doc);
+    });
+    maxPages = response.data.totalPages;
+    if (maxPages === 1)
+      document.getElementById("loadmoreBtn").classList.add("hidden");
+  } else {
+  }
+  if (comments.length > 0)
+    document.getElementById("emptyComments").classList.add("hidden");
+  document.getElementById("commentsContainer").classList.remove("hidden");
+  document.getElementById("commentsLoader").classList.add("hidden");
+}
+
+async function loadMore() {
+  document.getElementById("loadmoreBtn").classList.add("is-loading");
+  currentPage++;
+  const response = await axios.get(
+    `/comments/${route.params.projectId}/?page=${currentPage}`
+  );
+  response.data.docs.forEach((doc: Comment) => {
+    comments.push(doc);
+  });
+  if (currentPage === maxPages) {
+    document.getElementById("loadmoreBtn").classList.add("hidden");
+  }
+  document.getElementById("loadmoreBtn").classList.remove("is-loading");
+}
+
+utils.onLoad(async () => {
+  renderComments(true);
+});
+
+eventBus.addEventListener("rerenderComments", async () => {
+  renderComments(true);
+});
 </script>
 
 <template>
@@ -50,6 +118,20 @@ function like() {
               />
             </svg>
             <p class="ml-2 font-bold text-lg opacity-65" id="viewsCounter">0</p>
+            <button class="ml-2 hover:opacity-30">
+              <svg
+                fill="currentColor"
+                class="opacity-65"
+                width="35"
+                height="35"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m3 15 .117.007a1 1 0 0 1 .876.876L4 16v4h4l.117.007a1 1 0 0 1 0 1.986L8 22H3l-.117-.007a1 1 0 0 1-.876-.876L2 21v-5l.007-.117a1 1 0 0 1 .876-.876zm18 0a1 1 0 0 1 .993.883L22 16v5a1 1 0 0 1-.883.993L21 22h-5a1 1 0 0 1-.117-1.993L16 20h4v-4a1 1 0 0 1 .883-.993zM8 2a1 1 0 0 1 .117 1.993L8 4H4v4a1 1 0 0 1-.883.993L3 9a1 1 0 0 1-.993-.883L2 8V3a1 1 0 0 1 .883-.993L3 2zm13 0 .117.007a1 1 0 0 1 .876.876L22 3v5l-.007.117a1 1 0 0 1-.876.876L21 9l-.117-.007a1 1 0 0 1-.876-.876L20 8V4h-4l-.117-.007a1 1 0 0 1 0-1.986L16 2z"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -60,12 +142,40 @@ function like() {
       >
         <p class="m-3 h-full w-full">Hello gays</p>
       </div>
-      <div class="lg:col-span-2 rounded-xl dark:bg-neutral-900 bg-neutral-300">
-        <h3 class="text-3xl text-center font-bold mt-2">Commenti</h3>
-        <div class="m-3" id="commentsContainer">
-          <CommentBox />
-          <div class="divider mt-2 mb-2" />
-          <p class="text-center m-2">Wow così vuoto qui 😯 *suono di grilli*</p>
+      <div
+        class="lg:col-span-2 rounded-xl dark:bg-neutral-900 bg-neutral-300 mb-5"
+      >
+        <h3 class="text-3xl text-center font-bold mt-5">Commenti</h3>
+        <div id="commentsLoader" class="m-5 mt-10 flex w-full justify-center">
+          <div class="loader bw">
+            <div class="bar-bounce" />
+          </div>
+        </div>
+        <div class="m-3 hidden" id="commentsContainer">
+          <CommentBoxInput />
+          <div
+            style="height: 2px"
+            class="dark:bg-neutral-700 bg-neutral-400 m-3"
+          />
+          <p class="text-center m-2" id="emptyComments">
+            Wow, così vuoto qui 😯 *suono di grilli*
+          </p>
+          <CommentsRenderer
+            v-for="i in comments"
+            :username="i.author.username"
+            :comment="i.content"
+            :totalReplies="i.replies"
+            :id="i._id"
+          />
+          <div class="flex w-full items-center justify-center mt-3">
+            <button
+              class="btn solid info outline"
+              id="loadmoreBtn"
+              @click="loadMore()"
+            >
+              Carica altri
+            </button>
+          </div>
         </div>
       </div>
     </div>

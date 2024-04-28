@@ -68,7 +68,7 @@ function isEmpty(text) {
   let isEmpty = true;
   splittedText.forEach((element) => {
     if (isEmpty) {
-      if (element != " ") {
+      if (element != " " && element != "\n") {
         isEmpty = false;
       }
     }

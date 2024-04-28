@@ -25,7 +25,6 @@ utils.onLoad(async () => {
   const response = await axios.get("/projects", {
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   });
-  console.log(response.data);
   projectsList = response.data.data;
   document.getElementById("loader").classList.add("hidden");
   document.getElementById("content").classList.remove("hidden");
