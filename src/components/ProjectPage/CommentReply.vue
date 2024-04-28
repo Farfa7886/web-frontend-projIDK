@@ -1,10 +1,55 @@
 <script setup>
 import DOMPurify from "isomorphic-dompurify";
+import { useRoute } from "vue-router";
+import utils from "../../helpers/utils";
+import axios from "axios";
+import { eventBus } from "../../event-bus";
 
-defineProps({
+const props = defineProps({
   username: String,
   content: String,
+  parent: String,
+  parentUsername: String,
+  userReply: Object,
+  parentUserId: String,
 });
+const route = useRoute();
+
+let customId = Math.floor(Math.random() * 100000000000000);
+
+function updateInputCounter() {
+  const textarea = document.getElementById("replyInput" + customId);
+  const counter = document.getElementById("counter-reply" + customId);
+  counter.innerText = textarea.value.length + "/250";
+  if (textarea.value.length >= 1 && !utils.isEmpty(textarea.value))
+    document.getElementById("reply-btn" + customId).disabled = false;
+  else document.getElementById("reply-btn" + customId).disabled = true;
+}
+
+function reply() {
+  event.preventDefault();
+  document.getElementById("reply-btn" + customId).classList.add("is-loading");
+
+  const textarea = document.getElementById("replyInput" + customId);
+  axios
+    .post(
+      `/comments/${route.params.projectId}`,
+      {
+        content: textarea.value,
+        replyTo: props.parent,
+        userReply: props.parentUserId,
+      },
+      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+    )
+    .then((response) => {
+      document
+        .getElementById("reply-btn" + customId)
+        .classList.remove("is-loading");
+      textarea.value = "";
+      eventBus.dispatchEvent(new Event("rerenderComments"));
+      utils.toggleModal("replyModal" + customId);
+    });
+}
 </script>
 
 <template>
@@ -17,11 +62,17 @@ defineProps({
       <h5 class="font-bold text-lg m-2 w-full">
         {{ DOMPurify.sanitize(username) }}
       </h5>
-      <p class="m-2">{{ DOMPurify.sanitize(content) }}</p>
+      <p class="m-2">
+        <a class="link text-info-800" v-if="userReply"
+          >@{{ userReply.username }}</a
+        >
+        {{ DOMPurify.sanitize(content) }}
+      </p>
       <div style="height: 2px" class="dark:bg-neutral-700 bg-neutral-400 m-3" />
       <div class="flex ml-2 mb-2">
         <button
           class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg"
+          @click="utils.toggleModal('replyModal' + customId)"
         >
           <div class="flex items-center m-1">
             <svg
@@ -91,6 +142,47 @@ defineProps({
           </div>
         </button>
       </div>
+    </div>
+  </div>
+
+  <div>
+    <label
+      class="modal-overlay"
+      @click="utils.toggleModal('replyModal' + customId)"
+    ></label>
+    <div class="modal flex flex-col gap-5" :id="'replyModal' + customId">
+      <button
+        class="absolute right-4 top-3"
+        @click="utils.toggleModal('replyModal' + customId)"
+      >
+        ✕
+      </button>
+      <h2 class="text-xl">Rispondi</h2>
+      <form>
+        <p>Testo</p>
+        <textarea
+          class="input bw w-full"
+          style="min-height: 100px; max-height: 200px"
+          @input="updateInputCounter()"
+          maxlength="250"
+          :id="'replyInput' + customId"
+        />
+        <p class="w-full text-right mt-2" :id="'counter-reply' + customId">
+          0/250
+        </p>
+
+        <div class="flex gap-3 mt-3">
+          <button
+            class="btn solid info flex-1"
+            @click="reply()"
+            :id="'reply-btn' + customId"
+            disabled
+          >
+            Invia
+          </button>
+          <button class="btn solid bw flex-1">Annulla</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>

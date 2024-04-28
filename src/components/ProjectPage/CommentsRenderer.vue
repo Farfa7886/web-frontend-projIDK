@@ -9,6 +9,7 @@ import { useRoute } from "vue-router";
 
 const props = defineProps({
   username: String,
+  userId: String,
   comment: String,
   id: String,
   totalReplies: Number,
@@ -24,9 +25,11 @@ const showRepliesButton = ref(null);
 interface Reply {
   author: {
     username: string;
+    _id: string;
   };
   content: string;
-  id: string;
+  _id: string;
+  userReply: object;
 }
 let replies: Reply[] = reactive([]);
 
@@ -38,7 +41,6 @@ async function showReplies() {
   const response = await axios.get(
     `/replies/${route.params.projectId}/${props.id}/?page=${currentPage}`
   );
-  console.log(response.data);
   response.data.docs.forEach((doc: Reply) => {
     replies.push(doc);
   });
@@ -56,7 +58,10 @@ async function showReplies() {
       v-for="i in replies"
       :username="i.author.username"
       :content="i.content"
-      :id="i.id"
+      :parent="id"
+      :parentUsername="username"
+      :parentUserId="userId"
+      :userReply="i.userReply"
     />
     <button
       ref="showRepliesButton"
