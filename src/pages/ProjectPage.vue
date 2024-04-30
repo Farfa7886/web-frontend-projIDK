@@ -16,6 +16,7 @@ const store = useLikesStore();
 const route = useRoute();
 let currentPage = 1;
 let maxPages = 1;
+const isLogged = localStorage.getItem("token") ? true : false;
 
 interface ProjectInfo {
   name: string;
@@ -119,14 +120,24 @@ utils.onLoad(async () => {
   document.getElementById("projectName").innerText = projectInfo.name;
   document.getElementById("projectAuthor").innerText =
     projectInfo.owner.username;
-  document.getElementById("projectDesc").innerText = projectInfo.description;
+  if (projectInfo.description != "")
+    document.getElementById("projectDesc").innerText = projectInfo.description;
   if (localStorage.getItem("token") && !projectInfo.public)
     projectInfo.embedUrl += `/${localStorage.getItem("token")}`;
 
   (document.getElementById("project-player") as HTMLIFrameElement).src =
     projectInfo.embedUrl;
-  if (!projectInfo.public)
+  if (
+    !projectInfo.public &&
+    projectInfo.owner._id === JSON.parse(localStorage.getItem("userData"))?.id
+  ) {
     document.getElementById("publishBTN").classList.remove("hidden");
+  } else if (
+    projectInfo.owner._id === JSON.parse(localStorage.getItem("userData"))?.id
+  ) {
+    document.getElementById("updateBTN").classList.remove("hidden");
+    document.getElementById("retireBTN").classList.remove("hidden");
+  }
 
   document.getElementById("mainDiv").classList.remove("hidden");
   document.getElementById("mainDiv").classList.add("flex");
@@ -150,6 +161,46 @@ function reloadIframe() {
 function openFullscreen() {
   document.getElementById("project-player").requestFullscreen();
   reloadIframe();
+}
+
+async function publish(action: string) {
+  document.getElementById("publishBTN").classList.add("is-loading");
+  if (action != "publish")
+    document.getElementById("retireBTN").classList.add("is-loading");
+  if (action != "unpublish")
+    document.getElementById("updateBTN").classList.add("is-loading");
+  try {
+    await axios.post(
+      `/${action}/${route.params.projectId}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+    utils.notyf("Successo", "success");
+    window.location.reload();
+  } catch (err) {
+    utils.notyf(err.response.data.error || "Errore", "error");
+    document.getElementById("publishBTN").classList.remove("is-loading");
+    document.getElementById("retireBTN").classList.remove("is-loading");
+    document.getElementById("updateBTN").classList.remove("is-loading");
+  }
+}
+
+function triggerModify() {
+  document.getElementById("projectDesc").classList.add("hidden");
+  (document.getElementById("textareaModify") as HTMLInputElement).value =
+    document.getElementById("projectDesc").innerHTML.replaceAll("<br>", "\n");
+  document.getElementById("textareaModify").classList.remove("hidden");
+  (document.getElementById("textareaModify") as HTMLInputElement).focus();
+}
+
+async function modifyDesc() {
+  document.getElementById("projectDesc").innerText = (
+    document.getElementById("textareaModify") as HTMLInputElement
+  ).value;
+  document.getElementById("projectDesc").classList.remove("hidden");
+  document.getElementById("textareaModify").classList.add("hidden");
 }
 </script>
 
@@ -176,17 +227,32 @@ function openFullscreen() {
           <h2 class="font-bold text-xl" id="projectName">Project name</h2>
           <p id="projectAuthor">Author</p>
         </div>
-        <button class="btn solid info mr-3 hidden" id="publishBTN">
+        <button
+          class="btn solid info mr-3 hidden"
+          id="publishBTN"
+          @click="publish('publish')"
+        >
           Pubblica
         </button>
-        <button class="btn solid warn mr-3 hidden" id="updateBTN">
+        <button
+          class="btn solid danger mr-3 hidden"
+          id="retireBTN"
+          @click="publish('unpublish')"
+        >
+          Ritira
+        </button>
+        <button
+          class="btn solid warn mr-3 hidden"
+          id="updateBTN"
+          @click="publish('publish')"
+        >
           Aggiorna
         </button>
       </div>
       <div class="grid lg:grid-cols-2 grid-cols-1 gap-6 mt-3">
         <div>
           <div
-            class="rounded-xl lg:w-[calc(100vw_/_3)] h-[calc((100vh_-_70px)_/_2)] w-[90vw] min-h-[433px]"
+            class="rounded-xl lg:w-[calc(100vw_/_3)] h-[calc((100vh_-_70px)_/_2)] w-[100vw] min-h-[433px]"
             id="playerDIV"
           >
             <iframe
@@ -257,20 +323,37 @@ function openFullscreen() {
         </div>
 
         <div
-          class="dark:bg-neutral-900 bg-neutral-300 rounded-xl lg:w-full w-[90vw] min-h-[433px]"
+          class="dark:bg-neutral-900 bg-neutral-300 rounded-xl lg:w-full w-[90vw] min-h-[433px] hover:cursor-text"
           style="height: 100%"
+          id="projDescDIV"
         >
           <p
             class="m-3 h-full w-full"
+            @click="triggerModify()"
             id="projectDesc"
             style="
               word-wrap: break-word;
               overflow-wrap: break-word;
               white-space: pre-wrap;
+              overflow-y: auto;
+              max-height: calc((100vh - 70px) / 2);
+              max-width: calc(100vw / 3);
             "
           >
-            Desc
+            [Clicca per cambiare la descrizione]
           </p>
+          <textarea
+            style="
+              height: calc(100% - 0.75rem * 2);
+              width: calc(100% - 0.75rem * 2);
+              background: transparent;
+            "
+            class="w-full resize-none rounded-xl m-3 hidden input"
+            id="textareaModify"
+            @blur="modifyDesc()"
+          >
+[Clicca per cambiare la descrizione]</textarea
+          >
         </div>
         <div
           class="lg:col-span-2 rounded-xl dark:bg-neutral-900 bg-neutral-300 mb-5"
@@ -282,7 +365,7 @@ function openFullscreen() {
             </div>
           </div>
           <div class="m-3 hidden" id="commentsContainer">
-            <CommentBoxInput />
+            <CommentBoxInput v-if="isLogged" />
             <div
               style="height: 2px"
               class="dark:bg-neutral-700 bg-neutral-400 m-3"

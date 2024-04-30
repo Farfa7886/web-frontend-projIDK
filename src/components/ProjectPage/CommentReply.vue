@@ -17,6 +17,7 @@ const props = defineProps({
   id: String,
 });
 const route = useRoute();
+const isLogged = localStorage.getItem("token") ? true : false;
 
 let customId = Math.floor(Math.random() * 100000000000000);
 const showDelBtn =
@@ -101,8 +102,9 @@ async function deleteComment() {
       <div style="height: 2px" class="dark:bg-neutral-700 bg-neutral-400 m-3" />
       <div class="flex ml-2 mb-2">
         <button
-          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg"
+          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg mr-2"
           @click="utils.toggleModal('replyModal' + customId)"
+          v-if="isLogged"
         >
           <div class="flex items-center m-1">
             <svg
@@ -121,7 +123,7 @@ async function deleteComment() {
           </div>
         </button>
         <button
-          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg ml-2"
+          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg"
         >
           <div class="flex items-center m-1">
             <svg
@@ -190,7 +192,7 @@ async function deleteComment() {
         ✕
       </button>
       <h2 class="text-xl">Rispondi</h2>
-      <form>
+      <form @submit="reply()">
         <p>Testo</p>
         <textarea
           class="input bw w-full"
@@ -206,13 +208,19 @@ async function deleteComment() {
         <div class="flex gap-3 mt-3">
           <button
             class="btn solid info flex-1"
-            @click="reply()"
+            type="submit"
             :id="'reply-btn' + customId"
             disabled
           >
             Invia
           </button>
-          <button class="btn solid bw flex-1">Annulla</button>
+          <button
+            class="btn solid bw flex-1"
+            type="button"
+            @click="utils.toggleModal('replyModal' + customId)"
+          >
+            Annulla
+          </button>
         </div>
       </form>
     </div>

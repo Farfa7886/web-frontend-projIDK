@@ -16,6 +16,8 @@ const props = defineProps({
 });
 
 const route = useRoute();
+const isLogged = localStorage.getItem("token") ? true : false;
+
 let customId = Math.floor(Math.random() * 100000000000000);
 const showDelBtn =
   props.userId == JSON.parse(localStorage.getItem("userData"))?.id;
@@ -82,21 +84,24 @@ async function deleteComment() {
       <h5 class="font-bold text-lg m-2 w-full">
         {{ DOMPurify.sanitize(username) }}
       </h5>
-      <p
-        class="m-2"
-        style="
-          word-wrap: break-word;
-          overflow-wrap: break-word;
-          white-space: pre-wrap;
-        "
-      >
-        {{ DOMPurify.sanitize(comment) }}
-      </p>
+      <div class="w-full" style="max-height: 200px; overflow-y: auto">
+        <p
+          class="m-2"
+          style="
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+          "
+        >
+          {{ DOMPurify.sanitize(comment) }}
+        </p>
+      </div>
       <div style="height: 2px" class="dark:bg-neutral-700 bg-neutral-400 m-3" />
       <div class="flex ml-2 mb-2">
         <button
-          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg"
+          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg mr-2"
           @click="utils.toggleModal('replyModal' + customId)"
+          v-if="isLogged"
         >
           <div class="flex items-center m-1">
             <svg
@@ -115,7 +120,7 @@ async function deleteComment() {
           </div>
         </button>
         <button
-          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg ml-2"
+          class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg"
         >
           <div class="flex items-center m-1">
             <svg
@@ -187,7 +192,7 @@ async function deleteComment() {
         ✕
       </button>
       <h2 class="text-xl">Rispondi</h2>
-      <form>
+      <form @submit="reply()">
         <p>Testo</p>
         <textarea
           class="input bw w-full"
@@ -203,13 +208,19 @@ async function deleteComment() {
         <div class="flex gap-3 mt-3">
           <button
             class="btn solid info flex-1"
-            @click="reply()"
             :id="'reply-btn' + customId"
             disabled
+            type="submit"
           >
             Invia
           </button>
-          <button class="btn solid bw flex-1">Annulla</button>
+          <button
+            class="btn solid bw flex-1"
+            type="button"
+            @click="utils.toggleModal('replyModal' + customId)"
+          >
+            Annulla
+          </button>
         </div>
       </form>
     </div>
