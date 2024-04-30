@@ -1,3 +1,5 @@
+import { Notyf } from "notyf";
+
 /**
  *
  * @returns {string} Current page position, for example "/profile"
@@ -185,6 +187,18 @@ function toggleModal(modal) {
   }
 }
 
+/**
+ * Creates a new Notyf instance and displays a notification message of the specified type.
+ *
+ * @param {string} message - The message to be displayed in the notification.
+ * @param {string} type - The type of the notification (e.g., "success", "error", "warning", etc.).
+ */
+function notyf(message, type) {
+  const notyf = new Notyf({ position: { x: "right", y: "top" } });
+
+  notyf[type](message);
+}
+
 export default {
   onSpecificPageLoad,
   onLoad,
@@ -201,4 +215,5 @@ export default {
   sanitizeInput,
   generateRandomString,
   toggleModal,
+  notyf,
 };

@@ -5,6 +5,7 @@ import CommentBoxInput from "../components/ProjectPage/CommentBoxInput.vue";
 import CommentsRenderer from "../components/ProjectPage/CommentsRenderer.vue";
 
 import axios from "axios";
+import { AxiosRequestConfig } from "axios";
 import utils from "../helpers/utils";
 import { useRoute } from "vue-router";
 import { useLikesStore } from "../stores/ProjectPageStore"; // It's my first time using stores lol
@@ -28,6 +29,7 @@ interface ProjectInfo {
     username: string;
   };
   forked: boolean;
+  public: boolean;
   embedUrl: string;
 }
 let projectInfo: ProjectInfo;
@@ -57,15 +59,24 @@ function like() {
   }
 }
 
+let isProjectOwner = false;
+
 async function renderComments(fetchAgain: boolean) {
   comments.splice(0, comments.length);
   document.getElementById("commentsContainer").classList.add("hidden");
   document.getElementById("commentsLoader").classList.remove("hidden");
+  let includeToken =
+    JSON.parse(localStorage.getItem("userData"))?.id == projectInfo.owner._id
+      ? `/${localStorage.getItem("token")}`
+      : "";
   if (fetchAgain) {
-    const response = await axios.get(`/comments/${route.params.projectId}`);
+    const response = await axios.get(
+      `/comments/${route.params.projectId}${includeToken}`
+    );
     response.data.docs.forEach((doc: Comment) => {
       comments.push(doc);
     });
+    isProjectOwner = response.data.isProjectOwner;
     maxPages = response.data.totalPages;
     if (maxPages === 1)
       document.getElementById("loadmoreBtn").classList.add("hidden");
@@ -93,19 +104,35 @@ async function loadMore() {
 }
 
 utils.onLoad(async () => {
-  renderComments(true);
+  const options: AxiosRequestConfig = {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
 
-  projectInfo = (await axios.get(`/view/${route.params.projectId}`)).data.data;
+  projectInfo = (
+    await axios.get(
+      `/view/${route.params.projectId}`,
+      localStorage.getItem("token") ? options : {}
+    )
+  ).data.data;
   document.getElementById("projectName").innerText = projectInfo.name;
   document.getElementById("projectAuthor").innerText =
     projectInfo.owner.username;
   document.getElementById("projectDesc").innerText = projectInfo.description;
+  if (localStorage.getItem("token") && !projectInfo.public)
+    projectInfo.embedUrl += `/${localStorage.getItem("token")}`;
+
   (document.getElementById("project-player") as HTMLIFrameElement).src =
     projectInfo.embedUrl;
+  if (!projectInfo.public)
+    document.getElementById("publishBTN").classList.remove("hidden");
 
   document.getElementById("mainDiv").classList.remove("hidden");
   document.getElementById("mainDiv").classList.add("flex");
   document.getElementById("loader").classList.add("hidden");
+
+  await renderComments(true);
 });
 
 eventBus.addEventListener("rerenderComments", async () => {
@@ -149,8 +176,12 @@ function openFullscreen() {
           <h2 class="font-bold text-xl" id="projectName">Project name</h2>
           <p id="projectAuthor">Author</p>
         </div>
-        <button class="btn solid info mr-3">Pubblica</button>
-        <button class="btn solid warn mr-3">Aggiorna</button>
+        <button class="btn solid info mr-3 hidden" id="publishBTN">
+          Pubblica
+        </button>
+        <button class="btn solid warn mr-3 hidden" id="updateBTN">
+          Aggiorna
+        </button>
       </div>
       <div class="grid lg:grid-cols-2 grid-cols-1 gap-6 mt-3">
         <div>
@@ -168,26 +199,28 @@ function openFullscreen() {
           <div
             class="dark:bg-neutral-900 bg-neutral-300 rounded-xl h-[60px] mt-3 flex items-center"
           >
-            <svg
-              height="35"
-              width="35"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              xml:space="preserve"
-              fill="currentColor"
-              class="opacity-65 ml-5"
-            >
-              <path
-                d="M12 21C7 21 3.2 18.2.2 12.5L0 12l.2-.5C3.2 5.8 7 3 12 3s8.8 2.8 11.8 8.5l.2.5-.2.5C20.8 18.2 17 21 12 21m-9.7-9c2.5 4.7 5.7 7 9.7 7s7.2-2.3 9.7-7C19.2 7.3 16 5 12 5s-7.2 2.3-9.7 7"
-              />
-              <path
-                d="M12 17c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5m0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3"
-              />
-            </svg>
-            <p class="ml-2 font-bold text-lg opacity-65" id="viewsCounter">0</p>
-            <div class="w-full">
+            <div class="w-full flex items-center">
               <LikeBtn :count="16" :liked="store.liked" @click="like()" />
               <ForkBtn />
+              <svg
+                height="35"
+                width="35"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                xml:space="preserve"
+                fill="currentColor"
+                class="opacity-65 ml-5"
+              >
+                <path
+                  d="M12 21C7 21 3.2 18.2.2 12.5L0 12l.2-.5C3.2 5.8 7 3 12 3s8.8 2.8 11.8 8.5l.2.5-.2.5C20.8 18.2 17 21 12 21m-9.7-9c2.5 4.7 5.7 7 9.7 7s7.2-2.3 9.7-7C19.2 7.3 16 5 12 5s-7.2 2.3-9.7 7"
+                />
+                <path
+                  d="M12 17c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5m0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3"
+                />
+              </svg>
+              <p class="ml-2 font-bold text-lg opacity-65" id="viewsCounter">
+                0
+              </p>
             </div>
             <div class="mr-3 flex items-center">
               <button class="hover:opacity-30" @click="reloadIframe()">
@@ -227,7 +260,17 @@ function openFullscreen() {
           class="dark:bg-neutral-900 bg-neutral-300 rounded-xl lg:w-full w-[90vw] min-h-[433px]"
           style="height: 100%"
         >
-          <p class="m-3 h-full w-full" id="projectDesc">Desc</p>
+          <p
+            class="m-3 h-full w-full"
+            id="projectDesc"
+            style="
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+              white-space: pre-wrap;
+            "
+          >
+            Desc
+          </p>
         </div>
         <div
           class="lg:col-span-2 rounded-xl dark:bg-neutral-900 bg-neutral-300 mb-5"
@@ -254,6 +297,7 @@ function openFullscreen() {
               :comment="i.content"
               :totalReplies="i.replies"
               :id="i._id"
+              :isProjectOwner="isProjectOwner"
             />
             <div class="flex w-full items-center justify-center mt-3">
               <button

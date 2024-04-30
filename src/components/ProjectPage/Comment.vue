@@ -5,8 +5,20 @@ import { eventBus } from "../../event-bus";
 import axios from "axios";
 import { useRoute } from "vue-router";
 
+const props = defineProps({
+  username: String,
+  userId: String,
+  comment: String,
+  id: String,
+  totalReplies: Number,
+  replies: Array,
+  isProjectOwner: Boolean,
+});
+
 const route = useRoute();
 let customId = Math.floor(Math.random() * 100000000000000);
+const showDelBtn =
+  props.userId == JSON.parse(localStorage.getItem("userData"))?.id;
 function updateInputCounter() {
   const textarea = document.getElementById("replyInput" + customId);
   const counter = document.getElementById("counter-reply" + customId);
@@ -15,14 +27,6 @@ function updateInputCounter() {
     document.getElementById("reply-btn" + customId).disabled = false;
   else document.getElementById("reply-btn" + customId).disabled = true;
 }
-
-const props = defineProps({
-  username: String,
-  comment: String,
-  id: String,
-  totalReplies: Number,
-  replies: Array,
-});
 
 function reply() {
   event.preventDefault();
@@ -47,6 +51,24 @@ function reply() {
       eventBus.dispatchEvent(new Event("rerenderComments"));
       utils.toggleModal("replyModal" + customId);
     });
+}
+
+async function deleteComment() {
+  document.getElementById("delBtn" + customId).classList.add("is-loading");
+  try {
+    await axios.delete(`/comments/${props.id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    document.getElementById("delBtn" + customId).classList.remove("is-loading");
+    utils.notyf("Commento eliminato", "success");
+    eventBus.dispatchEvent(new Event("rerenderComments"));
+  } catch (err) {
+    console.error(err);
+    document.getElementById("delBtn" + customId).classList.remove("is-loading");
+    utils.notyf(err.response.data.error || "Errore", "error");
+  } finally {
+    utils.toggleModal("deleteModal" + customId);
+  }
 }
 </script>
 
@@ -124,6 +146,8 @@ function reply() {
         </button>
         <button
           class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg ml-2"
+          @click="utils.toggleModal('deleteModal' + customId)"
+          v-if="showDelBtn || isProjectOwner"
         >
           <div class="flex items-center m-1">
             <svg
@@ -188,6 +212,38 @@ function reply() {
           <button class="btn solid bw flex-1">Annulla</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div>
+    <label
+      class="modal-overlay"
+      @click="utils.toggleModal('deleteModal' + customId)"
+    ></label>
+    <div class="modal flex flex-col gap-5" :id="'deleteModal' + customId">
+      <button
+        class="absolute right-4 top-3"
+        @click="utils.toggleModal('deleteModal' + customId)"
+      >
+        ✕
+      </button>
+      <h2 class="text-xl">Elimina commento</h2>
+      <span>Sei sicuro? Questa azione non potrà essere annullata</span>
+      <div class="flex gap-3">
+        <button
+          class="btn solid danger flex-1"
+          @click="deleteComment()"
+          :id="'delBtn' + customId"
+        >
+          Elimina
+        </button>
+        <button
+          class="btn solid bw flex-1"
+          @click="utils.toggleModal('deleteModal' + customId)"
+        >
+          Annulla
+        </button>
+      </div>
     </div>
   </div>
 </template>

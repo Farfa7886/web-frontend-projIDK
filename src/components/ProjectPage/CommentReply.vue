@@ -12,10 +12,15 @@ const props = defineProps({
   parentUsername: String,
   userReply: Object,
   parentUserId: String,
+  authorId: String,
+  isProjectOwner: Boolean,
+  id: String,
 });
 const route = useRoute();
 
 let customId = Math.floor(Math.random() * 100000000000000);
+const showDelBtn =
+  props.authorId == JSON.parse(localStorage.getItem("userData"))?.id;
 
 function updateInputCounter() {
   const textarea = document.getElementById("replyInput" + customId);
@@ -50,6 +55,24 @@ function reply() {
       utils.toggleModal("replyModal" + customId);
     });
 }
+
+async function deleteComment() {
+  document.getElementById("delBtn" + customId).classList.add("is-loading");
+  try {
+    await axios.delete(`/comments/${props.id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    document.getElementById("delBtn" + customId).classList.remove("is-loading");
+    utils.notyf("Commento eliminato", "success");
+    eventBus.dispatchEvent(new Event("rerenderComments"));
+  } catch (err) {
+    console.error(err);
+    document.getElementById("delBtn" + customId).classList.remove("is-loading");
+    utils.notyf(err.response.data.error || "Errore", "error");
+  } finally {
+    utils.toggleModal("deleteModal" + customId);
+  }
+}
 </script>
 
 <template>
@@ -62,7 +85,14 @@ function reply() {
       <h5 class="font-bold text-lg m-2 w-full">
         {{ DOMPurify.sanitize(username) }}
       </h5>
-      <p class="m-2">
+      <p
+        class="m-2"
+        style="
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          white-space: pre-wrap;
+        "
+      >
         <a class="link text-info-800" v-if="userReply"
           >@{{ userReply.username }}</a
         >
@@ -122,6 +152,8 @@ function reply() {
         </button>
         <button
           class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg ml-2"
+          v-if="showDelBtn || isProjectOwner"
+          @click="utils.toggleModal('deleteModal' + customId)"
         >
           <div class="flex items-center m-1">
             <svg
@@ -183,6 +215,38 @@ function reply() {
           <button class="btn solid bw flex-1">Annulla</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div>
+    <label
+      class="modal-overlay"
+      @click="utils.toggleModal('deleteModal' + customId)"
+    ></label>
+    <div class="modal flex flex-col gap-5" :id="'deleteModal' + customId">
+      <button
+        class="absolute right-4 top-3"
+        @click="utils.toggleModal('deleteModal' + customId)"
+      >
+        ✕
+      </button>
+      <h2 class="text-xl">Elimina commento</h2>
+      <span>Sei sicuro? Questa azione non potrà essere annullata</span>
+      <div class="flex gap-3">
+        <button
+          class="btn solid danger flex-1"
+          @click="deleteComment()"
+          :id="'delBtn' + customId"
+        >
+          Elimina
+        </button>
+        <button
+          class="btn solid bw flex-1"
+          @click="utils.toggleModal('deleteModal' + customId)"
+        >
+          Annulla
+        </button>
+      </div>
     </div>
   </div>
 </template>

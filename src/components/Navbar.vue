@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function logout() {
   localStorage.removeItem("token");
+  localStorage.removeItem("userData");
   window.location.reload();
 }
 </script>
