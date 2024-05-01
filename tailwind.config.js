@@ -5,6 +5,7 @@ import utils from "./src/helpers/utils";
 module.exports = {
   content: ["./src/**/*.{vue,js,ts,jsx,tsx}"],
   plugins: [
+    require("@tailwindcss/typography"),
     require("@sira-ui/tailwind")({
       themes: [
         {

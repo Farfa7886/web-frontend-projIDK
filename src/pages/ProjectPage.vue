@@ -11,12 +11,15 @@ import { useRoute } from "vue-router";
 import { useLikesStore } from "../stores/ProjectPageStore"; // It's my first time using stores lol
 import { reactive } from "vue";
 import { eventBus } from "../event-bus";
+import { marked } from "marked";
+import DOMPurify from "isomorphic-dompurify";
 
 const store = useLikesStore();
 const route = useRoute();
 let currentPage = 1;
 let maxPages = 1;
 const isLogged = localStorage.getItem("token") ? true : false;
+let likesCounter = 0;
 
 interface ProjectInfo {
   name: string;
@@ -32,6 +35,8 @@ interface ProjectInfo {
   forked: boolean;
   public: boolean;
   embedUrl: string;
+  liked: boolean;
+  likes: number;
 }
 let projectInfo: ProjectInfo;
 
@@ -55,8 +60,18 @@ let comments: Comment[] = reactive([]);
 function like() {
   if (!store.liked) {
     store.like();
+    axios.post(
+      `/like/${route.params.projectId}`,
+      {},
+      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+    );
   } else {
     store.unlike();
+    axios.post(
+      `/unlike/${route.params.projectId}`,
+      {},
+      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+    );
   }
 }
 
@@ -120,8 +135,15 @@ utils.onLoad(async () => {
   document.getElementById("projectName").innerText = projectInfo.name;
   document.getElementById("projectAuthor").innerText =
     projectInfo.owner.username;
-  if (projectInfo.description != "")
-    document.getElementById("projectDesc").innerText = projectInfo.description;
+  if (projectInfo.description != "" && DOMPurify.isSupported) {
+    const parsedDescription = await marked.parse(projectInfo.description);
+
+    document.getElementById("projectDesc").innerHTML = DOMPurify.sanitize(
+      parsedDescription,
+      { USE_PROFILES: { html: true }, FORBID_TAGS: ["style", "img"] }
+    );
+  }
+
   if (localStorage.getItem("token") && !projectInfo.public)
     projectInfo.embedUrl += `/${localStorage.getItem("token")}`;
 
@@ -138,6 +160,8 @@ utils.onLoad(async () => {
     document.getElementById("updateBTN").classList.remove("hidden");
     document.getElementById("retireBTN").classList.remove("hidden");
   }
+  store.setLikes(projectInfo.likes);
+  store.setLiked(projectInfo.liked);
 
   document.getElementById("mainDiv").classList.remove("hidden");
   document.getElementById("mainDiv").classList.add("flex");
@@ -160,7 +184,7 @@ function reloadIframe() {
 
 function openFullscreen() {
   document.getElementById("project-player").requestFullscreen();
-  reloadIframe();
+  //reloadIframe();
 }
 
 async function publish(action: string) {
@@ -190,17 +214,38 @@ async function publish(action: string) {
 function triggerModify() {
   document.getElementById("projectDesc").classList.add("hidden");
   (document.getElementById("textareaModify") as HTMLInputElement).value =
-    document.getElementById("projectDesc").innerHTML.replaceAll("<br>", "\n");
+    projectInfo.description;
   document.getElementById("textareaModify").classList.remove("hidden");
   (document.getElementById("textareaModify") as HTMLInputElement).focus();
 }
 
 async function modifyDesc() {
-  document.getElementById("projectDesc").innerText = (
+  projectInfo.description = (
     document.getElementById("textareaModify") as HTMLInputElement
   ).value;
+
+  const parsedDescription = await marked.parse(projectInfo.description);
+  document.getElementById("projectDesc").innerHTML = DOMPurify.sanitize(
+    parsedDescription,
+    { USE_PROFILES: { html: true }, FORBID_TAGS: ["style", "img"] }
+  );
   document.getElementById("projectDesc").classList.remove("hidden");
   document.getElementById("textareaModify").classList.add("hidden");
+  axios
+    .post(
+      `/projectInfo/${route.params.projectId}`,
+      { description: projectInfo.description },
+      {
+        headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    )
+    .then(() => {
+      utils.notyf("Descrizione cambiata", "success");
+    })
+    .catch((err) => {
+      console.error(err);
+      utils.notyf(err.response.data.error || "Errore", "error");
+    });
 }
 </script>
 
@@ -266,7 +311,11 @@ async function modifyDesc() {
             class="dark:bg-neutral-900 bg-neutral-300 rounded-xl h-[60px] mt-3 flex items-center"
           >
             <div class="w-full flex items-center">
-              <LikeBtn :count="16" :liked="store.liked" @click="like()" />
+              <LikeBtn
+                :count="likesCounter"
+                :liked="store.liked"
+                @click="like()"
+              />
               <ForkBtn />
               <svg
                 height="35"
@@ -323,12 +372,12 @@ async function modifyDesc() {
         </div>
 
         <div
-          class="dark:bg-neutral-900 bg-neutral-300 rounded-xl lg:w-full w-[90vw] min-h-[433px] hover:cursor-text"
+          class="dark:bg-neutral-900 bg-neutral-300 rounded-xl lg:w-full w-[100vw] min-h-[433px] hover:cursor-text"
           style="height: 100%"
           id="projDescDIV"
         >
-          <p
-            class="m-3 h-full w-full"
+          <article
+            class="m-3 h-full w-full prose lg:prose-xl dark:text-white dark:prose-invert"
             @click="triggerModify()"
             id="projectDesc"
             style="
@@ -336,12 +385,12 @@ async function modifyDesc() {
               overflow-wrap: break-word;
               white-space: pre-wrap;
               overflow-y: auto;
-              max-height: calc((100vh - 70px) / 2);
+              max-height: calc((100vh + 20px) / 2);
               max-width: calc(100vw / 3);
             "
           >
             [Clicca per cambiare la descrizione]
-          </p>
+          </article>
           <textarea
             style="
               height: calc(100% - 0.75rem * 2);

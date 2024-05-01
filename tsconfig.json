@@ -9,7 +9,8 @@
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "typeRoots": ["./typings"],
-    "outFile": "./dist/combined.js"
+    "outFile": "./dist/combined.js",
+    "esModuleInterop": true
   },
   "include": ["./**/*"],
   "exclude": [

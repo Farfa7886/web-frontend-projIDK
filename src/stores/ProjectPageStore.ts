@@ -17,6 +17,9 @@ export const useLikesStore = defineStore("likes", () => {
     liked.value = false;
     likes.value--;
   }
+  function setLiked(newValue: boolean) {
+    liked.value = newValue;
+  }
   function setForks(newValue: number) {
     forks.value = newValue;
   }
@@ -24,5 +27,5 @@ export const useLikesStore = defineStore("likes", () => {
     views.value = newValue;
   }
 
-  return { likes, liked, setLikes, like, unlike, forks };
+  return { likes, liked, setLikes, setLiked, like, unlike, forks };
 });
