@@ -66,13 +66,13 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div style="height: 100%">
     <button
-      class="text-left hover:opacity-80 rounded-lg"
+      class="text-left hover:opacity-80 rounded-lg h-full"
       @click="toggleModal(randId)"
     >
       <div
-        class="overflow-hidden rounded-lg has-shadow w-full dark:bg-neutral-900"
+        class="overflow-hidden rounded-lg has-shadow w-full dark:bg-neutral-900 h-full"
       >
         <img
           :src="thumbnail == '' ? '/no_thumbnail.png' : thumbnail"
@@ -92,7 +92,11 @@ export default {
           <h3 class="text-xl font-semibold">{{ title }}</h3>
           <div class="text-sm">
             <p>
-              {{ description == "" ? "No description" : description }}
+              {{
+                description == ""
+                  ? "No description"
+                  : description.slice(0, 90) + "..."
+              }}
             </p>
             <div
               :class="

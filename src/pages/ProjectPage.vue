@@ -58,20 +58,33 @@ interface Comment {
 let comments: Comment[] = reactive([]);
 
 function like() {
+  if (!localStorage.getItem("token")) return;
   if (!store.liked) {
     store.like();
-    axios.post(
-      `/like/${route.params.projectId}`,
-      {},
-      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
-    );
+    axios
+      .post(
+        `/like/${route.params.projectId}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .catch((err) => {
+        store.unlike;
+      });
   } else {
     store.unlike();
-    axios.post(
-      `/unlike/${route.params.projectId}`,
-      {},
-      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
-    );
+    axios
+      .post(
+        `/unlike/${route.params.projectId}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .catch((err) => {
+        store.like();
+      });
   }
 }
 
@@ -83,11 +96,18 @@ async function renderComments(fetchAgain: boolean) {
   document.getElementById("commentsLoader").classList.remove("hidden");
   let includeToken =
     JSON.parse(localStorage.getItem("userData"))?.id == projectInfo.owner._id
-      ? `/${localStorage.getItem("token")}`
-      : "";
+      ? true
+      : false;
   if (fetchAgain) {
     const response = await axios.get(
-      `/comments/${route.params.projectId}${includeToken}`
+      `/comments/${route.params.projectId}`,
+      includeToken
+        ? {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        : {}
     );
     response.data.docs.forEach((doc: Comment) => {
       comments.push(doc);
@@ -212,6 +232,8 @@ async function publish(action: string) {
 }
 
 function triggerModify() {
+  if (projectInfo.owner._id != JSON.parse(localStorage.getItem("userData"))?.id)
+    return;
   document.getElementById("projectDesc").classList.add("hidden");
   (document.getElementById("textareaModify") as HTMLInputElement).value =
     projectInfo.description;
@@ -220,6 +242,13 @@ function triggerModify() {
 }
 
 async function modifyDesc() {
+  document.getElementById("projectDesc").classList.remove("hidden");
+  document.getElementById("textareaModify").classList.add("hidden");
+  if (
+    (document.getElementById("textareaModify") as HTMLInputElement).value ==
+    projectInfo.description
+  )
+    return;
   projectInfo.description = (
     document.getElementById("textareaModify") as HTMLInputElement
   ).value;
@@ -229,8 +258,6 @@ async function modifyDesc() {
     parsedDescription,
     { USE_PROFILES: { html: true }, FORBID_TAGS: ["style", "img"] }
   );
-  document.getElementById("projectDesc").classList.remove("hidden");
-  document.getElementById("textareaModify").classList.add("hidden");
   axios
     .post(
       `/projectInfo/${route.params.projectId}`,
@@ -396,8 +423,10 @@ async function modifyDesc() {
               height: calc(100% - 0.75rem * 2);
               width: calc(100% - 0.75rem * 2);
               background: transparent;
+              border: none;
+              outline: none;
             "
-            class="w-full resize-none rounded-xl m-3 hidden input"
+            class="w-full resize-none rounded-xl m-3 hidden"
             id="textareaModify"
             @blur="modifyDesc()"
           >
