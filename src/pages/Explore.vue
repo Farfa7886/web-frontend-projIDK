@@ -28,7 +28,7 @@ utils.onLoad(async () => {
     </div>
   </div>
   <div
-    class="grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-10 xl:w-full w-[calc(100%-2.5rem)] hidden"
+    class="grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 xl:w-full w-[calc(100%-2.5rem)] hidden"
     id="mainDIV"
   >
     <Card

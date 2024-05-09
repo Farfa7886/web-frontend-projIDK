@@ -20,7 +20,7 @@ function updateInputCounter() {
 
 function sendComment() {
   event.preventDefault();
-  const textarea = document.querySelector("textarea");
+  const textarea = document.getElementById("inputArea");
   document.getElementById("send-btn").classList.add("is-loading");
   document.getElementById("send-btn").innerHTML = "<p>Invia</p>";
   axios
@@ -50,6 +50,7 @@ function sendComment() {
     <div class="ml-3" style="max-width: 500px; width: 100%">
       <form @submit="sendComment()">
         <textarea
+          id="inputArea"
           class="input bw w-full"
           style="min-height: 100px; max-height: 200px"
           @input="updateInputCounter()"

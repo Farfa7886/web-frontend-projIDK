@@ -37,6 +37,7 @@ interface ProjectInfo {
   embedUrl: string;
   liked: boolean;
   likes: number;
+  thumbnail: string;
 }
 let projectInfo: ProjectInfo;
 
@@ -167,8 +168,6 @@ utils.onLoad(async () => {
   if (localStorage.getItem("token") && !projectInfo.public)
     projectInfo.embedUrl += `/${localStorage.getItem("token")}`;
 
-  (document.getElementById("project-player") as HTMLIFrameElement).src =
-    projectInfo.embedUrl;
   if (
     !projectInfo.public &&
     projectInfo.owner._id === JSON.parse(localStorage.getItem("userData"))?.id
@@ -179,7 +178,11 @@ utils.onLoad(async () => {
   ) {
     document.getElementById("updateBTN").classList.remove("hidden");
     document.getElementById("retireBTN").classList.remove("hidden");
+    document.getElementById("set-thumbnail-btn").classList.remove("hidden");
   }
+  if (projectInfo.thumbnail != null && projectInfo.thumbnail != "")
+    (document.getElementById("thumbnailIMG") as HTMLImageElement).src =
+      projectInfo.thumbnail;
   store.setLikes(projectInfo.likes);
   store.setLiked(projectInfo.liked);
 
@@ -189,6 +192,13 @@ utils.onLoad(async () => {
 
   await renderComments(true);
 });
+
+function loadProject() {
+  document.getElementById("cover").classList.add("hidden");
+  document.getElementById("project-player").classList.remove("hidden");
+  (document.getElementById("project-player") as HTMLIFrameElement).src =
+    projectInfo.embedUrl;
+}
 
 eventBus.addEventListener("rerenderComments", async () => {
   renderComments(true);
@@ -203,7 +213,7 @@ function reloadIframe() {
 }
 
 function openFullscreen() {
-  document.getElementById("project-player").requestFullscreen();
+  document.getElementById("playerDIV").requestFullscreen();
   //reloadIframe();
 }
 
@@ -274,6 +284,71 @@ async function modifyDesc() {
       utils.notyf(err.response.data.error || "Errore", "error");
     });
 }
+
+function setThumbnail() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/jpeg, image/png, image/webp"; // Accept non-animated image files
+
+  input.onchange = () => {
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const base64Image = e.target.result;
+      if (
+        !input.value.endsWith("jpeg") &&
+        !input.value.endsWith("png") &&
+        !input.value.endsWith("webp") &&
+        !input.value.endsWith("jpg")
+      ) {
+        return utils.notyf("Formato non supportato", "error");
+      }
+      input.remove();
+      document.getElementById("set-thumbnail-btn").classList.add("is-loading");
+      let extension;
+      if (input.value.split(".")[input.value.split(".").length - 1] == "jpg")
+        extension = "jpeg";
+      else
+        extension = input.value.split(".")[input.value.split(".").length - 1];
+      axios
+        .post(
+          `/thumbnail/${route.params.projectId}`,
+          {
+            image:
+              typeof base64Image === "string"
+                ? base64Image.replace(`data:image/${extension};base64,`, "")
+                : base64Image,
+          },
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then(() => {
+          utils.notyf("Thumbnail cambiata", "success");
+        })
+        .catch((err) => {
+          console.error(err);
+          if (String(err) == "AxiosError: Network Error") {
+            utils.notyf("Immagine troppo grande", "error");
+          } else {
+            utils.notyf(err.response?.data?.error || "Errore", "error");
+          }
+        })
+        .finally(() => {
+          document
+            .getElementById("set-thumbnail-btn")
+            .classList.remove("is-loading");
+        });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  input.click();
+}
 </script>
 
 <template>
@@ -290,50 +365,100 @@ async function modifyDesc() {
       <div
         class="dark:bg-neutral-900 bg-neutral-300 h-[60px] w-full rounded-xl flex items-center"
       >
-        <img
-          class="ml-3"
-          src="/no-icon.png"
-          style="object-fit: cover; height: 35px; width: 35px"
-        />
-        <div class="ml-2 w-full">
-          <h2 class="font-bold text-xl" id="projectName">Project name</h2>
-          <p id="projectAuthor">Author</p>
+        <div class="flex items-center">
+          <img
+            class="ml-3"
+            src="/no-icon.png"
+            style="object-fit: cover; height: 35px; width: 35px"
+          />
+          <div class="ml-2">
+            <h2 class="font-bold text-xl" id="projectName">Project name</h2>
+            <p id="projectAuthor">Author</p>
+          </div>
         </div>
-        <button
-          class="btn solid info mr-3 hidden"
-          id="publishBTN"
-          @click="publish('publish')"
+
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: right;
+            width: 100%;
+          "
         >
-          Pubblica
-        </button>
-        <button
-          class="btn solid danger mr-3 hidden"
-          id="retireBTN"
-          @click="publish('unpublish')"
-        >
-          Ritira
-        </button>
-        <button
-          class="btn solid warn mr-3 hidden"
-          id="updateBTN"
-          @click="publish('publish')"
-        >
-          Aggiorna
-        </button>
+          <button
+            class="btn solid info mr-3 hidden"
+            id="publishBTN"
+            @click="publish('publish')"
+          >
+            Pubblica
+          </button>
+          <button
+            class="btn solid info mr-3 hidden"
+            @click="setThumbnail()"
+            id="set-thumbnail-btn"
+          >
+            Imposta thumbnail
+          </button>
+          <button
+            class="btn solid danger mr-3 hidden"
+            id="retireBTN"
+            @click="publish('unpublish')"
+          >
+            Ritira
+          </button>
+          <button
+            class="btn solid warn mr-3 hidden"
+            id="updateBTN"
+            @click="publish('publish')"
+          >
+            Aggiorna
+          </button>
+        </div>
       </div>
       <div class="grid lg:grid-cols-2 grid-cols-1 gap-6 mt-3">
         <div>
           <div
-            class="rounded-xl lg:w-[calc(100vw_/_3)] h-[calc((100vh_-_70px)_/_2)] w-[100vw] min-h-[433px]"
+            class="relative rounded-xl lg:w-[calc(100vw_/_3)] h-[calc((100vh_-_70px)_/_2)] w-[100vw] min-h-[433px]"
             id="playerDIV"
           >
+            <div class="relative w-full h-full" id="cover">
+              <img
+                src="/no_thumbnail.png"
+                class="w-full h-full opacity-40 object-cover"
+                id="thumbnailIMG"
+              />
+              <button class="w-full h-full" @click="loadProject()">
+                <div
+                  class="absolute top-0 left-0 rounded-full w-full h-full flex justify-center items-center"
+                >
+                  <div
+                    class="bg-black rounded-full opacity-75 flex justify-center items-center"
+                    style="height: 100px; width: 100px"
+                  >
+                    <svg
+                      width="50"
+                      height="50"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      class="ml-1"
+                    >
+                      <path
+                        d="M18.54 9 8.88 3.46a3.42 3.42 0 0 0-5.13 3v11.12A3.42 3.42 0 0 0 7.17 21a3.43 3.43 0 0 0 1.71-.46L18.54 15a3.42 3.42 0 0 0 0-5.92Zm-1 4.19-9.66 5.62a1.44 1.44 0 0 1-1.42 0 1.42 1.42 0 0 1-.71-1.23V6.42a1.42 1.42 0 0 1 .71-1.23A1.5 1.5 0 0 1 7.17 5a1.54 1.54 0 0 1 .71.19l9.66 5.58a1.42 1.42 0 0 1 0 2.46Z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </button>
+            </div>
             <iframe
-              class="w-full h-full rounded-xl"
+              class="w-full h-full rounded-xl hidden"
               src="/loading.html"
               id="project-player"
               sandbox="allow-scripts"
             />
           </div>
+
           <div
             class="dark:bg-neutral-900 bg-neutral-300 rounded-xl h-[60px] mt-3 flex items-center"
           >
