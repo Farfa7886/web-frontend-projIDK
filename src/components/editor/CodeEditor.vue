@@ -28,6 +28,7 @@ add([
 ]);`;
 
 async function loadData() {
+  utils.toggleModal("modal-loading");
   const response = (
     await axios.get(`/project/${route.params.projectId}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -38,6 +39,8 @@ async function loadData() {
   projectData = response;
   editor.setValue(projectData.data.code);
   document.getElementById("projName").innerText = projectData.name;
+  document.getElementById("projNameModify").value = projectData.name;
+  utils.toggleModal("modal-loading");
 }
 
 function log(text, type) {
@@ -240,6 +243,19 @@ document.addEventListener("keydown", (event) => {
           style="overflow-y: auto; height: calc(45vh)"
         ></div>
       </div>
+    </div>
+  </div>
+
+  <div>
+    <label class="modal-overlay"></label>
+    <div class="modal gap-5 lg:w-80 w-full" id="modal-loading">
+      <div class="flex w-full justify-center">
+        <div class="loader bw">
+          <div class="bar-bounce" />
+        </div>
+      </div>
+
+      <p style="text-align: center; width: 100%">Caricamento</p>
     </div>
   </div>
 </template>

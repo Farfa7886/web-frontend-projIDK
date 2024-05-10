@@ -63,8 +63,9 @@ function create() {
         <div id="premade" class="none">
           <CreateBtn
             img="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Blue_question_mark_icon.svg/2048px-Blue_question_mark_icon.svg.png"
-            text="Quiz"
-            :disabled="true"
+            text="Slideshow"
+            subtitle="Slideshows interattive"
+            @click="step2('slideshow')"
           />
           <CreateBtn
             img="/iframe.png"

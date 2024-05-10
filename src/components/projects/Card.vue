@@ -46,6 +46,13 @@ function deleteProject() {
       notyf.error(err.response.data.error);
     });
 }
+
+function badgeColor(badge) {
+  console.log(badge == "slideshow");
+  if (badge === "blocks") return "danger";
+  else if (badge === "code") return "info";
+  else if (badge === "slideshow") return "success";
+}
 </script>
 <script>
 export default {
@@ -98,11 +105,7 @@ export default {
                   : description.slice(0, 90) + "..."
               }}
             </p>
-            <div
-              :class="
-                'badge solid mt-2 ' + (type == 'code' ? 'info' : 'danger')
-              "
-            >
+            <div :class="'badge solid mt-2 ' + badgeColor(type)">
               {{ type.charAt(0).toUpperCase() + type.slice(1) }}
             </div>
             <div

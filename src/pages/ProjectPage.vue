@@ -422,17 +422,17 @@ function setThumbnail() {
             id="playerDIV"
           >
             <div class="relative w-full h-full" id="cover">
-              <img
-                src="/no_thumbnail.png"
-                class="w-full h-full opacity-40 object-cover"
-                id="thumbnailIMG"
-              />
               <button class="w-full h-full" @click="loadProject()">
+                <img
+                  src="/no_thumbnail.png"
+                  class="w-full h-full opacity-40 object-cover"
+                  id="thumbnailIMG"
+                />
                 <div
                   class="absolute top-0 left-0 rounded-full w-full h-full flex justify-center items-center"
                 >
                   <div
-                    class="bg-black rounded-full opacity-75 flex justify-center items-center"
+                    class="dark:bg-black bg-white rounded-full opacity-75 flex justify-center items-center"
                     style="height: 100px; width: 100px"
                   >
                     <svg

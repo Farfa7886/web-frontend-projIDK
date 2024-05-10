@@ -1,6 +1,10 @@
 <script>
 import { eventBus } from "../event-bus";
+import axios from "axios";
+import utils from "../helpers/utils";
+import { useRoute } from "vue-router";
 
+let prevName = "";
 export default {
   methods: {
     test() {
@@ -10,8 +14,47 @@ export default {
       document.getElementById("saveBtn").classList.add("is-loading");
       eventBus.dispatchEvent(new Event("save"));
     },
+    editName() {
+      prevName = document.getElementById("projName").innerText;
+      document.getElementById("projNameModify").value =
+        document.getElementById("projName").innerText;
+      document.getElementById("projName").classList.add("hidden");
+      document.getElementById("projNameModify").classList.remove("hidden");
+      document.getElementById("projNameModify").focus();
+    },
   },
 };
+</script>
+
+<script setup>
+const route = useRoute();
+function acutallyEditName() {
+  document.getElementById("projName").innerText =
+    document.getElementById("projNameModify").value;
+  document.getElementById("projName").classList.remove("hidden");
+  document.getElementById("projNameModify").classList.add("hidden");
+  if (document.getElementById("projName").innerText == prevName) return;
+  axios
+    .post(
+      `/projectInfo/${route.params.projectId}`,
+      {
+        name: document.getElementById("projName").innerText,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
+    .then(() => {
+      utils.notyf("Nome cambiato", "success");
+      prevName = document.getElementById("projName").innerText;
+    })
+    .catch((err) => {
+      utils.notyf(err.response?.data?.error || "Errore", "error");
+      document.getElementById("projName").innerText = prevName;
+    });
+}
 </script>
 
 <template>
@@ -20,10 +63,22 @@ export default {
     style="align-items: center"
   >
     <div class="flex w-full">
-      <h4 class="font-bold text-xl ml-2 hover:opacity-60" id="projName">
-        [PROJECT NAME]
-      </h4>
-      <div class="w-full flex justify-end mr-2 gap-2">
+      <div class="flex items-center w-full">
+        <h4
+          class="font-bold text-xl ml-2 hover:opacity-60"
+          id="projName"
+          @click="editName()"
+        >
+          [PROJECT NAME]
+        </h4>
+        <input
+          id="projNameModify"
+          class="hidden ml-2"
+          @focusout="acutallyEditName()"
+        />
+      </div>
+
+      <div class="flex justify-end mr-2 gap-2" style="width: 200px">
         <button
           class="btn solid warn compact light sm ml-3"
           @click="test()"

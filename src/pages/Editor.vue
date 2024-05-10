@@ -4,6 +4,7 @@ import utils from "../helpers/utils";
 import NewProject from "../components/editor/NewProject.vue";
 import EditorBlocks from "../components/editor/EditorBlocks.vue";
 import CodeEditor from "../components/editor/CodeEditor.vue";
+import SlideshowEditor from "./slideshowEditor/SlideshowEditor.vue";
 import axios from "axios";
 
 const route = useRoute();
@@ -70,4 +71,5 @@ utils.onLoad(async () => {
   <NewProject v-if="route.params.projectId == 'new' && isLogged" />
   <EditorBlocks v-if="projectType == 'blocks'" :projectData="projectData" />
   <CodeEditor v-if="projectType == 'code'" :projectData="projectData" />
+  <SlideshowEditor v-if="projectType == 'slideshow'" />
 </template>
