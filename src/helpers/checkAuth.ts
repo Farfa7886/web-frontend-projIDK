@@ -18,6 +18,7 @@ const checkAuth = () => {
     .catch((err) => {
       if (err.response.data.success == false) {
         localStorage.removeItem("token");
+        localStorage.removeItem("userData");
         window.location.href = "/";
       }
     });

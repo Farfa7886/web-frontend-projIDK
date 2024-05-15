@@ -365,14 +365,16 @@ function setThumbnail() {
       <div
         class="dark:bg-neutral-900 bg-neutral-300 h-[60px] w-full rounded-xl flex items-center"
       >
-        <div class="flex items-center">
+        <div class="flex items-center w-full">
           <img
             class="ml-3"
             src="/no-icon.png"
             style="object-fit: cover; height: 35px; width: 35px"
           />
-          <div class="ml-2">
-            <h2 class="font-bold text-xl" id="projectName">Project name</h2>
+          <div class="ml-2 w-full">
+            <h2 class="font-bold text-xl w-full" id="projectName">
+              Project name
+            </h2>
             <p id="projectAuthor">Author</p>
           </div>
         </div>

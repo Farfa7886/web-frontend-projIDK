@@ -7,8 +7,8 @@ import Layouts from "./Layouts.vue";
   <button
     style="height: 20%; width: 100%; min-height: 170px"
     @click="utils.toggleModal('modal-new-slide')"
-    class="dark:bg-neutral-900 bg-gray-200 hover:opacity-60 rounded-xl drag-drop"
-    id="droppa"
+    class="dark:bg-neutral-900 bg-gray-200 hover:opacity-60 rounded-xl"
+    id="newSlideBtn"
   >
     <div class="flex w-full justify-center">
       <svg

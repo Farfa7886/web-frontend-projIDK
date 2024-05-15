@@ -75,6 +75,7 @@ function acutallyEditName() {
           id="projNameModify"
           class="hidden ml-2"
           @focusout="acutallyEditName()"
+          autocomplete="off"
         />
       </div>
 
