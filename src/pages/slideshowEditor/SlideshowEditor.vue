@@ -2,7 +2,7 @@
 import CreateSlide from "./components/CreateSlide.vue";
 import SlideshowBtn from "./components/SlideshowBtn.vue";
 import SlideshowSidebar from "./components/SlideshowSidebar.vue";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, nextTick } from "vue";
 import axios from "axios";
 import utils from "../../helpers/utils";
 import { useRoute } from "vue-router";
@@ -21,6 +21,29 @@ let projectSlides = reactive([
   //   layoutType: "info_1",
   // },
 ]); // { layoutUrl: str, slideshowName: str, current: bool }
+const renderComponent = ref(true);
+
+const forceRender = async () => {
+  // Here, we'll remove MyComponent
+  renderComponent.value = false;
+
+  // Then, wait for the change to get flushed to the DOM
+  await nextTick();
+
+  // Add MyComponent back in
+  renderComponent.value = true;
+};
+
+function array_move(arr, old_index, new_index) {
+  if (new_index >= arr.length) {
+    var k = new_index - arr.length + 1;
+    while (k--) {
+      arr.push(undefined);
+    }
+  }
+  arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+  return arr; // for testing
+}
 
 onMounted(async () => {
   const data = (
@@ -50,6 +73,17 @@ eventBus.addEventListener("createSlide", (event) => {
   });
   document.getElementById("select-slide-info-div").classList.add("hidden");
   document.getElementById("slideActionNav").classList.remove("hidden");
+  eventBus.dispatchEvent(
+    new CustomEvent("slideData", {
+      detail: {
+        top: projectSlides.length == 1, // is slide at the top of the list
+        bottom: true, // is slide at the bottom of the list
+        index: projectSlides.length - 1,
+        name: `Slide ${projectSlides.length}`,
+        layoutType: event.detail,
+      },
+    })
+  );
   setTimeout(() => {
     document.getElementById("newSlideBtn").scrollIntoView();
   }, 100);
@@ -69,8 +103,40 @@ eventBus.addEventListener("selectSlide", (event) => {
         bottom: event.detail.index == projectSlides.length - 1, // is slide at the bottom of the list
         index: event.detail.index,
         name: event.detail.name,
-        layoutType: event.detail.layoutType,
+        layoutType: projectSlides[event.detail.index].layoutType,
       },
+    })
+  );
+});
+
+eventBus.addEventListener("moveSlide", (event) => {
+  const currentElement =
+    projectSlides[projectSlides.find((element) => element.current).index];
+  const prevIndex = currentElement.index;
+  if (event.detail == "up") {
+    array_move(projectSlides, prevIndex, prevIndex - 1);
+  } else if (event.detail == "down") {
+    array_move(projectSlides, prevIndex, prevIndex + 1);
+  }
+  projectSlides.forEach((element, index) => {
+    element.index = index;
+  });
+  const newCurrentElement = projectSlides.find((element) => element.current);
+  forceRender();
+  eventBus.dispatchEvent(
+    new CustomEvent("slideData", {
+      detail: {
+        top: newCurrentElement.index == 0, // is slide at the top of the list
+        bottom: newCurrentElement.index == projectSlides.length - 1, // is slide at the bottom of the list
+        index: newCurrentElement.index,
+        name: newCurrentElement.slideshowName,
+        layoutType: newCurrentElement.layoutType,
+      },
+    })
+  );
+  eventBus.dispatchEvent(
+    new CustomEvent("slideScrollView", {
+      detail: newCurrentElement.index,
     })
   );
 });
@@ -81,8 +147,9 @@ eventBus.addEventListener("selectSlide", (event) => {
     class="grid lg:grid-cols-7 grid-cols-1 w-full gap-2 p-2"
     style="height: calc(100vh - 70px)"
   >
-    <div style="overflow-y: auto">
+    <div style="overflow-y: auto" class="rounded-xl">
       <SlideshowBtn
+        v-if="renderComponent"
         v-for="i in projectSlides"
         :layoutUrl="i.layoutUrl"
         :name="i.slideshowName"

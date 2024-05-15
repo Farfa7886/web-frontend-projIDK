@@ -3,6 +3,7 @@ import utils from "../../../helpers/utils";
 import Layouts from "./Layouts.vue";
 import SvgLoader from "../../../components/SvgLoader.vue";
 import { eventBus } from "../../../event-bus";
+import { ref } from "vue";
 
 const props = defineProps({
   selected: Boolean,
@@ -10,6 +11,7 @@ const props = defineProps({
   name: String,
   index: Number,
 });
+const currentBtn = ref(null);
 
 function selectSlide() {
   eventBus.dispatchEvent(
@@ -18,11 +20,18 @@ function selectSlide() {
     })
   );
 }
+
+eventBus.addEventListener("slideScrollView", (event) => {
+  try {
+    if (event.detail == props.index) currentBtn.value.scrollIntoView();
+  } catch (error) {}
+});
 </script>
 
 <template>
   <button
     @click="selectSlide()"
+    ref="currentBtn"
     style="height: 20%; width: 100%; min-height: 170px; margin-bottom: 8px"
     :class="
       'dark:bg-neutral-900 bg-gray-200 rounded-xl ' +

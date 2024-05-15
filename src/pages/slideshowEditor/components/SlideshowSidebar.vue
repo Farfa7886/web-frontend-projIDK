@@ -1,5 +1,36 @@
 <script setup>
+import { ref } from "vue";
 import { eventBus } from "../../../event-bus";
+
+const slideNameInput = ref(null);
+eventBus.addEventListener("slideData", (event) => {
+  console.log(event.detail);
+  slideNameInput.value.value = event.detail.name;
+  document.getElementById("up_btn").disabled = event.detail.top;
+  document.getElementById("down_btn").disabled = event.detail.bottom;
+  if (event.detail.top) {
+    document.getElementById("up_btn").classList.remove("hover:opacity-60");
+    document.getElementById("up_btn").classList.add("opacity-60");
+  } else {
+    document.getElementById("up_btn").classList.add("hover:opacity-60");
+    document.getElementById("up_btn").classList.remove("opacity-60");
+  }
+  if (event.detail.bottom) {
+    document.getElementById("down_btn").classList.remove("hover:opacity-60");
+    document.getElementById("down_btn").classList.add("opacity-60");
+  } else {
+    document.getElementById("down_btn").classList.add("hover:opacity-60");
+    document.getElementById("down_btn").classList.remove("opacity-60");
+  }
+});
+
+function move(direction) {
+  eventBus.dispatchEvent(
+    new CustomEvent("moveSlide", {
+      detail: direction,
+    })
+  );
+}
 </script>
 
 <template>
@@ -10,6 +41,8 @@ import { eventBus } from "../../../event-bus";
           class="mr-2 hover:opacity-60"
           aria-label="Sposta in alto"
           title="Sposta in alto"
+          id="up_btn"
+          @click="move('up')"
         >
           <svg
             width="35"
@@ -28,6 +61,8 @@ import { eventBus } from "../../../event-bus";
           class="hover:opacity-60"
           aria-label="Sposta in baso"
           title="Sposta in baso"
+          id="down_btn"
+          @click="move('down')"
         >
           <svg
             width="35"
@@ -60,5 +95,8 @@ import { eventBus } from "../../../event-bus";
         </svg>
       </button>
     </div>
+    <!-- ... -->
+    <p class="mt-5">Nome slide</p>
+    <input class="input bw" minlength="1" maxlength="24" ref="slideNameInput" />
   </div>
 </template>
