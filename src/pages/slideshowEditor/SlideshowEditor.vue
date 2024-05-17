@@ -63,6 +63,7 @@ function array_move(arr, old_index, new_index) {
 }
 
 onMounted(async () => {
+  utils.toggleModal("load-proj-modal");
   const data = (
     await axios.get(`/project/${route.params.projectId}`, {
       headers: {
@@ -70,7 +71,13 @@ onMounted(async () => {
       },
     })
   ).data.data;
+  projectSlides = data.data.slides;
+  projectSlides.forEach((slide) => {
+    slide.current = false;
+  });
+  utils.toggleModal("load-proj-modal");
   slideshowStore.setData(data);
+  forceRender();
 
   //console.log(data);
   if (data.data) projectData = data.data;
@@ -172,6 +179,40 @@ eventBus.addEventListener("editComponents", (event) => {
     event.detail; // how do I remove the index key in it?
   console.log(projectSlides);
 });
+
+function save() {
+  document.getElementById("save-btn").classList.add("is-loading");
+  axios
+    .post(
+      `/project/${route.params.projectId}`,
+      {
+        slides: projectSlides,
+      },
+      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+    )
+    .then((response) => {
+      utils.notyf("Salvato", "success");
+    })
+    .catch((err) => {
+      console.error(err);
+      utils.notyf(err.response?.data?.error || "Errore", "error");
+    })
+    .finally(() => {
+      document.getElementById("save-btn").classList.remove("is-loading");
+    });
+}
+
+eventBus.addEventListener("delSlide", (event) => {
+  projectSlides.splice(event.detail, 1);
+  projectSlides.forEach((slide, index) => {
+    slide.index = index;
+  });
+  forceRender();
+  currentSlideType = "none";
+  forceRenderPreview();
+  utils.hide("slideActionNav");
+  utils.show("select-slide-info-div");
+});
 </script>
 
 <template>
@@ -184,7 +225,9 @@ eventBus.addEventListener("editComponents", (event) => {
     </div>
     <div class="flex h-full items-center">
       <button class="btn solid sm danger mr-2">Anteprima</button>
-      <button class="btn solid sm info">Salva</button>
+      <button class="btn solid sm info" id="save-btn" @click="save()">
+        Salva
+      </button>
     </div>
   </div>
   <div
@@ -213,4 +256,17 @@ eventBus.addEventListener("editComponents", (event) => {
     </div>
   </div>
   <Elements class="hidden" />
+  <div>
+    <label class="modal-overlay"></label>
+    <div
+      class="modal flex flex-col gap-5 justify-center items-center"
+      style="min-width: 300px"
+      id="load-proj-modal"
+    >
+      <div class="loader bw">
+        <div class="spin" />
+      </div>
+      <p>Caricamento</p>
+    </div>
+  </div>
 </template>

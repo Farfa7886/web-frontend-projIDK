@@ -5,8 +5,10 @@ import { eventBus } from "../../../event-bus";
 import SidebarComponentsEditor from "./SidebarComponentsEditor.vue";
 
 const slideNameInput = ref(null);
+let currentIndex = 0;
 eventBus.addEventListener("slideData", (event) => {
   //console.log(event.detail);
+  currentIndex = event.detail.index;
   slideNameInput.value.value = event.detail.name;
   document.getElementById("up_btn").disabled = event.detail.top;
   document.getElementById("down_btn").disabled = event.detail.bottom;
@@ -32,6 +34,10 @@ function move(direction) {
       detail: direction,
     })
   );
+}
+
+function deleteSlide() {
+  eventBus.dispatchEvent(new CustomEvent("delSlide", { detail: currentIndex }));
 }
 </script>
 
@@ -80,7 +86,11 @@ function move(direction) {
           </svg>
         </button>
       </div>
-      <button aria-label="Elimina slide" title="Elimina slide">
+      <button
+        aria-label="Elimina slide"
+        title="Elimina slide"
+        @click="deleteSlide()"
+      >
         <svg
           width="23"
           height="23"
