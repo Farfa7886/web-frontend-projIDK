@@ -279,9 +279,10 @@ async function modifyDesc() {
     .then(() => {
       utils.notyf("Descrizione cambiata", "success");
     })
-    .catch((err) => {
+    .catch((err: object) => {
       console.error(err);
-      utils.notyf(err.response.data.error || "Errore", "error");
+      //@ts-ignore
+      utils.notyf(err?.response?.data?.error || "Errore", "error");
     });
 }
 
@@ -531,7 +532,7 @@ function setThumbnail() {
           id="projDescDIV"
         >
           <article
-            class="m-3 h-full w-full prose lg:prose-xl dark:text-white dark:prose-invert"
+            class="m-3 h-full w-full prose lg:prose-xl dark:prose-invert"
             @click="triggerModify()"
             id="projectDesc"
             style="

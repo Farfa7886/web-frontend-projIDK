@@ -13,9 +13,5 @@
     "esModuleInterop": true
   },
   "include": ["./**/*"],
-  "exclude": [
-    "./plugins/**/*",
-    "./typings/**/*",
-    "./dist/**/*" // This is what fixed it!
-  ]
+  "exclude": ["./plugins/**/*", "./typings/**/*", "./dist/**/*"]
 }

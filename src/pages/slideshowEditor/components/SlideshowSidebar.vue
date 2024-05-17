@@ -2,9 +2,11 @@
 import { ref } from "vue";
 import { eventBus } from "../../../event-bus";
 
+import SidebarComponentsEditor from "./SidebarComponentsEditor.vue";
+
 const slideNameInput = ref(null);
 eventBus.addEventListener("slideData", (event) => {
-  console.log(event.detail);
+  //console.log(event.detail);
   slideNameInput.value.value = event.detail.name;
   document.getElementById("up_btn").disabled = event.detail.top;
   document.getElementById("down_btn").disabled = event.detail.bottom;
@@ -98,5 +100,9 @@ function move(direction) {
     <!-- ... -->
     <p class="mt-5">Nome slide</p>
     <input class="input bw" minlength="1" maxlength="24" ref="slideNameInput" />
+    <div class="divider" />
+    <div class="h-full w-full" style="overflow-y: auto">
+      <SidebarComponentsEditor />
+    </div>
   </div>
 </template>
