@@ -76,14 +76,18 @@ async function deleteComment() {
 
 <template>
   <div class="flex mt-4">
-    <img src="/no-icon.png" style="height: 50px; width: 50px" />
+    <a :href="`/profile/${userId}`"
+      ><img src="/no-icon.png" style="height: 50px; width: 50px"
+    /></a>
     <div
       class="ml-3 rounded-b-xl rounded-tr-xl dark:bg-neutral-800 bg-neutral-100"
       style="width: 100%; max-width: 500px"
     >
-      <h5 class="font-bold text-lg m-2 w-full">
-        {{ DOMPurify.sanitize(username) }}
-      </h5>
+      <a :href="`/profile/${userId}`"
+        ><h5 class="font-bold text-lg m-2 w-full">
+          {{ DOMPurify.sanitize(username) }}
+        </h5></a
+      >
       <div class="w-full" style="max-height: 200px; overflow-y: auto">
         <p
           class="m-2"

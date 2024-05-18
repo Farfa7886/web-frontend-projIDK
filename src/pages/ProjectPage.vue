@@ -3,13 +3,14 @@ import LikeBtn from "../components/ProjectPage/LikeBtn.vue";
 import ForkBtn from "../components/ProjectPage/ForkBtn.vue";
 import CommentBoxInput from "../components/ProjectPage/CommentBoxInput.vue";
 import CommentsRenderer from "../components/ProjectPage/CommentsRenderer.vue";
+import SlideshowRenderer from "../components/slideshowRenders/ProductionRenderer.vue";
 
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
 import utils from "../helpers/utils";
 import { useRoute } from "vue-router";
 import { useLikesStore } from "../stores/ProjectPageStore"; // It's my first time using stores lol
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { eventBus } from "../event-bus";
 import { marked } from "marked";
 import DOMPurify from "isomorphic-dompurify";
@@ -20,6 +21,9 @@ let currentPage = 1;
 let maxPages = 1;
 const isLogged = localStorage.getItem("token") ? true : false;
 let likesCounter = 0;
+
+// for slideshows
+let renderRenderer = ref(false);
 
 interface ProjectInfo {
   name: string;
@@ -38,6 +42,7 @@ interface ProjectInfo {
   liked: boolean;
   likes: number;
   thumbnail: string;
+  slides: Array<any>;
 }
 let projectInfo: ProjectInfo;
 
@@ -156,8 +161,12 @@ utils.onLoad(async () => {
   document.getElementById("projectName").innerText = projectInfo.name;
   document.getElementById("projectAuthor").innerText =
     projectInfo.owner.username;
+  if (projectInfo.type == "slideshow")
+    document.getElementById("proj-reload").classList.add("hidden");
+
   if (projectInfo.description != "" && DOMPurify.isSupported) {
     const parsedDescription = await marked.parse(projectInfo.description);
+    console.log(parsedDescription);
 
     document.getElementById("projectDesc").innerHTML = DOMPurify.sanitize(
       parsedDescription,
@@ -189,15 +198,21 @@ utils.onLoad(async () => {
   document.getElementById("mainDiv").classList.remove("hidden");
   document.getElementById("mainDiv").classList.add("flex");
   document.getElementById("loader").classList.add("hidden");
+  console.log(projectInfo);
 
   await renderComments(true);
 });
 
 function loadProject() {
-  document.getElementById("cover").classList.add("hidden");
-  document.getElementById("project-player").classList.remove("hidden");
-  (document.getElementById("project-player") as HTMLIFrameElement).src =
-    projectInfo.embedUrl;
+  if (projectInfo.type == "code") {
+    (document.getElementById("project-player") as HTMLIFrameElement).src =
+      projectInfo.embedUrl;
+    document.getElementById("cover").classList.add("hidden");
+    document.getElementById("project-player").classList.remove("hidden");
+  } else if (projectInfo.type == "slideshow") {
+    renderRenderer.value = true;
+    document.getElementById("cover").classList.add("hidden");
+  }
 }
 
 eventBus.addEventListener("rerenderComments", async () => {
@@ -355,16 +370,19 @@ function setThumbnail() {
 <template>
   <div
     id="loader"
-    class="w-full h-[calc(100vh-70px)] flex justify-center items-center"
+    class="w-full h-[calc(100vh-70px)] flex justify-center items-center dark:bg-neutral-800"
   >
     <div class="loader bw">
       <div class="bar-bounce" />
     </div>
   </div>
-  <div id="mainDiv" class="w-full h-full justify-center mt-3 hidden">
+  <div
+    id="mainDiv"
+    class="w-full min-h-[calc(100vh-70px)] justify-center mt-3 hidden dark:bg-neutral-800"
+  >
     <div>
       <div
-        class="dark:bg-neutral-900 bg-neutral-300 h-[60px] w-full rounded-xl flex items-center"
+        class="dark:bg-neutral-900 bg-neutral-200 h-[60px] w-full rounded-xl flex items-center"
       >
         <div class="flex items-center w-full">
           <img
@@ -460,10 +478,15 @@ function setThumbnail() {
               id="project-player"
               sandbox="allow-scripts"
             />
+            <SlideshowRenderer
+              class="rounded-xl w-full h-full"
+              v-if="renderRenderer"
+              :slides="projectInfo.slides"
+            />
           </div>
 
           <div
-            class="dark:bg-neutral-900 bg-neutral-300 rounded-xl h-[60px] mt-3 flex items-center"
+            class="dark:bg-neutral-900 bg-neutral-200 rounded-xl h-[60px] mt-3 flex items-center"
           >
             <div class="w-full flex items-center">
               <LikeBtn
@@ -493,7 +516,11 @@ function setThumbnail() {
               </p>
             </div>
             <div class="mr-3 flex items-center">
-              <button class="hover:opacity-30" @click="reloadIframe()">
+              <button
+                class="hover:opacity-30"
+                @click="reloadIframe()"
+                id="proj-reload"
+              >
                 <svg
                   width="35"
                   height="35"
@@ -527,12 +554,12 @@ function setThumbnail() {
         </div>
 
         <div
-          class="dark:bg-neutral-900 bg-neutral-300 rounded-xl lg:w-full w-[100vw] min-h-[433px] hover:cursor-text"
+          class="dark:bg-neutral-900 bg-neutral-200 rounded-xl lg:w-full w-[100vw] min-h-[433px] hover:cursor-text"
           style="height: 100%"
           id="projDescDIV"
         >
           <article
-            class="m-3 h-full w-full prose lg:prose-xl dark:prose-invert"
+            class="m-3 h-full w-full prose dark:prose-invert"
             @click="triggerModify()"
             id="projectDesc"
             style="
@@ -562,7 +589,7 @@ function setThumbnail() {
           >
         </div>
         <div
-          class="lg:col-span-2 rounded-xl dark:bg-neutral-900 bg-neutral-300 mb-5"
+          class="lg:col-span-2 rounded-xl dark:bg-neutral-900 bg-neutral-200 mb-5"
         >
           <h3 class="text-3xl text-center font-bold mt-5">Commenti</h3>
           <div id="commentsLoader" class="m-5 mt-10 flex w-full justify-center">

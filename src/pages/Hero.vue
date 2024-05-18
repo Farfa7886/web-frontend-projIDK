@@ -1,7 +1,7 @@
 <script setup></script>
 <template>
   <!-- component -->
-  <section class="pt-24">
+  <section class="pt-24 dark:bg-neutral-800">
     <div class="px-12 mx-auto max-w-7xl">
       <div class="w-full mx-auto text-left md:w-11/12 xl:w-9/12 md:text-center">
         <h1

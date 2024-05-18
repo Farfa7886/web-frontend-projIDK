@@ -102,8 +102,8 @@ function setToStrictStringLowercase(text, noNumbers, noSpecialChars) {
 
 function getCurrentTheme(strict) {
   if (
-    localStorage.getItem("theme") == null ||
-    localStorage.getItem("theme") == "system"
+    localStorage.getItem("color-theme") == null ||
+    localStorage.getItem("color-theme") == "system"
   ) {
     if (strict) {
       const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -115,9 +115,9 @@ function getCurrentTheme(strict) {
     } else {
       return "system";
     }
-  } else if (localStorage.getItem("theme") == "dark") {
+  } else if (localStorage.getItem("color-theme") == "dark") {
     return "dark";
-  } else if (localStorage.getItem("theme") == "light") {
+  } else if (localStorage.getItem("color-theme") == "light") {
     return "light";
   }
 }

@@ -8,6 +8,7 @@ import templates from "../../helpers/templates";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import { Notyf } from "notyf";
+import { onMounted } from "vue";
 
 const route = useRoute();
 let iframeView;
@@ -63,7 +64,7 @@ function clearConsole() {
   document.getElementById("logsDiv").innerHTML = "";
 }
 
-utils.onLoad(async () => {
+onMounted(async () => {
   if (route.query.engine == "pixi7")
     document.getElementById("previewIframe").src = "/pixiCodeView.html";
   iframeView = document.getElementById("previewIframe");
@@ -72,10 +73,12 @@ utils.onLoad(async () => {
     language: "javascript",
     theme: utils.getCurrentTheme(true) == "dark" ? "vs-dark" : "vs-light",
   });
-  editor.layout({
-    width: document.getElementById("editorDIV").offsetWidth,
-    height: document.getElementById("editorDIV").offsetHeight,
-  });
+  setTimeout(() => {
+    editor.layout({
+      width: document.getElementById("editorDIV").offsetWidth,
+      height: document.getElementById("editorDIV").offsetHeight,
+    });
+  }, 20);
 
   iframeView.addEventListener("load", function () {
     var iframeDocument =
@@ -140,10 +143,10 @@ utils.onLoad(async () => {
 });
 
 addEventListener("resize", (event) => {
-  editor.layout({
-    width: 100,
-    height: 100,
-  });
+  // editor.layout({
+  //   width: 100,
+  //   height: 100,
+  // });
   editor.layout({
     width: document.getElementById("editorDIV").offsetWidth,
     height: document.getElementById("editorDIV").offsetHeight,

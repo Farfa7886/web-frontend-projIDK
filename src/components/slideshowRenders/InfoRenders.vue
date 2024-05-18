@@ -6,6 +6,10 @@ import { marked } from "marked";
 
 const props = defineProps({
   type: String,
+  usePadding: {
+    type: Boolean,
+    default: true,
+  },
   elements: {
     type: Object,
     default: {}, // { key: HTML }
@@ -13,10 +17,15 @@ const props = defineProps({
 });
 
 eventBus.addEventListener("updateSlidePreview", (event) => {
-  //console.log(event.detail);
-  document.getElementById(
-    event.detail.type + "_" + event.detail.elementNum
-  ).style.overflowY = "auto";
+  //console.log("updateSlidePreview", event.detail);
+  if (
+    document
+      .getElementById(event.detail.type + "_" + event.detail.elementNum)
+      .innerHTML.includes("img")
+  )
+    document
+      .getElementById(event.detail.type + "_" + event.detail.elementNum)
+      .style.removeProperty("overflow-y");
   if (event.detail.elemType == "text")
     document.getElementById(
       event.detail.type + "_" + event.detail.elementNum
@@ -39,6 +48,14 @@ eventBus.addEventListener("updateSlidePreview", (event) => {
       event.detail.type + "_" + event.detail.elementNum
     ).style.overflowY = "hidden";
   }
+  document.querySelectorAll(".slideshowContent").forEach(function (element) {
+    const imgElements = element.getElementsByTagName("img");
+    if (imgElements.length === 0) {
+      element.classList.add("no-img");
+    } else {
+      element.classList.remove("no-img");
+    }
+  });
 });
 
 onMounted(() => {
@@ -47,11 +64,15 @@ onMounted(() => {
     document.getElementById("selectSlide_renderer").classList.add("flex");
     return;
   }
+  //console.log(props.type);
   document.getElementById(props.type + "_container").classList.remove("hidden");
   Object.keys(props.elements).forEach((key) => {
     document.getElementById(props.type + "_" + key).innerHTML =
       props.elements[key];
   });
+  if (!props.usePadding) {
+    document.getElementById(props.type + "_container").classList.remove("p-2");
+  }
 });
 </script>
 
@@ -111,10 +132,7 @@ onMounted(() => {
     </div>
   </div>
   <div id="info_4_container" class="w-full h-full rounded-xl p-2 hidden">
-    <div
-      class="slideshowBG w-full h-[80px] mb-2 slideshowContent"
-      id="info_4_1"
-    ></div>
+    <div id="info_4_1" class="slideshowBG slideshowContent"></div>
     <div
       class="slideshowBG w-full h-[calc(100%-80px-0.5rem)] slideshowContent"
       id="info_4_2"
@@ -129,13 +147,20 @@ onMounted(() => {
   <div class="hidden prose lg:prose-xl dark:prose-invert rounded-xl"></div>
 </template>
 
-<style scoped>
+<style>
 .slideshowBG {
   /* @apply bg-neutral-700; */
+  /* min-height: 300px; */
 }
-.slideshowContent {
-  @apply prose lg:prose-xl dark:prose-invert rounded-xl;
+.no-img.slideshowContent {
+  @apply prose dark:prose-invert rounded-xl;
   max-width: 100%;
   overflow-y: auto;
+}
+
+.slideshowIMG {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

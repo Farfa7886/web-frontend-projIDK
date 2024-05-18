@@ -1,5 +1,6 @@
 <script setup>
 import { useRoute } from "vue-router";
+import { onMounted } from "vue";
 import utils from "../helpers/utils";
 import NewProject from "../components/editor/NewProject.vue";
 import EditorBlocks from "../components/editor/EditorBlocks.vue";
@@ -12,7 +13,7 @@ let projectType = route.query.type;
 let projectData = {};
 
 const isLogged = localStorage.getItem("token") != null;
-utils.onLoad(async () => {
+onMounted(async () => {
   if (localStorage.getItem("token") === null) utils.toggleModal("modal-login");
   else if (route.params.projectId == "new") utils.toggleModal("modal-create");
   else if (!route.query.type) {
@@ -34,7 +35,7 @@ utils.onLoad(async () => {
 <template>
   <div
     id="loading"
-    class="hidden w-full justify-center items-center"
+    class="hidden w-full justify-center items-center dark:bg-neutral-800"
     style="height: calc(100vh - 70px)"
   >
     <div class="loader bw xl info">
@@ -43,7 +44,7 @@ utils.onLoad(async () => {
   </div>
   <!-- LOGIN MODAL -->
   <div
-    class="modal flex flex-col gap-5"
+    class="modal flex flex-col gap-5 dark:bg-neutral-800"
     style="min-width: 250px"
     id="modal-login"
   >
@@ -60,7 +61,7 @@ utils.onLoad(async () => {
   </div>
   <!-- END LOGIN MODAL -->
   <div
-    class="flex w-full justify-center items-center"
+    class="flex w-full justify-center items-center dark:bg-neutral-800"
     style="height: calc(100vh - 70px)"
     id="loader"
   >

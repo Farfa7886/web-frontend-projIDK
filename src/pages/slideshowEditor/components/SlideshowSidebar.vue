@@ -1,15 +1,18 @@
 <script setup>
 import { ref } from "vue";
 import { eventBus } from "../../../event-bus";
+import utils from "../../../helpers/utils";
 
 import SidebarComponentsEditor from "./SidebarComponentsEditor.vue";
 
 const slideNameInput = ref(null);
+let prevSlideName = "";
 let currentIndex = 0;
 eventBus.addEventListener("slideData", (event) => {
   //console.log(event.detail);
   currentIndex = event.detail.index;
   slideNameInput.value.value = event.detail.name;
+  prevSlideName = slideNameInput.value.value;
   document.getElementById("up_btn").disabled = event.detail.top;
   document.getElementById("down_btn").disabled = event.detail.bottom;
   if (event.detail.top) {
@@ -39,6 +42,21 @@ function move(direction) {
 function deleteSlide() {
   eventBus.dispatchEvent(new CustomEvent("delSlide", { detail: currentIndex }));
 }
+
+function changeSlideName() {
+  eventBus.dispatchEvent(
+    new CustomEvent("changeSlideName", {
+      detail: { index: currentIndex, name: slideNameInput.value.value },
+    })
+  );
+}
+
+eventBus.addEventListener("slideChangeFail", () => {
+  slideNameInput.value.value = prevSlideName;
+});
+eventBus.addEventListener("slideChangeSuccess", () => {
+  prevSlideName = slideNameInput.value.value;
+});
 </script>
 
 <template>
@@ -89,7 +107,7 @@ function deleteSlide() {
       <button
         aria-label="Elimina slide"
         title="Elimina slide"
-        @click="deleteSlide()"
+        @click="utils.toggleModal('modal-delete-slide')"
       >
         <svg
           width="23"
@@ -109,10 +127,55 @@ function deleteSlide() {
     </div>
     <!-- ... -->
     <p class="mt-5">Nome slide</p>
-    <input class="input bw" minlength="1" maxlength="24" ref="slideNameInput" />
+    <input
+      class="input bw"
+      minlength="1"
+      maxlength="24"
+      ref="slideNameInput"
+      @change="changeSlideName()"
+    />
     <div class="divider" />
     <div class="h-full w-full" style="overflow-y: auto">
       <SidebarComponentsEditor />
+    </div>
+  </div>
+
+  <div>
+    <label
+      class="modal-overlay"
+      @click="utils.toggleModal('modal-delete-slide')"
+    ></label>
+
+    <div
+      class="modal flex flex-col gap-5 lg:w-auto w-full"
+      style="max-width: 500px"
+      id="modal-delete-slide"
+    >
+      <button
+        class="absolute right-4 top-3"
+        @click="utils.toggleModal('modal-delete-slide')"
+      >
+        ✕
+      </button>
+      <h2 class="text-xl">Elimina slide</h2>
+      <span>Non potrai annullare questa azione</span>
+      <div class="flex gap-3">
+        <button
+          class="btn solid danger flex-1"
+          @click="
+            deleteSlide();
+            utils.toggleModal('modal-delete-slide');
+          "
+        >
+          Elimina
+        </button>
+        <button
+          class="btn solid bw flex-1"
+          @click="utils.toggleModal('modal-delete-slide')"
+        >
+          Annulla
+        </button>
+      </div>
     </div>
   </div>
 </template>

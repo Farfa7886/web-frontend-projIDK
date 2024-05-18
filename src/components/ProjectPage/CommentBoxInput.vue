@@ -10,7 +10,7 @@ const route = useRoute();
 let username = JSON.parse(localStorage.getItem("userData"))?.username;
 
 function updateInputCounter() {
-  const textarea = document.querySelector("textarea");
+  const textarea = document.querySelector("#inputArea");
   const counter = document.querySelector("#counter");
   counter.innerText = textarea.value.length + "/250";
   if (textarea.value.length >= 1 && !utils.isEmpty(textarea.value))

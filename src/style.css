@@ -31,23 +31,21 @@ div:not([class]):not([style]) {
 }
 
 @media (prefers-color-scheme: dark) {
-  .htmlBG {
+  .htmlBG:is(.dark *) {
     background-color: var(--dark-bg);
   }
-  div:not([class]):not([style]) {
+  div:not([class]):not([style]):is(.dark *) {
     background-color: var(--dark-bg);
     color: white;
   }
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  (p,h1,h2,h3,h4,h5,h6):is(.dark *) {
     color: white;
     @apply opacity-90;
   }
+}
+
+div:not([class]):not([style]):is(.dark *) {
+  @apply dark:bg-neutral-800;
 }
 
 /* Blockly toolbox fix, do not remove */

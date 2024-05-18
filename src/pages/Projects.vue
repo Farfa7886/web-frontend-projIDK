@@ -20,12 +20,14 @@ const forceRerender = async () => {
 checkAuth();
 
 let projectsList = [];
+let sortedList = [];
 
 utils.onLoad(async () => {
   const response = await axios.get("/projects", {
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   });
   projectsList = response.data.data;
+  sortedList = projectsList;
   document.getElementById("loader").classList.add("hidden");
   document.getElementById("content").classList.remove("hidden");
   document.getElementById("content").classList.add("grid");
@@ -39,6 +41,17 @@ utils.onLoad(async () => {
       "calc(100vh - 70px - 0.75rem)";
   }
 });
+
+function sortProjects(filter) {
+  if (filter == "all") sortedList = projectsList;
+  else if (filter == "forked")
+    sortedList = projectsList.filter((project) => project.forked);
+  else if (filter == "public")
+    sortedList = projectsList.filter((project) => project.public);
+  else if (filter == "private")
+    sortedList = projectsList.filter((project) => !project.public);
+  forceRerender();
+}
 </script>
 
 <template>
@@ -51,6 +64,7 @@ utils.onLoad(async () => {
         <button
           style="width: 100%; height: 50px"
           class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2"
+          @click="sortProjects('all')"
         >
           <p class="ml-3 flex items-center">
             <svg
@@ -74,6 +88,7 @@ utils.onLoad(async () => {
           </p>
         </button>
         <button
+          @click="sortProjects('forked')"
           style="width: 100%; height: 50px"
           class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2"
         >
@@ -96,6 +111,7 @@ utils.onLoad(async () => {
         </button>
         <button
           style="width: 100%; height: 50px"
+          @click="sortProjects('public')"
           class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2"
         >
           <p class="ml-3 flex items-center">
@@ -116,6 +132,7 @@ utils.onLoad(async () => {
           </p>
         </button>
         <button
+          @click="sortProjects('private')"
           style="width: 100%; height: 50px"
           class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2"
         >
@@ -153,7 +170,7 @@ utils.onLoad(async () => {
         id="content"
       >
         <Card
-          v-for="i in projectsList"
+          v-for="i in sortedList"
           v-if="renderComponent"
           :title="i.name"
           :description="i.description"
@@ -167,4 +184,5 @@ utils.onLoad(async () => {
       </div>
     </div>
   </div>
+  <div class="border-white border-2 hidden"></div>
 </template>

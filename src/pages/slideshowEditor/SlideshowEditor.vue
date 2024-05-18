@@ -29,6 +29,8 @@ const renderComponent = ref(true);
 const renderComponentPreview = ref(true);
 const slideshowStore = useSlideshowStore();
 let currentSlideType = "none";
+let prevName = "";
+let renderPreview = ref(false);
 
 const forceRender = async () => {
   // Here, we'll remove MyComponent
@@ -71,7 +73,9 @@ onMounted(async () => {
       },
     })
   ).data.data;
-  projectSlides = data.data.slides;
+  prevName = data.name;
+  document.getElementById("projName").innerText = data.name;
+  projectSlides = data?.data?.slides || [];
   projectSlides.forEach((slide) => {
     slide.current = false;
   });
@@ -213,6 +217,73 @@ eventBus.addEventListener("delSlide", (event) => {
   utils.hide("slideActionNav");
   utils.show("select-slide-info-div");
 });
+
+eventBus.addEventListener("changeSlideName", (event) => {
+  // check if the name is already taken
+  if (
+    projectSlides.find(
+      (slide) =>
+        slide.slideshowName == event.detail.name &&
+        slide.index != event.detail.index
+    )
+  ) {
+    utils.notyf("Esiste già una slide con questo nome", "error");
+    eventBus.dispatchEvent(new Event("slideChangeFail"));
+    return;
+  }
+  projectSlides[event.detail.index].slideshowName = event.detail.name;
+  forceRender();
+  eventBus.dispatchEvent(new Event("slideChangeSuccess"));
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.ctrlKey && event.key === "s") {
+    event.preventDefault();
+    save();
+  }
+});
+
+function editname() {
+  prevName = document.getElementById("projName").innerText;
+  document.getElementById("projNameModify").value =
+    document.getElementById("projName").innerText;
+  document.getElementById("projName").classList.add("hidden");
+  document.getElementById("projNameModify").classList.remove("hidden");
+  document.getElementById("projNameModify").focus();
+}
+
+function acutallyEditName() {
+  document.getElementById("projName").innerText =
+    document.getElementById("projNameModify").value;
+  document.getElementById("projName").classList.remove("hidden");
+  document.getElementById("projNameModify").classList.add("hidden");
+  if (document.getElementById("projName").innerText == prevName) return;
+  axios
+    .post(
+      `/projectInfo/${route.params.projectId}`,
+      {
+        name: document.getElementById("projName").innerText,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
+    .then(() => {
+      utils.notyf("Nome cambiato", "success");
+      prevName = document.getElementById("projName").innerText;
+    })
+    .catch((err) => {
+      utils.notyf(err.response?.data?.error || "Errore", "error");
+      document.getElementById("projName").innerText = prevName;
+    });
+}
+
+function doRenderPreview() {
+  renderPreview.value = true;
+  utils.toggleModal("preview-modal");
+}
 </script>
 
 <template>
@@ -220,11 +291,23 @@ eventBus.addEventListener("delSlide", (event) => {
     class="w-[calc(100vw-1rem)] rounded-xl dark:bg-black bg-neutral-200 mt-2 ml-2 flex items-center p-2"
     style="height: 50px"
   >
-    <div class="w-full">
-      <p class="font-bold text-2xl hover:opacity-60 w-50">Ciao</p>
+    <div class="w-full flex">
+      <p
+        class="font-bold text-2xl hover:opacity-60 w-50"
+        id="projName"
+        @click="editname()"
+      ></p>
+      <input
+        id="projNameModify"
+        @focusout="acutallyEditName()"
+        class="hidden"
+        autocomplete="off"
+      />
     </div>
     <div class="flex h-full items-center">
-      <button class="btn solid sm danger mr-2">Anteprima</button>
+      <button class="btn solid sm danger mr-2" @click="doRenderPreview()">
+        Anteprima
+      </button>
       <button class="btn solid sm info" id="save-btn" @click="save()">
         Salva
       </button>
@@ -232,9 +315,9 @@ eventBus.addEventListener("delSlide", (event) => {
   </div>
   <div
     class="grid lg:grid-cols-7 grid-cols-1 w-full gap-2 p-2"
-    style="height: calc(100vh - 70px - 50px - 0.5rem)"
+    style="height: calc(100vh - 70px - 50px - 0.5rem); min-height: 400px"
   >
-    <div style="overflow-y: auto" class="rounded-xl">
+    <div style="overflow-y: auto; min-height: 400px" class="rounded-xl h-full">
       <SlideshowBtn
         v-if="renderComponent"
         v-for="i in projectSlides"
@@ -247,11 +330,12 @@ eventBus.addEventListener("delSlide", (event) => {
     </div>
     <div
       class="bg-neutral-200 dark:bg-neutral-950 lg:col-span-5 lg:h-calc(100vh-70px-1rem) h-full max-h-[900px] rounded-xl dropzone overflow-y-auto"
+      style="min-height: 500px"
     >
       <InfoRenders :type="currentSlideType" v-if="renderComponentPreview" />
     </div>
     <div id="select-slide-info-div" class="hidden">Seleziona una slide</div>
-    <div style="overflow-y: auto" id="slideActionNav">
+    <div style="overflow-y: auto; min-height: 400px" id="slideActionNav">
       <SlideshowSidebar />
     </div>
   </div>
@@ -267,6 +351,25 @@ eventBus.addEventListener("delSlide", (event) => {
         <div class="spin" />
       </div>
       <p>Caricamento</p>
+    </div>
+  </div>
+
+  <div>
+    <label
+      class="modal-overlay"
+      @click="utils.toggleModal('preview-modal')"
+    ></label>
+    <div
+      class="modal flex flex-col gap-5 justify-center items-center"
+      style="width: 100%; height: 100%"
+      id="preview-modal"
+    >
+      <button
+        class="absolute right-4 top-3"
+        @click="utils.toggleModal('preview-modal')"
+      >
+        ✕
+      </button>
     </div>
   </div>
 </template>

@@ -139,10 +139,10 @@ async function handleElemInput(id, num) {
     utils.toggleModal("uploading-img");
     imgURL = (await uploadImg(document.getElementById(id + "_value"))).data;
     utils.toggleModal("uploading-img");
-    finalHTML = `<img src="${imgURL}" class="w-full h-full rounded-xl" style="object-fit: cover" />`;
+    finalHTML = `<img src="${imgURL}" class="rounded-xl slideshowIMG" />`;
   }
   const isImg = document.getElementById(id).value == "image";
-  console.log("fatto", id, num);
+  //console.log("fatto", id, num);
   eventBus.dispatchEvent(
     new CustomEvent("updateSlidePreview", {
       detail: {

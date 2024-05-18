@@ -59,14 +59,27 @@ export default {
   props: ["id", "type"],
   methods: {
     redirectToEditor() {
-      window.location.assign(
+      // window.location.assign(
+      //   `/editor/${this.id}/?type=${this.type}${
+      //     this.engine ? "&engine=" + this.engine : ""
+      //   }`
+      // );
+
+      // this.$router.push(
+      //   `/editor/${this.id}/?type=${this.type}${
+      //     this.engine ? "&engine=" + this.engine : ""
+      //   }`
+      // );
+      window.open(
         `/editor/${this.id}/?type=${this.type}${
           this.engine ? "&engine=" + this.engine : ""
-        }`
+        }`,
+        "_self"
       );
     },
     projectPage() {
-      window.location.assign(`/project/${this.id}`);
+      this.$router.push(`/project/${this.id}`);
+      //window.location.assign(`/project/${this.id}`);
     },
   },
 };
@@ -102,7 +115,8 @@ export default {
               {{
                 description == ""
                   ? "No description"
-                  : description.slice(0, 90) + "..."
+                  : description.slice(0, 90) +
+                    (description.length > 90 ? "..." : "")
               }}
             </p>
             <div :class="'badge solid mt-2 ' + badgeColor(type)">
