@@ -146,6 +146,69 @@ export default {
       var current_glassopacity = 0.5;
       let menu_class = "";
 
+      let currentData = {
+        skinColor: current_skincolor,
+        eyes: "",
+        eyebrows: "",
+        mouth: "",
+        hairstyles: current_hairstyle,
+        haircolor: current_haircolor,
+        facialhair: "",
+        clothes: "",
+        fabriccolor: current_fabriccolors,
+        glasses: "",
+        glassopacity: current_glassopacity,
+        accesories: "",
+        tattoos: "",
+        backgroundcolor: current_backgroundcolors,
+      };
+
+      function load(config) {
+        current_skincolor = config.skinColor;
+        current_hairstyle = config.hairstyle;
+        current_haircolor = config.haircolor;
+        current_fabriccolors = config.fabriccolor;
+        current_backgroundcolors = config.backgroundcolor;
+        current_glassopacity = config.glassopacity;
+        // ----------
+
+        $("#skin #body").attr("fill", "#" + config.skinColor);
+        $("#eyes g").hide();
+        $("#eyes #e_" + config.eyes).show();
+        $("#eyebrows g").hide();
+        $("#eyebrows #eb_" + config.eyebrows).show();
+        $("#mouths g").hide();
+        $("#mouths #m_" + config.mouth).show();
+        $("#hair_front g").hide();
+        $("#hair_back g").hide();
+        $("#hair_front .h_" + config.hairstyle).show();
+        $("#hair_back .h_" + config.hairstyle).show();
+        var color = current_haircolor;
+        color = color.split("_");
+        $("#hair_front .h_" + current_hairstyle + " .tinted").attr(
+          "fill",
+          "#" + color[0]
+        );
+        $("#hair_back .h_" + current_hairstyle + " .tinted").attr(
+          "fill",
+          "#" + color[1]
+        );
+        $("#facialhair g .tinted").attr("fill", "#" + color[2]);
+        $("#facialhair g").hide();
+        $("#facialhair #f_" + config.facialhair).show();
+        $("#clothes g").hide();
+        $("#clothes #c_" + config.clothes).show();
+        $("#glasses g").hide();
+        $("#glasses #g_" + config.glasses).show();
+        $(".glass").attr("fill-opacity", config.glassopacity);
+        $("#clothes g .tinted").attr("fill", "#" + config.fabriccolor);
+        $("#background").attr("fill", "#" + config.backgroundcolor);
+        $("#tattoos g").hide();
+        $("#tattoos #t_" + config.tattoos).show();
+        $("#accesories g").hide();
+        $("#accesories #a_" + config.accesories).show();
+      }
+
       $(document).ready(function () {
         $("body").delegate("#menu_list button", "click", function () {
           var idx = $(this).attr("id");
@@ -155,6 +218,7 @@ export default {
               if ($(this).css("display") == "inline") {
                 id = $(this).attr("id");
                 current_eyes = id.substr(2);
+                currentData.eyes = current_eyes;
               }
             });
             var current_eyebrows;
@@ -162,6 +226,7 @@ export default {
               if ($(this).css("display") == "inline") {
                 id = $(this).attr("id");
                 current_eyebrows = id.substr(3);
+                currentData.eyebrows = current_eyebrows;
               }
             });
             var current_mouth;
@@ -169,6 +234,7 @@ export default {
               if ($(this).css("display") == "inline") {
                 id = $(this).attr("id");
                 current_mouth = id.substr(2);
+                currentData.mouth = current_mouth;
               }
             });
             var current_facialhair = "none";
@@ -176,6 +242,7 @@ export default {
               if ($(this).css("display") == "inline") {
                 id = $(this).attr("id");
                 current_facialhair = id.substr(2);
+                currentData.facialhair = current_facialhair;
               }
             });
             var current_clothe;
@@ -183,6 +250,7 @@ export default {
               if ($(this).css("display") == "inline") {
                 id = $(this).attr("id");
                 current_clothe = id.substr(2);
+                currentData.clothes = current_clothe;
               }
             });
             var current_glasses = "none";
@@ -190,6 +258,7 @@ export default {
               if ($(this).css("display") == "inline") {
                 id = $(this).attr("id");
                 current_glasses = id.substr(2);
+                currentData.glasses = current_glasses;
               }
             });
             var current_tattoos = "none";
@@ -197,6 +266,7 @@ export default {
               if ($(this).css("display") == "inline") {
                 id = $(this).attr("id");
                 current_tattoos = id.substr(2);
+                currentData.tattoos = current_tattoos;
               }
             });
             var current_accesories = "none";
@@ -204,6 +274,7 @@ export default {
               if ($(this).css("display") == "inline") {
                 id = $(this).attr("id");
                 current_accesories = id.substr(2);
+                currentData.accesories = current_accesories;
               }
             });
             var url =

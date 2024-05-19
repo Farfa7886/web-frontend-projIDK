@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import axios from "axios";
 import AvatarMaker from "../components/AvatarMaker.vue";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
-onMounted(() => {});
+const usernameInput = ref(null);
+
+onMounted(() => {
+  usernameInput.value.value = JSON.parse(
+    localStorage.getItem("userData")
+  ).username;
+});
 </script>
 
 <template>
@@ -24,6 +30,7 @@ onMounted(() => {});
               id="Username"
               class="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0"
               placeholder="Username"
+              ref="usernameInput"
             />
 
             <span
