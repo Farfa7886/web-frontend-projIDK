@@ -7,6 +7,7 @@ module.exports = {
   content: ["./src/**/*.{vue,js,ts,jsx,tsx}"],
   plugins: [
     require("@tailwindcss/typography"),
+    require("@tailwindcss/forms"),
     require("@sira-ui/tailwind")({
       themes: [
         {

@@ -10,7 +10,7 @@ import FirstSetup from "./pages/FirstSetup.vue";
 import Projects from "./pages/Projects.vue";
 import ProjectPage from "./pages/ProjectPage.vue";
 import Notifications from "./pages/Notifications.vue";
-import Profile from "./pages/Profile.vue";
+import Settings from "./pages/Settings.vue";
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -28,7 +28,7 @@ export const router = createRouter({
       name: "Project Page",
     },
     { path: "/notifications", component: Notifications, name: "Notifications" },
-    { path: "/profile/:userId", component: Profile, name: "Profile" },
+    { path: "/settings", component: Settings, name: "Settings" },
     { path: "/:pathMatch(.*)*", component: NotFoundPage, name: "Not Found" },
   ],
 });

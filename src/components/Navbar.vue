@@ -287,9 +287,9 @@ onMounted(() => {
               >
                 <li>
                   <RouterLink
-                    to="/profile"
+                    to="/settings"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >Profilo</RouterLink
+                    >Impostazioni</RouterLink
                   >
                 </li>
                 <li>
