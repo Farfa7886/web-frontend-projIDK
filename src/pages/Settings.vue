@@ -74,21 +74,36 @@ function changePassword() {
     });
 }
 
-function save() {
+async function uploadAvatar(base64: string) {
+  const response = await axios.post(
+    `/image/upload`,
+    {
+      image: base64.replace("data:image/png;base64,", ""),
+    },
+    {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response.data.data;
+}
+async function save() {
   //@ts-ignore
   btnSave.value.classList.add("is-loading");
 
-  html2canvas(document.getElementById("avatarSvgs")).then((canvas) => {
-    const imgData = canvas.toDataURL("image/png");
-    console.log(imgData);
-  });
-  return;
+  document.getElementById("hair_back").classList.remove("rounded-t-xl");
+  const canvas = await html2canvas(document.getElementById("avatarSvgs"));
+  const imgData = canvas.toDataURL("image/png");
+  document.getElementById("hair_back").classList.add("rounded-t-xl");
+  const avatarURL = await uploadAvatar(imgData);
   axios
     .post(
       `/user/update`,
       {
         username: usernameInput.value.value,
         avatar: avatarData,
+        avatarUrl: avatarURL,
       },
       {
         headers: {
@@ -104,7 +119,7 @@ function save() {
           id: JSON.parse(localStorage.getItem("userData")).id,
         })
       );
-      utils.notyf("Username cambiato con successo", "success");
+      utils.notyf("Cambiamenti salvaiti", "success");
     })
     .catch((err) => {
       utils.notyf(err.response?.data?.error || "Errore", "error");
@@ -114,6 +129,13 @@ function save() {
       btnSave.value.classList.remove("is-loading");
     });
 }
+
+document.addEventListener("keydown", (event) => {
+  if (event.ctrlKey && event.key === "s") {
+    event.preventDefault();
+    save();
+  }
+});
 </script>
 
 <template>

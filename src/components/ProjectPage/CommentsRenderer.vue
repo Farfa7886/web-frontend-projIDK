@@ -14,6 +14,7 @@ const props = defineProps({
   id: String,
   totalReplies: Number,
   isProjectOwner: Boolean,
+  avatar: String,
 });
 
 const route = useRoute();
@@ -27,6 +28,7 @@ interface Reply {
   author: {
     username: string;
     _id: string;
+    avatarUrl: string;
   };
   content: string;
   _id: string;
@@ -56,6 +58,7 @@ async function showReplies() {
 <template>
   <Comment
     :username="username"
+    :avatar="avatar"
     :comment="comment"
     :id="id"
     :userId="userId"
@@ -65,6 +68,7 @@ async function showReplies() {
       v-for="i in replies"
       :username="i.author.username"
       :authorId="i.author._id"
+      :avatar="i.author.avatarUrl"
       :content="i.content"
       :parent="id"
       :parentUsername="username"

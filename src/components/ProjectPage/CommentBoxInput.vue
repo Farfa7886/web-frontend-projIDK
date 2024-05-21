@@ -3,7 +3,6 @@ import axios from "axios";
 import utils from "../../helpers/utils";
 import { useRoute } from "vue-router";
 import { eventBus } from "../../event-bus";
-import AvatarMaker from "../AvatarMaker.vue";
 
 const sendSVG = `<svg class="icon line-color" data-name="Line Color" height=24 viewBox="0 0 24 24" width=24 xmlns=http://www.w3.org/2000/svg><path d="M7 12h4" stroke=currentColor style=stroke-linecap:round;stroke-linejoin:round;stroke-width:2 /><path d="m5.44 4.15 14.65 7a1 1 0 0 1 0 1.8l-14.65 7a1 1 0 0 1-1.34-1.41l2.72-6.13a1.06 1.06 0 0 0 0-.82L4.1 5.46a1 1 0 0 1 1.34-1.31" stroke=currentColor style=fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:2 /></svg>`;
 
@@ -11,7 +10,7 @@ const route = useRoute();
 let username = JSON.parse(localStorage.getItem("userData"))?.username;
 
 defineProps({
-  ownerAvatar: Object,
+  avatar: String,
 });
 
 function updateInputCounter() {
@@ -49,7 +48,7 @@ function sendComment() {
 <template>
   <div class="flex">
     <img
-      src="/no-icon.png"
+      :src="avatar == '' ? '/no-icon.png' : avatar"
       style="height: 50px; width: 50px; object-fit: cover"
     />
     <div class="ml-3" style="max-width: 500px; width: 100%">

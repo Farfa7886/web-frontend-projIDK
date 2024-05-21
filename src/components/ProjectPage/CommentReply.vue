@@ -7,6 +7,7 @@ import { eventBus } from "../../event-bus";
 
 const props = defineProps({
   username: String,
+  avatar: String,
   content: String,
   parent: String,
   parentUsername: String,
@@ -79,7 +80,9 @@ async function deleteComment() {
 <template>
   <div class="flex mt-3">
     <a :href="`/profile/${authorId}`"
-      ><img src="/no-icon.png" style="height: 50px; width: 50px"
+      ><img
+        :src="avatar == '' ? '/no-icon.png' : avatar"
+        style="height: 50px; width: 50px"
     /></a>
     <div
       class="ml-3 rounded-b-xl rounded-tr-xl dark:bg-neutral-800 bg-neutral-100"

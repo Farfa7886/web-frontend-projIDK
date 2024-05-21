@@ -7,6 +7,7 @@ import { useRoute } from "vue-router";
 
 const props = defineProps({
   username: String,
+  avatar: String,
   userId: String,
   comment: String,
   id: String,
@@ -77,7 +78,9 @@ async function deleteComment() {
 <template>
   <div class="flex mt-4">
     <a :href="`/profile/${userId}`"
-      ><img src="/no-icon.png" style="height: 50px; width: 50px"
+      ><img
+        :src="avatar == '' ? '/no-icon.png' : avatar"
+        style="height: 50px; width: 50px"
     /></a>
     <div
       class="ml-3 rounded-b-xl rounded-tr-xl dark:bg-neutral-800 bg-neutral-100"

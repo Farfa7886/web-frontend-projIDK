@@ -22,8 +22,9 @@ let currentPage = 1;
 let maxPages = 1;
 const isLogged = localStorage.getItem("token") ? true : false;
 let likesCounter = 0;
+const loadedProject = ref(false);
 const renderAvatar = ref(false);
-let ownerAvatarUrl = reactive({ av: "" });
+const avatarElem = ref(null);
 
 // for slideshows
 let renderRenderer = ref(false);
@@ -38,7 +39,7 @@ interface ProjectInfo {
   owner: {
     _id: string;
     username: string;
-    avatar: string;
+    avatarUrl: string;
   };
   forked: boolean;
   public: boolean;
@@ -54,7 +55,7 @@ interface Comment {
   author: {
     _id: string;
     username: string;
-    avatar: object;
+    avatarUrl: string;
   };
   content: string;
   _id: string;
@@ -166,8 +167,10 @@ utils.onLoad(async () => {
   document.getElementById("projectName").innerText = projectInfo.name;
   document.getElementById("projectAuthor").innerText =
     projectInfo.owner.username;
-  ownerAvatarUrl.av = projectInfo.owner.avatar;
+  if (projectInfo.owner.avatarUrl)
+    avatarElem.value.src = projectInfo.owner.avatarUrl;
   renderAvatar.value = true;
+  loadedProject.value = true;
   if (projectInfo.type == "slideshow")
     document.getElementById("proj-reload").classList.add("hidden");
 
@@ -394,8 +397,8 @@ function setThumbnail() {
         <div class="flex items-center w-full">
           <img
             class="ml-3"
-            :src="ownerAvatarUrl.av == '' ? ownerAvatarUrl.av : '/no-icon.png'"
-            style="object-fit: cover; height: 35px; width: 35px"
+            ref="avatarElem"
+            style="object-fit: cover; height: 42px; width: 42px"
           />
 
           <div class="ml-2 w-full">
@@ -606,7 +609,10 @@ function setThumbnail() {
             </div>
           </div>
           <div class="m-3 hidden" id="commentsContainer">
-            <CommentBoxInput v-if="isLogged" />
+            <CommentBoxInput
+              v-if="isLogged && loadedProject"
+              :avatar="projectInfo.owner.avatarUrl"
+            />
             <div
               style="height: 2px"
               class="dark:bg-neutral-700 bg-neutral-400 m-3"
@@ -617,6 +623,7 @@ function setThumbnail() {
             <CommentsRenderer
               v-for="i in comments"
               :username="i.author.username"
+              :avatar="i.author.avatarUrl"
               :userId="i.author._id"
               :comment="i.content"
               :totalReplies="i.replies"

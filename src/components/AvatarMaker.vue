@@ -697,13 +697,13 @@ onMounted(() => {
 
 <template>
   <div id="avatar" class="rounded-xl" :style="finalStyle">
-    <div id="avatarSvgs" class="w-full h-full">
+    <div id="avatarSvgs" class="w-full h-[calc(100%-99px)]">
       <svg
         :style="finalStyle"
         id="hair_back"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
-        :class="editor ? 'rounded-t-xl' : 'rounded-t-lg rounded-b-lg'"
+        class="rounded-t-xl"
         width="360px"
         height="360px"
         viewBox="0 0 360 360"
