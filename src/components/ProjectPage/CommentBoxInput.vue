@@ -50,13 +50,7 @@ function sendComment() {
   <div class="flex">
     <img
       src="/no-icon.png"
-      class="hidden"
       style="height: 50px; width: 50px; object-fit: cover"
-    />
-    <AvatarMaker
-      :avatar="ownerAvatar"
-      :editor="false"
-      style="width: 50px; height: 50px"
     />
     <div class="ml-3" style="max-width: 500px; width: 100%">
       <form @submit="sendComment()">

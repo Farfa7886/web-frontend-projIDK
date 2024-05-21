@@ -4,6 +4,7 @@ import AvatarMaker from "../components/AvatarMaker.vue";
 import { onMounted, ref } from "vue";
 import utils from "../helpers/utils";
 import { eventBus } from "../event-bus";
+import html2canvas from "html2canvas";
 
 const usernameInput = ref(null);
 const showAvatarMaker = ref(false);
@@ -77,6 +78,11 @@ function save() {
   //@ts-ignore
   btnSave.value.classList.add("is-loading");
 
+  html2canvas(document.getElementById("avatarSvgs")).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    console.log(imgData);
+  });
+  return;
   axios
     .post(
       `/user/update`,
