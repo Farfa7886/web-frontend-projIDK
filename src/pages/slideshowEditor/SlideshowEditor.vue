@@ -300,7 +300,7 @@ function doRenderPreview() {
       <input
         id="projNameModify"
         @focusout="acutallyEditName()"
-        class="hidden"
+        class="hidden dark:bg-black h-7"
         autocomplete="off"
       />
     </div>

@@ -1,658 +1,708 @@
-<script>
-export default {
-  mounted() {
-    import("jquery").then((jQuery) => {
-      window.$ = window.jQuery = jQuery.default;
-
-      var skins = [
-        "ffdbb4",
-        "edb98a",
-        "fd9841",
-        "fcee93",
-        "d08b5b",
-        "ae5d29",
-        "614335",
-      ];
-      var eyes = [
-        "default",
-        "dizzy",
-        "eyeroll",
-        "happy",
-        "close",
-        "hearts",
-        "side",
-        "wink",
-        "squint",
-        "surprised",
-        "winkwacky",
-        "cry",
-      ];
-      var eyebrows = [
-        "default",
-        "default2",
-        "raised",
-        "sad",
-        "sad2",
-        "unibrow",
-        "updown",
-        "updown2",
-        "angry",
-        "angry2",
-      ];
-      var mouths = [
-        "default",
-        "twinkle",
-        "tongue",
-        "smile",
-        "serious",
-        "scream",
-        "sad",
-        "grimace",
-        "eating",
-        "disbelief",
-        "concerned",
-        "vomit",
-      ];
-      var hairstyles = [
-        "bold",
-        "longhair",
-        "longhairbob",
-        "hairbun",
-        "longhaircurly",
-        "longhaircurvy",
-        "longhairdread",
-        "nottoolong",
-        "miawallace",
-        "longhairstraight",
-        "longhairstraight2",
-        "shorthairdreads",
-        "shorthairdreads2",
-        "shorthairfrizzle",
-        "shorthairshaggy",
-        "shorthaircurly",
-        "shorthairflat",
-        "shorthairround",
-        "shorthairwaved",
-        "shorthairsides",
-      ];
-      var haircolors = [
-        "bb7748_9a4f2b_6f2912",
-        "404040_262626_101010",
-        "c79d63_ab733e_844713",
-        "e1c68e_d0a964_b88339",
-        "906253_663d32_3b1d16",
-        "f8afaf_f48a8a_ed5e5e",
-        "f1e6cf_e9d8b6_dec393",
-        "d75324_c13215_a31608",
-        "59a0ff_3777ff_194bff",
-      ];
-      var facialhairs = ["none", "magnum", "fancy", "magestic", "light"];
-      var clothes = ["vneck", "sweater", "hoodie", "overall", "blazer"];
-      var fabriccolors = [
-        "545454",
-        "65c9ff",
-        "5199e4",
-        "25557c",
-        "e6e6e6",
-        "929598",
-        "a7ffc4",
-        "ffdeb5",
-        "ffafb9",
-        "ffffb1",
-        "ff5c5c",
-        "e3adff",
-      ];
-      var backgroundcolors = [
-        "ffffff",
-        "f5f6eb",
-        "e5fde2",
-        "d5effd",
-        "d1d0fc",
-        "f7d0fc",
-        "d0d0d0",
-      ];
-      var glasses = [
-        "none",
-        "rambo",
-        "fancy",
-        "old",
-        "nerd",
-        "fancy2",
-        "harry",
-      ];
-      var glassopacities = ["10", "25", "50", "75", "100"];
-      var tattoos = [
-        "non",
-        "harry",
-        "airbender",
-        "krilin",
-        "front",
-        "tribal",
-        "tribal2",
-        "throat",
-      ];
-      var accesories = [
-        "none",
-        "earphones",
-        "earring1",
-        "earring2",
-        "earring3",
-      ];
-      var current_skincolor = "edb98a";
-      var current_hairstyle = "longhair";
-      var current_haircolor = "bb7748_9a4f2b_6f2912";
-      var current_fabriccolors = "545454";
-      var current_backgroundcolors = "ffffff";
-      var current_glassopacity = 0.5;
-      let menu_class = "";
-
-      let currentData = {
-        skinColor: current_skincolor,
-        eyes: "",
-        eyebrows: "",
-        mouth: "",
-        hairstyles: current_hairstyle,
-        haircolor: current_haircolor,
-        facialhair: "",
-        clothes: "",
-        fabriccolor: current_fabriccolors,
-        glasses: "",
-        glassopacity: current_glassopacity,
-        accesories: "",
-        tattoos: "",
-        backgroundcolor: current_backgroundcolors,
-      };
-
-      function load(config) {
-        current_skincolor = config.skinColor;
-        current_hairstyle = config.hairstyle;
-        current_haircolor = config.haircolor;
-        current_fabriccolors = config.fabriccolor;
-        current_backgroundcolors = config.backgroundcolor;
-        current_glassopacity = config.glassopacity;
-        // ----------
-
-        $("#skin #body").attr("fill", "#" + config.skinColor);
-        $("#eyes g").hide();
-        $("#eyes #e_" + config.eyes).show();
-        $("#eyebrows g").hide();
-        $("#eyebrows #eb_" + config.eyebrows).show();
-        $("#mouths g").hide();
-        $("#mouths #m_" + config.mouth).show();
-        $("#hair_front g").hide();
-        $("#hair_back g").hide();
-        $("#hair_front .h_" + config.hairstyle).show();
-        $("#hair_back .h_" + config.hairstyle).show();
-        var color = current_haircolor;
-        color = color.split("_");
-        $("#hair_front .h_" + current_hairstyle + " .tinted").attr(
-          "fill",
-          "#" + color[0]
-        );
-        $("#hair_back .h_" + current_hairstyle + " .tinted").attr(
-          "fill",
-          "#" + color[1]
-        );
-        $("#facialhair g .tinted").attr("fill", "#" + color[2]);
-        $("#facialhair g").hide();
-        $("#facialhair #f_" + config.facialhair).show();
-        $("#clothes g").hide();
-        $("#clothes #c_" + config.clothes).show();
-        $("#glasses g").hide();
-        $("#glasses #g_" + config.glasses).show();
-        $(".glass").attr("fill-opacity", config.glassopacity);
-        $("#clothes g .tinted").attr("fill", "#" + config.fabriccolor);
-        $("#background").attr("fill", "#" + config.backgroundcolor);
-        $("#tattoos g").hide();
-        $("#tattoos #t_" + config.tattoos).show();
-        $("#accesories g").hide();
-        $("#accesories #a_" + config.accesories).show();
-      }
-
-      $(document).ready(function () {
-        $("body").delegate("#menu_list button", "click", function () {
-          var idx = $(this).attr("id");
-          if (idx == "download") {
-            var current_eyes;
-            $("#eyes g").each(function () {
-              if ($(this).css("display") == "inline") {
-                id = $(this).attr("id");
-                current_eyes = id.substr(2);
-                currentData.eyes = current_eyes;
-              }
-            });
-            var current_eyebrows;
-            $("#eyebrows g").each(function () {
-              if ($(this).css("display") == "inline") {
-                id = $(this).attr("id");
-                current_eyebrows = id.substr(3);
-                currentData.eyebrows = current_eyebrows;
-              }
-            });
-            var current_mouth;
-            $("#mouths g").each(function () {
-              if ($(this).css("display") == "inline") {
-                id = $(this).attr("id");
-                current_mouth = id.substr(2);
-                currentData.mouth = current_mouth;
-              }
-            });
-            var current_facialhair = "none";
-            $("#facialhair g").each(function () {
-              if ($(this).css("display") == "inline") {
-                id = $(this).attr("id");
-                current_facialhair = id.substr(2);
-                currentData.facialhair = current_facialhair;
-              }
-            });
-            var current_clothe;
-            $("#clothes g").each(function () {
-              if ($(this).css("display") == "inline") {
-                id = $(this).attr("id");
-                current_clothe = id.substr(2);
-                currentData.clothes = current_clothe;
-              }
-            });
-            var current_glasses = "none";
-            $("#glasses g").each(function () {
-              if ($(this).css("display") == "inline") {
-                id = $(this).attr("id");
-                current_glasses = id.substr(2);
-                currentData.glasses = current_glasses;
-              }
-            });
-            var current_tattoos = "none";
-            $("#tattoos g").each(function () {
-              if ($(this).css("display") == "inline") {
-                id = $(this).attr("id");
-                current_tattoos = id.substr(2);
-                currentData.tattoos = current_tattoos;
-              }
-            });
-            var current_accesories = "none";
-            $("#accesories g").each(function () {
-              if ($(this).css("display") == "inline") {
-                id = $(this).attr("id");
-                current_accesories = id.substr(2);
-                currentData.accesories = current_accesories;
-              }
-            });
-            var url =
-              "https://vitruvianman.000webhostapp.com/avatarmaker/avatar.php?skincolor=" +
-              current_skincolor;
-            url += "&hairstyle=" + current_hairstyle;
-            url += "&haircolor=" + current_haircolor;
-            url += "&fabriccolors=" + current_fabriccolors;
-            url += "&eyes=" + current_eyes;
-            url += "&eyebrows=" + current_eyebrows;
-            url += "&mouth=" + current_mouth;
-            url += "&facialhair=" + current_facialhair;
-            url += "&clothe=" + current_clothe;
-            url += "&backgroundcolor=" + current_backgroundcolors;
-            url += "&glasses=" + current_glasses;
-            url += "&glassopacity=" + current_glassopacity;
-            url += "&tattoos=" + current_tattoos;
-            url += "&accesories=" + current_accesories;
-            window.open(url);
-          } else {
-            var selected = $(this).html();
-            $("#options_title").html("Seleziona " + selected.toLowerCase());
-            $("#options_div").innerHTML = "";
-            var html = "";
-            switch (idx) {
-              case "skincolor":
-                for (var i = 0; i < skins.length; i++) {
-                  let skin = skins[i];
-                  html += `<div class="skins" id="s_${skin}" style="background-color:#${skin};" data-v-5778c730></div>`;
-                }
-                break;
-              case "eyes":
-                for (i = 0; i < eyes.length; i++) {
-                  let eye = eyes[i];
-                  html += `<div class="eyes" id="e_${eye}" style="background-color:#${current_skincolor};background-position:${
-                    i * -53
-                  }px 0px;" data-v-5778c730></div>`;
-                }
-                break;
-              case "eyebrows":
-                for (i = 0; i < eyebrows.length; i++) {
-                  let eyebrow = eyebrows[i];
-                  html += `<div class='eyebrows' id='eb_${eyebrow}' style='background-color:#${current_skincolor};background-position:${
-                    i * -53
-                  }px -53px;' data-v-5778c730></div>`;
-                }
-                break;
-              case "mouths":
-                for (i = 0; i < mouths.length; i++) {
-                  let mouth = mouths[i];
-                  html += `<div class='mouths' id='m_${mouth}' style='background-color:#${current_skincolor};background-position:${
-                    i * -53
-                  }px -106px;' data-v-5778c730></div>`;
-                }
-                break;
-              case "hairstyles":
-                for (i = 0; i < hairstyles.length; i++) {
-                  let hairstyle = hairstyles[i];
-                  html += `<div class='hairstyles' id='h_${hairstyle}' style='background-color:#ffffff;background-position:${
-                    i * -53
-                  }px -159px;' data-v-5778c730></div>`;
-                }
-                break;
-              case "haircolors":
-                for (i = 0; i < haircolors.length; i++) {
-                  let haircolor = haircolors[i];
-                  let haircolor_front = haircolor.split("_");
-                  html += `<div class='haircolors' id='hc_${haircolor}' style='background-color:#${haircolor_front[0]};' data-v-5778c730></div>`;
-                }
-                break;
-              case "facialhairs":
-                for (i = 0; i < facialhairs.length; i++) {
-                  let facialhair = facialhairs[i];
-                  html += `<div class='facialhairs' id='f_${facialhair}' style='background-color:#ffffff;background-position:${
-                    i * -53
-                  }px -212px;' data-v-5778c730></div>`;
-                }
-                break;
-              case "clothes":
-                for (var i = 0; i < clothes.length; i++) {
-                  let clothe = clothes[i];
-                  html += `<div class='clothes' id='c_${clothe}' style='background-color:#ffffff;background-position:${
-                    i * -53
-                  }px -265px;' data-v-5778c730></div>`;
-                }
-                break;
-              case "fabriccolors":
-                for (var i = 0; i < fabriccolors.length; i++) {
-                  let fabriccolor = fabriccolors[i];
-                  html += `<div class='fabriccolors' id='f_${fabriccolor}' style='background-color:#${fabriccolor};' data-v-5778c730></div>`;
-                }
-                break;
-              case "backgroundcolors":
-                for (var i = 0; i < backgroundcolors.length; i++) {
-                  let backgroundcolor = backgroundcolors[i];
-                  html += `<div class='backgroundcolors' id='g_${backgroundcolor}' style='background-color:#${backgroundcolor};' data-v-5778c730></div>`;
-                }
-                break;
-              case "glasses":
-                for (var i = 0; i < glasses.length; i++) {
-                  let glass = glasses[i];
-                  html += `<div class='glasses' id='g_${glass}' style='background-color:#ffffff;background-position:${
-                    i * -53
-                  }px -313px;' data-v-5778c730></div>`;
-                }
-                break;
-              case "glassopacity":
-                for (var i = 0; i < glassopacities.length; i++) {
-                  let glassopacity = glassopacities[i];
-                  html += `<div class='glassopacity' id='o_${glassopacity}' style='background-color:#ffffff;' data-v-5778c730>${glassopacity}%</div>`;
-                }
-                break;
-              case "tattoos":
-                for (var i = 0; i < tattoos.length; i++) {
-                  let tattoo = tattoos[i];
-                  html += `<div class='tattoos' id='t_${tattoo}' style='background-color:#ffffff;background-position:${
-                    i * -53
-                  }px -419px;' data-v-5778c730></div>`;
-                }
-                break;
-              case "accesories":
-                for (var i = 0; i < accesories.length; i++) {
-                  let accesory = accesories[i];
-                  html += `<div class='accesories' id='a_${accesory}' style='background-color:#ffffff;background-position:${
-                    i * -53
-                  }px -369px;' data-v-5778c730></div>`;
-                }
-                break;
-            }
-            $("#options_div").html(html);
-            $("#menu_lines").click();
-          }
-        });
-        $("body").delegate("#random", "click", function () {
-          random();
-        });
-        $("body").delegate("#menu_lines", "click", function () {
-          menu_class = document.getElementById("menu").classList;
-          if (!menu_class.contains("active")) {
-            $("#menu").addClass("active");
-            $("#menu").css({
-              border: "0px",
-            });
-            $("#menu")
-              .stop()
-              .animate(
-                {
-                  width: "360px",
-                },
-                {
-                  duration: 300,
-                  complete: function () {
-                    $(this).stop().animate(
-                      {
-                        height: "460px",
-                      },
-                      {
-                        duration: 300,
-                      }
-                    );
-                  },
-                }
-              );
-          } else {
-            $("#menu").removeClass("active");
-            $("#menu").css({
-              "border-right": "1px solid #707070",
-            });
-            $("#menu")
-              .stop()
-              .animate(
-                {
-                  height: "99px",
-                },
-                {
-                  duration: 300,
-                  complete: function () {
-                    $(this).stop().animate(
-                      {
-                        width: "60px",
-                      },
-                      {
-                        duration: 300,
-                      }
-                    );
-                  },
-                }
-              );
-          }
-        });
-        $("body").delegate(".skins", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          current_skincolor = id;
-          $("#skin #body").attr("fill", "#" + id);
-        });
-        $("body").delegate(".eyes", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          $("#eyes g").hide();
-          $("#eyes #e_" + id).show();
-        });
-        $("body").delegate(".eyebrows", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(3);
-          $("#eyebrows g").hide();
-          $("#eyebrows #eb_" + id).show();
-        });
-        $("body").delegate(".mouths", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          $("#mouths g").hide();
-          $("#mouths #m_" + id).show();
-        });
-        $("body").delegate(".hairstyles", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          current_hairstyle = id;
-          $("#hair_front g").hide();
-          $("#hair_back g").hide();
-          $("#hair_front .h_" + id).show();
-          $("#hair_back .h_" + id).show();
-          var color = current_haircolor;
-          color = color.split("_");
-          $("#hair_front .h_" + current_hairstyle + " .tinted").attr(
-            "fill",
-            "#" + color[0]
-          );
-          $("#hair_back .h_" + current_hairstyle + " .tinted").attr(
-            "fill",
-            "#" + color[1]
-          );
-          $("#facialhair g .tinted").attr("fill", "#" + color[2]);
-        });
-        $("body").delegate(".haircolors", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(3);
-          current_haircolor = id;
-          id = id.split("_");
-          $("#hair_front .h_" + current_hairstyle + " .tinted").attr(
-            "fill",
-            "#" + id[0]
-          );
-          $("#hair_back .h_" + current_hairstyle + " .tinted").attr(
-            "fill",
-            "#" + id[1]
-          );
-          $("#facialhair g .tinted").attr("fill", "#" + id[2]);
-        });
-        $("body").delegate(".facialhairs", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          $("#facialhair g").hide();
-          $("#facialhair #f_" + id).show();
-        });
-        $("body").delegate(".clothes", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          $("#clothes g").hide();
-          $("#clothes #c_" + id).show();
-        });
-        $("body").delegate(".fabriccolors", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          current_fabriccolors = id;
-          $("#clothes g .tinted").attr("fill", "#" + id);
-        });
-        $("body").delegate(".backgroundcolors", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          current_backgroundcolors = id;
-          $("#background").attr("fill", "#" + id);
-        });
-        $("body").delegate(".glasses", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          $("#glasses g").hide();
-          $("#glasses #g_" + id).show();
-        });
-        $("body").delegate(".glassopacity", "click", function () {
-          var id = $(this).attr("id");
-          id = parseInt(id.substr(2));
-          current_glassopacity = id / 100;
-          $(".glass").attr("fill-opacity", current_glassopacity);
-        });
-        $("body").delegate(".tattoos", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          $("#tattoos g").hide();
-          $("#tattoos #t_" + id).show();
-        });
-        $("body").delegate(".accesories", "click", function () {
-          var id = $(this).attr("id");
-          id = id.substr(2);
-          $("#accesories g").hide();
-          $("#accesories #a_" + id).show();
-        });
-        //random();
-      });
-      function random() {
-        var rand_skins = skins[Math.floor(Math.random() * skins.length)];
-        var rand_eyes = eyes[Math.floor(Math.random() * eyes.length)];
-        var rand_eyebrows =
-          eyebrows[Math.floor(Math.random() * eyebrows.length)];
-        var rand_mouths = mouths[Math.floor(Math.random() * mouths.length)];
-        var rand_hairstyles =
-          hairstyles[Math.floor(Math.random() * hairstyles.length)];
-        var rand_haircolors =
-          haircolors[Math.floor(Math.random() * haircolors.length)];
-        var rand_facialhairs =
-          facialhairs[Math.floor(Math.random() * facialhairs.length)];
-        var rand_clothes = clothes[Math.floor(Math.random() * clothes.length)];
-        var rand_fabriccolors =
-          fabriccolors[Math.floor(Math.random() * fabriccolors.length)];
-        var rand_backgroundcolors =
-          backgroundcolors[Math.floor(Math.random() * backgroundcolors.length)];
-        var rand_glasses = glasses[Math.floor(Math.random() * glasses.length)];
-        var rand_glassopacities =
-          parseInt(
-            glassopacities[Math.floor(Math.random() * glassopacities.length)]
-          ) / 100;
-        var rand_tattoos = tattoos[Math.floor(Math.random() * tattoos.length)];
-        var rand_accesories =
-          accesories[Math.floor(Math.random() * accesories.length)];
-        current_skincolor = rand_skins;
-        current_fabriccolors = rand_fabriccolors;
-        current_backgroundcolors = rand_backgroundcolors;
-        current_glassopacity = rand_glassopacities;
-        $("#skin #body").attr("fill", "#" + rand_skins);
-        $("#eyes g").hide();
-        $("#eyes #e_" + rand_eyes).show();
-        $("#eyebrows g").hide();
-        $("#eyebrows #eb_" + rand_eyebrows).show();
-        $("#mouths g").hide();
-        $("#mouths #m_" + rand_mouths).show();
-        current_hairstyle = rand_hairstyles;
-        $("#hair_front g").hide();
-        $("#hair_back g").hide();
-        $("#hair_front .h_" + rand_hairstyles).show();
-        $("#hair_back .h_" + rand_hairstyles).show();
-        current_haircolor = rand_haircolors;
-        var color = current_haircolor;
-        color = color.split("_");
-        $("#hair_front .h_" + current_hairstyle + " .tinted").attr(
-          "fill",
-          "#" + color[0]
-        );
-        $("#hair_back .h_" + current_hairstyle + " .tinted").attr(
-          "fill",
-          "#" + color[1]
-        );
-        $("#facialhair g .tinted").attr("fill", "#" + color[2]);
-        $("#facialhair g").hide();
-        $("#facialhair #f_" + rand_facialhairs).show();
-        $("#clothes g").hide();
-        $("#clothes #c_" + rand_clothes).show();
-        $("#glasses g").hide();
-        $("#glasses #g_" + rand_glasses).show();
-        $(".glass").attr("fill-opacity", rand_glassopacities);
-        $("#clothes g .tinted").attr("fill", "#" + rand_fabriccolors);
-        $("#background").attr("fill", "#" + rand_backgroundcolors);
-        $("#tattoos g").hide();
-        $("#tattoos #t_" + rand_tattoos).show();
-        $("#accesories g").hide();
-        $("#accesories #a_" + rand_accesories).show();
-      }
-    });
+<script setup>
+import { onMounted } from "vue";
+import { eventBus } from "../event-bus";
+const props = defineProps({
+  data: Object,
+  avatar: Object,
+  editor: {
+    type: Boolean,
+    default: true,
   },
-};
+  style: {
+    type: Object,
+    default: {},
+  },
+});
+const finalStyle = (() => {
+  let f = "";
+  Object.keys(props.style).forEach((k) => {
+    f += `${k}: ${props.style[k]};`;
+  });
+  return f;
+})();
+const randId = Math.random().toString(36).substring(2, 7);
+
+function sendAvatarData(avatarData) {
+  eventBus.dispatchEvent(new CustomEvent("avatarData", { detail: avatarData }));
+}
+
+onMounted(() => {
+  import("jquery").then((jQuery) => {
+    window.$ = window.jQuery = jQuery.default;
+
+    var skins = [
+      "ffdbb4",
+      "edb98a",
+      "fd9841",
+      "fcee93",
+      "d08b5b",
+      "ae5d29",
+      "614335",
+    ];
+    var eyes = [
+      "default",
+      "dizzy",
+      "eyeroll",
+      "happy",
+      "close",
+      "hearts",
+      "side",
+      "wink",
+      "squint",
+      "surprised",
+      "winkwacky",
+      "cry",
+    ];
+    var eyebrows = [
+      "default",
+      "default2",
+      "raised",
+      "sad",
+      "sad2",
+      "unibrow",
+      "updown",
+      "updown2",
+      "angry",
+      "angry2",
+    ];
+    var mouths = [
+      "default",
+      "twinkle",
+      "tongue",
+      "smile",
+      "serious",
+      "scream",
+      "sad",
+      "grimace",
+      "eating",
+      "disbelief",
+      "concerned",
+      "vomit",
+    ];
+    var hairstyles = [
+      "bold",
+      "longhair",
+      "longhairbob",
+      "hairbun",
+      "longhaircurly",
+      "longhaircurvy",
+      "longhairdread",
+      "nottoolong",
+      "miawallace",
+      "longhairstraight",
+      "longhairstraight2",
+      "shorthairdreads",
+      "shorthairdreads2",
+      "shorthairfrizzle",
+      "shorthairshaggy",
+      "shorthaircurly",
+      "shorthairflat",
+      "shorthairround",
+      "shorthairwaved",
+      "shorthairsides",
+    ];
+    var haircolors = [
+      "bb7748_9a4f2b_6f2912",
+      "404040_262626_101010",
+      "c79d63_ab733e_844713",
+      "e1c68e_d0a964_b88339",
+      "906253_663d32_3b1d16",
+      "f8afaf_f48a8a_ed5e5e",
+      "f1e6cf_e9d8b6_dec393",
+      "d75324_c13215_a31608",
+      "59a0ff_3777ff_194bff",
+    ];
+    var facialhairs = ["none", "magnum", "fancy", "magestic", "light"];
+    var clothes = ["vneck", "sweater", "hoodie", "overall", "blazer"];
+    var fabriccolors = [
+      "545454",
+      "65c9ff",
+      "5199e4",
+      "25557c",
+      "e6e6e6",
+      "929598",
+      "a7ffc4",
+      "ffdeb5",
+      "ffafb9",
+      "ffffb1",
+      "ff5c5c",
+      "e3adff",
+    ];
+    var backgroundcolors = [
+      "ffffff",
+      "f5f6eb",
+      "e5fde2",
+      "d5effd",
+      "d1d0fc",
+      "f7d0fc",
+      "d0d0d0",
+    ];
+    var glasses = ["none", "rambo", "fancy", "old", "nerd", "fancy2", "harry"];
+    var glassopacities = ["10", "25", "50", "75", "100"];
+    var tattoos = [
+      "non",
+      "harry",
+      "airbender",
+      "krilin",
+      "front",
+      "tribal",
+      "tribal2",
+      "throat",
+    ];
+    var accesories = ["none", "earphones", "earring1", "earring2", "earring3"];
+    var current_skincolor = "edb98a";
+    var current_hairstyle = "longhair";
+    var current_haircolor = "bb7748_9a4f2b_6f2912";
+    var current_fabriccolors = "545454";
+    var current_backgroundcolors = "ffffff";
+    var current_glassopacity = 0.5;
+    let menu_class = "";
+
+    let currentData = {
+      skinColor: current_skincolor,
+      eyes: eyes[0],
+      eyebrows: eyebrows[0],
+      mouth: mouths[0],
+      hairstyles: current_hairstyle,
+      haircolor: current_haircolor,
+      facialhair: facialhairs[0],
+      clothes: clothes[0],
+      fabriccolor: current_fabriccolors,
+      glasses: glasses[0],
+      glassopacity: current_glassopacity,
+      accesories: accesories[0],
+      tattoos: tattoos[0],
+      backgroundcolor: current_backgroundcolors,
+    };
+    currentData = props.avatar;
+    if (props.data) currentData = props.data;
+
+    function load(config) {
+      current_skincolor = config.skinColor;
+      current_hairstyle = config.hairstyles;
+      current_haircolor = config.haircolor;
+      current_fabriccolors = config.fabriccolor;
+      current_backgroundcolors = config.backgroundcolor;
+      current_glassopacity = config.glassopacity;
+      // ----------
+
+      $("#skin #body").attr("fill", "#" + config.skinColor);
+      $("#eyes g").hide();
+      $("#eyes #e_" + config.eyes).show();
+      $("#eyebrows g").hide();
+      $("#eyebrows #eb_" + config.eyebrows).show();
+      $("#mouths g").hide();
+      $("#mouths #m_" + config.mouth).show();
+      $("#hair_front g").hide();
+      $("#hair_back g").hide();
+      $("#hair_front .h_" + config.hairstyles).show();
+      $("#hair_back .h_" + config.hairstyles).show();
+      var color = current_haircolor;
+      color = color.split("_");
+      $("#hair_front .h_" + current_hairstyle + " .tinted").attr(
+        "fill",
+        "#" + color[0]
+      );
+      $("#hair_back .h_" + current_hairstyle + " .tinted").attr(
+        "fill",
+        "#" + color[1]
+      );
+      $("#facialhair g .tinted").attr("fill", "#" + color[2]);
+      $("#facialhair g").hide();
+      $("#facialhair #f_" + config.facialhair).show();
+      $("#clothes g").hide();
+      $("#clothes #c_" + config.clothes).show();
+      $("#glasses g").hide();
+      $("#glasses #g_" + config.glasses).show();
+      $(".glass").attr("fill-opacity", config.glassopacity);
+      $("#clothes g .tinted").attr("fill", "#" + config.fabriccolor);
+      $("#background").attr("fill", "#" + config.backgroundcolor);
+      $("#tattoos g").hide();
+      $("#tattoos #t_" + config.tattoos).show();
+      $("#accesories g").hide();
+      $("#accesories #a_" + config.accesories).show();
+    }
+
+    document.getElementById("avatar").addEventListener("click", () => {
+      sendAvatarData(currentData);
+    });
+    $(document).ready(function () {
+      $("body").delegate("#menu_list button", "click", function () {
+        var idx = $(this).attr("id");
+        if (idx == "download") {
+          var current_eyes;
+          $("#eyes g").each(function () {
+            if ($(this).css("display") == "inline") {
+              id = $(this).attr("id");
+              current_eyes = id.substr(2);
+              currentData.eyes = current_eyes;
+            }
+          });
+          var current_eyebrows;
+          $("#eyebrows g").each(function () {
+            if ($(this).css("display") == "inline") {
+              id = $(this).attr("id");
+              current_eyebrows = id.substr(3);
+              currentData.eyebrows = current_eyebrows;
+            }
+          });
+          var current_mouth;
+          $("#mouths g").each(function () {
+            if ($(this).css("display") == "inline") {
+              id = $(this).attr("id");
+              current_mouth = id.substr(2);
+              currentData.mouth = current_mouth;
+            }
+          });
+          var current_facialhair = "none";
+          $("#facialhair g").each(function () {
+            if ($(this).css("display") == "inline") {
+              id = $(this).attr("id");
+              current_facialhair = id.substr(2);
+              currentData.facialhair = current_facialhair;
+            }
+          });
+          var current_clothe;
+          $("#clothes g").each(function () {
+            if ($(this).css("display") == "inline") {
+              id = $(this).attr("id");
+              current_clothe = id.substr(2);
+              currentData.clothes = current_clothe;
+            }
+          });
+          var current_glasses = "none";
+          $("#glasses g").each(function () {
+            if ($(this).css("display") == "inline") {
+              id = $(this).attr("id");
+              current_glasses = id.substr(2);
+              currentData.glasses = current_glasses;
+            }
+          });
+          var current_tattoos = "none";
+          $("#tattoos g").each(function () {
+            if ($(this).css("display") == "inline") {
+              id = $(this).attr("id");
+              current_tattoos = id.substr(2);
+              currentData.tattoos = current_tattoos;
+            }
+          });
+          var current_accesories = "none";
+          $("#accesories g").each(function () {
+            if ($(this).css("display") == "inline") {
+              id = $(this).attr("id");
+              current_accesories = id.substr(2);
+              currentData.accesories = current_accesories;
+            }
+          });
+          var url =
+            "https://vitruvianman.000webhostapp.com/avatarmaker/avatar.php?skincolor=" +
+            current_skincolor;
+          url += "&hairstyle=" + current_hairstyle;
+          url += "&haircolor=" + current_haircolor;
+          url += "&fabriccolors=" + current_fabriccolors;
+          url += "&eyes=" + current_eyes;
+          url += "&eyebrows=" + current_eyebrows;
+          url += "&mouth=" + current_mouth;
+          url += "&facialhair=" + current_facialhair;
+          url += "&clothe=" + current_clothe;
+          url += "&backgroundcolor=" + current_backgroundcolors;
+          url += "&glasses=" + current_glasses;
+          url += "&glassopacity=" + current_glassopacity;
+          url += "&tattoos=" + current_tattoos;
+          url += "&accesories=" + current_accesories;
+          window.open(url);
+        } else {
+          var selected = $(this).html();
+          $("#options_title").html("Seleziona " + selected.toLowerCase());
+          $("#options_div").innerHTML = "";
+          var html = "";
+          switch (idx) {
+            case "skincolor":
+              for (var i = 0; i < skins.length; i++) {
+                let skin = skins[i];
+                html += `<div class="skins" id="s_${skin}" style="background-color:#${skin};" data-v-5778c730></div>`;
+              }
+              break;
+            case "eyes":
+              for (i = 0; i < eyes.length; i++) {
+                let eye = eyes[i];
+                html += `<div class="eyes" id="e_${eye}" style="background-color:#${current_skincolor};background-position:${
+                  i * -53
+                }px 0px;" data-v-5778c730></div>`;
+              }
+              break;
+            case "eyebrows":
+              for (i = 0; i < eyebrows.length; i++) {
+                let eyebrow = eyebrows[i];
+                html += `<div class='eyebrows' id='eb_${eyebrow}' style='background-color:#${current_skincolor};background-position:${
+                  i * -53
+                }px -53px;' data-v-5778c730></div>`;
+              }
+              break;
+            case "mouths":
+              for (i = 0; i < mouths.length; i++) {
+                let mouth = mouths[i];
+                html += `<div class='mouths' id='m_${mouth}' style='background-color:#${current_skincolor};background-position:${
+                  i * -53
+                }px -106px;' data-v-5778c730></div>`;
+              }
+              break;
+            case "hairstyles":
+              for (i = 0; i < hairstyles.length; i++) {
+                let hairstyle = hairstyles[i];
+                html += `<div class='hairstyles' id='h_${hairstyle}' style='background-color:#ffffff;background-position:${
+                  i * -53
+                }px -159px;' data-v-5778c730></div>`;
+              }
+              break;
+            case "haircolors":
+              for (i = 0; i < haircolors.length; i++) {
+                let haircolor = haircolors[i];
+                let haircolor_front = haircolor.split("_");
+                html += `<div class='haircolors' id='hc_${haircolor}' style='background-color:#${haircolor_front[0]};' data-v-5778c730></div>`;
+              }
+              break;
+            case "facialhairs":
+              for (i = 0; i < facialhairs.length; i++) {
+                let facialhair = facialhairs[i];
+                html += `<div class='facialhairs' id='f_${facialhair}' style='background-color:#ffffff;background-position:${
+                  i * -53
+                }px -212px;' data-v-5778c730></div>`;
+              }
+              break;
+            case "clothes":
+              for (var i = 0; i < clothes.length; i++) {
+                let clothe = clothes[i];
+                html += `<div class='clothes' id='c_${clothe}' style='background-color:#ffffff;background-position:${
+                  i * -53
+                }px -265px;' data-v-5778c730></div>`;
+              }
+              break;
+            case "fabriccolors":
+              for (var i = 0; i < fabriccolors.length; i++) {
+                let fabriccolor = fabriccolors[i];
+                html += `<div class='fabriccolors' id='f_${fabriccolor}' style='background-color:#${fabriccolor};' data-v-5778c730></div>`;
+              }
+              break;
+            case "backgroundcolors":
+              for (var i = 0; i < backgroundcolors.length; i++) {
+                let backgroundcolor = backgroundcolors[i];
+                html += `<div class='backgroundcolors' id='g_${backgroundcolor}' style='background-color:#${backgroundcolor};' data-v-5778c730></div>`;
+              }
+              break;
+            case "glasses":
+              for (var i = 0; i < glasses.length; i++) {
+                let glass = glasses[i];
+                html += `<div class='glasses' id='g_${glass}' style='background-color:#ffffff;background-position:${
+                  i * -53
+                }px -313px;' data-v-5778c730></div>`;
+              }
+              break;
+            case "glassopacity":
+              for (var i = 0; i < glassopacities.length; i++) {
+                let glassopacity = glassopacities[i];
+                html += `<div class='glassopacity' id='o_${glassopacity}' style='background-color:#ffffff;' data-v-5778c730>${glassopacity}%</div>`;
+              }
+              break;
+            case "tattoos":
+              for (var i = 0; i < tattoos.length; i++) {
+                let tattoo = tattoos[i];
+                html += `<div class='tattoos' id='t_${tattoo}' style='background-color:#ffffff;background-position:${
+                  i * -53
+                }px -419px;' data-v-5778c730></div>`;
+              }
+              break;
+            case "accesories":
+              for (var i = 0; i < accesories.length; i++) {
+                let accesory = accesories[i];
+                html += `<div class='accesories' id='a_${accesory}' style='background-color:#ffffff;background-position:${
+                  i * -53
+                }px -369px;' data-v-5778c730></div>`;
+              }
+              break;
+          }
+          $("#options_div").html(html);
+          $("#menu_lines").click();
+        }
+      });
+      $("body").delegate("#random", "click", function () {
+        random();
+        sendAvatarData(currentData);
+      });
+      $("body").delegate("#menu_lines", "click", function () {
+        menu_class = document.getElementById("menu").classList;
+        if (!menu_class.contains("active")) {
+          $("#menu").addClass("active");
+          $("#menu").css({
+            border: "0px",
+          });
+          $("#menu")
+            .stop()
+            .animate(
+              {
+                width: "360px",
+              },
+              {
+                duration: 300,
+                complete: function () {
+                  $(this).stop().animate(
+                    {
+                      height: "460px",
+                    },
+                    {
+                      duration: 300,
+                    }
+                  );
+                },
+              }
+            );
+        } else {
+          $("#menu").removeClass("active");
+          $("#menu").css({
+            "border-right": "1px solid #707070",
+          });
+          $("#menu")
+            .stop()
+            .animate(
+              {
+                height: "99px",
+              },
+              {
+                duration: 300,
+                complete: function () {
+                  $(this).stop().animate(
+                    {
+                      width: "60px",
+                    },
+                    {
+                      duration: 300,
+                    }
+                  );
+                },
+              }
+            );
+        }
+      });
+      $("body").delegate(".skins", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        current_skincolor = id;
+        currentData.skinColor = current_skincolor;
+        $("#skin #body").attr("fill", "#" + id);
+      });
+      $("body").delegate(".eyes", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        currentData.eyes = id;
+        $("#eyes g").hide();
+        $("#eyes #e_" + id).show();
+      });
+      $("body").delegate(".eyebrows", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(3);
+        currentData.eyebrows = id;
+        $("#eyebrows g").hide();
+        $("#eyebrows #eb_" + id).show();
+      });
+      $("body").delegate(".mouths", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        currentData.mouth = id;
+        $("#mouths g").hide();
+        $("#mouths #m_" + id).show();
+      });
+      $("body").delegate(".hairstyles", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        current_hairstyle = id;
+        currentData.hairstyles = current_hairstyle;
+        $("#hair_front g").hide();
+        $("#hair_back g").hide();
+        $("#hair_front .h_" + id).show();
+        $("#hair_back .h_" + id).show();
+        var color = current_haircolor;
+        color = color.split("_");
+        $("#hair_front .h_" + current_hairstyle + " .tinted").attr(
+          "fill",
+          "#" + color[0]
+        );
+        $("#hair_back .h_" + current_hairstyle + " .tinted").attr(
+          "fill",
+          "#" + color[1]
+        );
+        $("#facialhair g .tinted").attr("fill", "#" + color[2]);
+      });
+      $("body").delegate(".haircolors", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(3);
+        current_haircolor = id;
+        currentData.haircolor = current_haircolor;
+        id = id.split("_");
+        $("#hair_front .h_" + current_hairstyle + " .tinted").attr(
+          "fill",
+          "#" + id[0]
+        );
+        $("#hair_back .h_" + current_hairstyle + " .tinted").attr(
+          "fill",
+          "#" + id[1]
+        );
+        $("#facialhair g .tinted").attr("fill", "#" + id[2]);
+      });
+      $("body").delegate(".facialhairs", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        currentData.facialhair = id;
+        $("#facialhair g").hide();
+        $("#facialhair #f_" + id).show();
+      });
+      $("body").delegate(".clothes", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        currentData.clothes = id;
+        $("#clothes g").hide();
+        $("#clothes #c_" + id).show();
+      });
+      $("body").delegate(".fabriccolors", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        current_fabriccolors = id;
+        currentData.fabriccolor = current_fabriccolors;
+        $("#clothes g .tinted").attr("fill", "#" + id);
+      });
+      $("body").delegate(".backgroundcolors", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        current_backgroundcolors = id;
+        currentData.backgroundcolor = current_backgroundcolors;
+        $("#background").attr("fill", "#" + id);
+      });
+      $("body").delegate(".glasses", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        currentData.glasses = id;
+        $("#glasses g").hide();
+        $("#glasses #g_" + id).show();
+      });
+      $("body").delegate(".glassopacity", "click", function () {
+        var id = $(this).attr("id");
+        id = parseInt(id.substr(2));
+        current_glassopacity = id / 100;
+        currentData.glassopacity = current_glassopacity;
+        $(".glass").attr("fill-opacity", current_glassopacity);
+      });
+      $("body").delegate(".tattoos", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        currentData.tattoos = id;
+        $("#tattoos g").hide();
+        $("#tattoos #t_" + id).show();
+      });
+      $("body").delegate(".accesories", "click", function () {
+        var id = $(this).attr("id");
+        id = id.substr(2);
+        currentData.accesories = id;
+        $("#accesories g").hide();
+        $("#accesories #a_" + id).show();
+      });
+      //random();
+      load(currentData);
+    });
+    function random() {
+      var rand_skins = skins[Math.floor(Math.random() * skins.length)];
+      var rand_eyes = eyes[Math.floor(Math.random() * eyes.length)];
+      var rand_eyebrows = eyebrows[Math.floor(Math.random() * eyebrows.length)];
+      var rand_mouths = mouths[Math.floor(Math.random() * mouths.length)];
+      var rand_hairstyles =
+        hairstyles[Math.floor(Math.random() * hairstyles.length)];
+      var rand_haircolors =
+        haircolors[Math.floor(Math.random() * haircolors.length)];
+      var rand_facialhairs =
+        facialhairs[Math.floor(Math.random() * facialhairs.length)];
+      var rand_clothes = clothes[Math.floor(Math.random() * clothes.length)];
+      var rand_fabriccolors =
+        fabriccolors[Math.floor(Math.random() * fabriccolors.length)];
+      var rand_backgroundcolors =
+        backgroundcolors[Math.floor(Math.random() * backgroundcolors.length)];
+      var rand_glasses = glasses[Math.floor(Math.random() * glasses.length)];
+      var rand_glassopacities =
+        parseInt(
+          glassopacities[Math.floor(Math.random() * glassopacities.length)]
+        ) / 100;
+      var rand_tattoos = tattoos[Math.floor(Math.random() * tattoos.length)];
+      var rand_accesories =
+        accesories[Math.floor(Math.random() * accesories.length)];
+      current_skincolor = rand_skins;
+      current_fabriccolors = rand_fabriccolors;
+      current_backgroundcolors = rand_backgroundcolors;
+      current_glassopacity = rand_glassopacities;
+      // -----
+      currentData.eyes = rand_eyes;
+      currentData.skinColor = rand_skins;
+      currentData.eyebrowsColor = rand_eyebrows;
+      currentData.mouthsColor = rand_mouths;
+      currentData.hairstyles = rand_hairstyles;
+      currentData.haircolor = rand_haircolors;
+      currentData.facialhair = rand_facialhairs;
+      currentData.clothes = rand_clothes;
+      currentData.fabriccolor = rand_fabriccolors;
+      currentData.background = rand_backgroundcolors;
+      currentData.glasses = rand_glasses;
+      currentData.glassopacity = rand_glassopacities;
+      currentData.tattoos = rand_tattoos;
+      currentData.accesories = rand_accesories;
+      // -----
+      $("#skin #body").attr("fill", "#" + rand_skins);
+      $("#eyes g").hide();
+      $("#eyes #e_" + rand_eyes).show();
+      $("#eyebrows g").hide();
+      $("#eyebrows #eb_" + rand_eyebrows).show();
+      $("#mouths g").hide();
+      $("#mouths #m_" + rand_mouths).show();
+      current_hairstyle = rand_hairstyles;
+      $("#hair_front g").hide();
+      $("#hair_back g").hide();
+      $("#hair_front .h_" + rand_hairstyles).show();
+      $("#hair_back .h_" + rand_hairstyles).show();
+      current_haircolor = rand_haircolors;
+      var color = current_haircolor;
+      color = color.split("_");
+      $("#hair_front .h_" + current_hairstyle + " .tinted").attr(
+        "fill",
+        "#" + color[0]
+      );
+      $("#hair_back .h_" + current_hairstyle + " .tinted").attr(
+        "fill",
+        "#" + color[1]
+      );
+      $("#facialhair g .tinted").attr("fill", "#" + color[2]);
+      $("#facialhair g").hide();
+      $("#facialhair #f_" + rand_facialhairs).show();
+      $("#clothes g").hide();
+      $("#clothes #c_" + rand_clothes).show();
+      $("#glasses g").hide();
+      $("#glasses #g_" + rand_glasses).show();
+      $(".glass").attr("fill-opacity", rand_glassopacities);
+      $("#clothes g .tinted").attr("fill", "#" + rand_fabriccolors);
+      $("#background").attr("fill", "#" + rand_backgroundcolors);
+      $("#tattoos g").hide();
+      $("#tattoos #t_" + rand_tattoos).show();
+      $("#accesories g").hide();
+      $("#accesories #a_" + rand_accesories).show();
+    }
+  });
+});
+
+// (() => {let f = ''; Object.keys(style).forEach((k) => { f += `${k}: ${style[k]};` }); return f})()
 </script>
 
 <template>
-  <div id="avatar" class="rounded-xl">
+  <div id="avatar" class="rounded-xl" :style="finalStyle">
     <svg
+      :style="finalStyle"
       id="hair_back"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
-      class="rounded-t-xl"
+      :class="editor ? 'rounded-t-xl' : 'rounded-t-lg rounded-b-lg'"
       width="360px"
       height="360px"
       viewBox="0 0 360 360"
@@ -663,7 +713,7 @@ export default {
         fill="#ffffff"
         points="0,0 360,0 360,360 0,360 "
       />
-      <g class="h_longhair" style="display: ">
+      <g class="h_longhair" style="display: none">
         <path
           class="tinted"
           fill="#9a4f2b"
@@ -735,6 +785,7 @@ export default {
       </g>
     </svg>
     <svg
+      :style="finalStyle"
       id="skincolor"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -764,6 +815,7 @@ export default {
       </g>
     </svg>
     <svg
+      :style="finalStyle"
       id="tattoos"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -830,6 +882,7 @@ export default {
       </g>
     </svg>
     <svg
+      :style="finalStyle"
       id="accesories"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -878,6 +931,7 @@ export default {
       </g>
     </svg>
     <svg
+      :style="finalStyle"
       id="eyes"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -1021,6 +1075,7 @@ export default {
       </g>
     </svg>
     <svg
+      :style="finalStyle"
       id="eyebrows"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -1159,6 +1214,7 @@ export default {
       </g>
     </svg>
     <svg
+      :style="finalStyle"
       id="mouths"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -1294,6 +1350,7 @@ export default {
       </g>
     </svg>
     <svg
+      :style="finalStyle"
       id="clothes"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -1395,6 +1452,7 @@ export default {
       </g>
     </svg>
     <svg
+      :style="finalStyle"
       id="hair_front"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -1527,7 +1585,7 @@ export default {
           d="M105 91c0,0 0,-1 0,-1 -1,-2 0,-5 2,-6 1,-1 1,-2 1,-3 0,-1 -1,-1 -1,-2 -1,-3 1,-5 3,-6 1,0 2,0 3,0 0,-1 0,-1 1,-2 -2,0 -3,-2 -3,-5 1,-2 3,-4 5,-3 1,0 3,1 4,1 1,-1 2,-2 3,-4 0,0 0,-1 0,-2 0,-1 0,-3 0,-5 -1,-2 1,-4 3,-5 3,0 5,1 5,4 0,1 0,1 0,2 2,-2 4,-3 6,-4 0,-1 0,-3 0,-4 0,-3 2,-5 4,-5 3,0 5,2 5,5l0 0c1,0 3,-1 4,-1 0,-1 0,-1 0,-2 -1,-2 0,-4 2,-5 3,-1 5,0 6,3 0,0 0,1 0,1 2,-1 4,-1 7,-1 0,-1 0,-1 0,-2 0,-2 2,-4 4,-4 3,0 4,2 4,5 2,-1 4,-1 5,-1 1,-1 2,-3 4,-2 2,0 4,1 4,3 2,0 3,0 5,0 1,-1 2,-2 4,-2 2,0 3,2 4,4 1,0 2,0 4,1l0 0c0,0 0,0 1,0 2,-1 4,0 5,2 0,0 1,1 1,1 1,1 3,2 5,3 0,0 0,1 1,1 0,-1 1,-1 1,-2 2,-1 5,-1 7,1 1,1 1,4 -1,6 0,0 -1,1 -2,2 1,0 1,1 2,1 0,0 1,0 1,-1 2,0 4,-1 6,-2 2,-1 4,0 6,2 1,2 0,4 -2,5 1,1 3,1 4,2 1,0 3,-1 5,-1 2,-1 4,1 5,3 0,3 -1,5 -4,6 0,0 0,0 0,0 1,2 3,5 4,9 6,22 -1,23 -18,13 -10,-5 -26,-12 -50,-11 -13,0 -28,1 -46,8 -12,5 -18,9 -18,16 -1,13 -4,26 -4,29 -1,0 -3,0 -5,1 -1,-3 -1,-7 -2,-10 -1,-10 -2,-19 0,-26 0,-4 0,-7 0,-10zm134 16c-2,-6 4,-6 6,-4 3,3 4,7 5,11 1,3 1,21 -1,22 -4,0 -2,-9 -5,-18 -1,-6 -5,-11 -5,-11z"
         />
       </g>
-      <g class="h_shorthairdreads2" style="display: none">
+      <g class="h_shorthairdreads2" style="display: none" :style="finalStyle">
         <path
           fill="#000000"
           fill-opacity="0.2"
@@ -1540,7 +1598,7 @@ export default {
           d="M126 229c-1,0 -1,0 -1,1 0,0 -1,1 -2,1 -2,2 -5,3 -7,3 -1,1 -2,1 -3,3 -1,1 -3,2 -5,1 -2,-1 -2,-3 -2,-4 2,-4 5,-5 8,-6 1,-1 2,-1 3,-2 -4,-4 -8,-8 -11,-12l0 0c-1,0 -3,0 -7,0 -1,-1 -3,-2 -2,-4 0,-2 2,-4 4,-3l0 0c-5,-7 -7,-12 -8,-16 -2,0 -4,2 -5,3 -1,2 -2,4 -3,6 0,1 -2,2 -4,2 -2,-1 -3,-3 -2,-5 1,-2 2,-5 4,-7 0,-1 0,-1 1,-2 -4,1 -9,-1 -10,-2 -2,-2 -2,-4 -1,-5 1,-2 3,-2 5,-1 1,1 3,1 6,1 1,0 2,0 3,0 -2,-1 -4,-3 -6,-5 0,-1 -1,-2 -2,-2 -1,-2 -1,-4 1,-5 1,-1 3,-1 5,0 1,1 1,2 2,2 2,2 3,4 3,3 0,0 0,0 1,-1 0,0 1,-1 1,-2 -1,-3 -2,-4 -4,-6 0,0 -1,-1 -1,-1 -4,2 -7,2 -11,2 -6,-1 -11,-5 -14,-8 -1,-1 -1,-4 0,-5 1,-1 4,-1 5,0 2,2 6,5 10,6 2,0 4,0 5,-1 0,-1 -1,-4 -1,-6l-10 -8c-2,-1 -2,-3 -1,-5 1,-1 4,-1 5,0l6 4c0,-4 1,-8 2,-14 -1,-1 -2,-2 -3,-3 -2,-2 -5,-4 -7,-5 -2,0 -3,1 -4,1 -1,1 -2,2 -3,3 -2,2 -4,2 -5,0 -2,-1 -2,-3 0,-5 1,-1 3,-3 4,-4 3,-1 5,-2 8,-2 5,1 8,3 11,6 0,0 0,0 0,-1 -2,-2 -5,-4 -8,-6l0 0c-4,-3 -7,-5 -9,-6 -2,-1 -3,-3 -2,-4 0,-2 3,-3 4,-3 3,1 7,4 11,7l0 0c0,0 0,0 1,1 0,-1 -1,-2 -1,-2 0,0 0,0 0,-1 -4,-1 -6,-4 -7,-6 0,-2 1,-4 2,-5 2,0 4,1 5,3 0,0 0,0 0,0 1,0 1,-1 1,-2 -4,-4 -6,-2 -10,1l-1 0c-1,1 -4,1 -5,-1 -1,-1 -1,-3 1,-4l1 -1c7,-5 10,-8 16,-2 0,-1 1,-1 1,-2 1,-3 3,-6 4,-8 -4,-4 -6,-11 -7,-15 0,0 -1,-1 -1,-1 0,-2 1,-4 2,-5 2,-1 4,0 5,2 0,1 0,1 0,2 1,2 2,5 3,8 0,-2 0,-3 0,-4 -1,-2 -2,-3 1,-8 -1,0 -2,-1 -2,-2 -3,-4 -5,-8 -5,-13 -1,-2 1,-4 3,-4 2,0 3,1 4,3 0,4 2,7 3,10 1,0 1,1 2,1 1,0 3,0 6,1 0,0 1,0 2,0 0,-3 1,-6 2,-9 0,-3 1,-6 2,-7 2,-2 4,-2 5,-1 2,1 2,3 1,5 0,1 -1,3 -2,5l0 0c3,-2 7,-6 11,-9 -3,-5 -3,-11 -3,-16 0,-2 0,-3 0,-5 -1,-2 1,-3 3,-3 2,0 3,1 4,3 0,2 0,3 0,5 0,4 0,8 2,12 2,-1 4,-2 6,-3 2,-5 1,-7 1,-10 0,-1 0,-2 0,-4 0,-1 1,-3 3,-3 2,0 4,1 4,3 0,1 0,2 0,3 0,3 1,5 0,7 3,0 5,-1 8,-2 0,-5 1,-7 3,-10 1,-1 1,-2 2,-3 1,-2 3,-2 5,-1 2,1 2,3 1,4 -1,2 -1,3 -1,3 -2,2 -2,4 -3,6 2,0 3,0 5,0 1,-5 2,-7 4,-9l1 0c1,-2 3,-2 5,0 1,1 1,3 0,5l-1 0c-1,1 -1,2 -2,3 3,1 6,1 10,1 -1,0 -1,-1 -2,-1 0,-1 0,-1 -1,-1 -1,-2 -1,-4 1,-5 1,-2 3,-1 5,0 0,0 0,0 0,1 2,2 4,3 5,7 1,0 2,1 3,1l4 1c6,-6 7,-7 8,-8 0,-1 1,-2 2,-4 1,-2 4,-2 5,-1 2,2 2,4 1,5 -1,2 -2,2 -2,3 -1,1 -1,3 -5,7 2,0 4,0 6,1 1,-4 3,-6 4,-8 0,-1 0,-1 1,-2 0,-2 3,-2 4,-1 2,1 3,3 2,4 0,1 -1,2 -1,2 -1,2 -2,4 -3,6 3,1 4,1 5,2 1,-2 1,-3 1,-4 1,-4 4,-6 6,-7 1,-1 3,-1 4,1 2,1 1,3 0,4 -1,1 -2,2 -3,4 -1,2 -1,6 0,11 1,0 2,0 3,1 0,0 0,0 0,0 1,-2 1,-4 2,-5 0,-2 0,-3 0,-5 0,-2 2,-3 4,-3 2,0 3,2 3,4 0,2 0,3 0,4 -1,2 -1,4 -2,7 2,1 4,2 6,3 1,-2 1,-4 1,-5 0,-2 1,-4 3,-4 2,0 4,2 4,4 0,3 0,6 -1,9 -1,1 -1,2 -1,3 0,0 0,1 0,1 0,1 0,3 1,3 1,1 1,1 2,1 1,0 2,-1 3,-1 1,-4 1,-6 0,-8 0,-1 0,-3 0,-5 0,-2 1,-4 3,-4 2,0 4,2 4,4 0,1 0,2 0,3 1,3 2,6 -1,16 0,0 -1,1 -1,2 1,2 2,4 3,7 0,-3 1,-5 1,-6 0,0 0,-1 0,-2 0,-1 2,-3 4,-2 2,0 3,2 3,4 0,0 0,0 0,1 0,2 -1,6 -3,10 -1,2 -2,3 -2,4 0,1 1,3 1,5 2,-5 3,-10 4,-10 0,-2 1,-4 3,-4 2,1 4,2 4,4 -1,2 -3,9 -5,14l0 1c1,-2 3,-4 4,-5 2,-1 4,-1 5,0 1,2 1,4 0,5 -1,1 -2,3 -4,5 -2,2 -4,4 -6,6l1 2c0,2 0,3 1,4 1,-4 2,-7 2,-8 0,-2 2,-4 4,-4 1,0 3,2 3,4 0,2 -1,6 -3,11 3,-2 6,-4 8,-4 2,0 3,2 3,4 0,2 -1,4 -3,4 -1,0 -5,2 -9,4 -1,1 -3,2 -4,3 0,0 0,0 0,1l0 0c3,0 6,1 8,1 2,0 3,1 3,3 0,2 -1,4 -3,4 -3,0 -5,-1 -8,-1l0 0c5,2 9,5 9,5 2,1 3,3 2,5 -1,1 -3,2 -5,1 -2,-1 -5,-3 -9,-5l0 0c-1,1 -1,1 -1,1 2,1 4,2 6,3 4,2 8,5 12,6 1,1 2,3 2,5 -1,1 -3,2 -5,2 -3,-2 -6,-3 -9,-5 0,1 1,3 1,4l0 1c2,1 3,2 4,3 2,1 3,4 4,8 0,3 0,6 0,10 0,2 -1,3 -3,3 -2,0 -4,-1 -4,-3 0,-4 0,-7 0,-9 -1,-2 -1,-3 -2,-4 0,0 -1,-1 -1,-1 -1,1 -2,2 -3,3 -1,1 -1,2 -2,3 2,3 4,6 6,10l0 1c1,2 1,4 -1,5 -2,1 -4,0 -5,-1l0 -2 -1 0c0,1 0,2 -1,4 5,1 5,3 6,5 0,1 1,3 2,4 1,2 1,4 -1,5 -1,1 -4,1 -5,-1 -1,-2 -2,-4 -2,-5 -1,-1 -1,-1 -5,-3 0,0 -1,0 -1,0 -1,0 -1,0 -2,0 -1,1 -3,1 -3,2 -1,2 -2,3 -2,3 2,1 4,1 7,2 0,0 1,0 2,0 2,0 3,1 3,3 0,2 -2,4 -4,4 -1,0 -1,0 -2,0 -2,-1 -4,-1 -6,-1 0,1 -1,1 -1,2 1,1 4,2 8,2 2,1 3,2 3,4 0,2 -2,4 -4,3 -6,-1 -10,-2 -12,-3 -2,2 -5,5 -8,8 0,0 0,1 1,1 3,1 6,2 9,3 1,0 3,2 2,4 0,2 -2,3 -4,3 -2,-1 -6,-2 -10,-4 1,2 1,4 1,6 1,4 2,8 2,13 -1,2 -2,3 -4,3 -2,0 -4,-2 -3,-4 0,-4 -1,-7 -2,-11 0,-3 -1,-6 -1,-10 0,-1 0,-2 0,-2 0,0 0,0 0,-1 0,0 0,-1 0,-2l0 0c-1,1 -1,1 -2,2 9,-11 14,-24 15,-38 7,-1 13,-7 13,-15l0 -15c0,-8 -6,-14 -13,-15l0 -8c0,-9 -2,-18 -5,-26 -10,-18 -39,-13 -64,-14 -25,1 -54,-4 -64,14 -3,8 -5,17 -5,26l0 8c-7,1 -13,7 -13,15l0 15c0,8 6,14 13,15 2,18 9,34 22,45 -3,1 -6,2 -7,3z"
         />
       </g>
-      <g class="h_shorthairfrizzle" style="display: none">
+      <g class="h_shorthairfrizzle" style="display: none" :style="finalStyle">
         <path
           class="tinted"
           fill="#bb7748"
@@ -1616,6 +1674,7 @@ export default {
       </g>
     </svg>
     <svg
+      :style="finalStyle"
       id="facialhair"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -1654,6 +1713,7 @@ export default {
       </g>
     </svg>
     <svg
+      :style="finalStyle"
       id="glasses"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -1753,7 +1813,7 @@ export default {
         />
       </g>
     </svg>
-    <div id="footer" class="rounded-bl-xl dark:bg-neutral-900">
+    <div id="footer" class="rounded-bl-xl dark:bg-neutral-900" v-if="editor">
       <div id="menu" class="dark:bg-neutral-900 rounded-xl">
         <div
           id="random"
@@ -1850,6 +1910,7 @@ export default {
       </div>
     </div>
   </div>
+  <div class="hidden rounded-b-xl"></div>
 </template>
 
 <style scoped>

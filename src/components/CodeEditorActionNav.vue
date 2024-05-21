@@ -73,7 +73,7 @@ function acutallyEditName() {
         </h4>
         <input
           id="projNameModify"
-          class="hidden ml-2"
+          class="hidden ml-2 dark:bg-black h-7"
           @focusout="acutallyEditName()"
           autocomplete="off"
         />

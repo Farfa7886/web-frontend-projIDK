@@ -4,6 +4,7 @@ import ForkBtn from "../components/ProjectPage/ForkBtn.vue";
 import CommentBoxInput from "../components/ProjectPage/CommentBoxInput.vue";
 import CommentsRenderer from "../components/ProjectPage/CommentsRenderer.vue";
 import SlideshowRenderer from "../components/slideshowRenders/ProductionRenderer.vue";
+import AvatarMaker from "../components/AvatarMaker.vue";
 
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
@@ -21,6 +22,8 @@ let currentPage = 1;
 let maxPages = 1;
 const isLogged = localStorage.getItem("token") ? true : false;
 let likesCounter = 0;
+const renderAvatar = ref(false);
+let ownerAvatar = {};
 
 // for slideshows
 let renderRenderer = ref(false);
@@ -35,6 +38,7 @@ interface ProjectInfo {
   owner: {
     _id: string;
     username: string;
+    avatar: string;
   };
   forked: boolean;
   public: boolean;
@@ -50,6 +54,7 @@ interface Comment {
   author: {
     _id: string;
     username: string;
+    avatar: object;
   };
   content: string;
   _id: string;
@@ -161,6 +166,8 @@ utils.onLoad(async () => {
   document.getElementById("projectName").innerText = projectInfo.name;
   document.getElementById("projectAuthor").innerText =
     projectInfo.owner.username;
+  ownerAvatar = projectInfo.owner.avatar;
+  renderAvatar.value = true;
   if (projectInfo.type == "slideshow")
     document.getElementById("proj-reload").classList.add("hidden");
 
@@ -386,10 +393,19 @@ function setThumbnail() {
       >
         <div class="flex items-center w-full">
           <img
-            class="ml-3"
+            class="ml-3 hidden"
             src="/no-icon.png"
             style="object-fit: cover; height: 35px; width: 35px"
           />
+          <div class="ml-3 mb-2 mt-2">
+            <AvatarMaker
+              v-if="renderAvatar"
+              :avatar="ownerAvatar"
+              :editor="false"
+              style="width: 42px; height: 42px"
+            />
+          </div>
+
           <div class="ml-2 w-full">
             <h2 class="font-bold text-xl w-full" id="projectName">
               Project name
