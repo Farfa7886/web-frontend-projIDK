@@ -46,7 +46,7 @@ import projectConfig from "../../projectConfig";
                 ></path>
               </svg>
             </a>
-            <a href="/editor/new" class="ml-10">
+            <a href="https://github.com/campfirehub" class="ml-10">
               <svg
                 width="30"
                 height="30"
