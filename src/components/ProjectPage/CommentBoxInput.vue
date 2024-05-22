@@ -8,6 +8,7 @@ const sendSVG = `<svg class="icon line-color" data-name="Line Color" height=24 v
 
 const route = useRoute();
 let username = JSON.parse(localStorage.getItem("userData"))?.username;
+const avatarUrl = JSON.parse(localStorage.getItem("userData"))?.avatarUrl;
 
 defineProps({
   avatar: String,
@@ -48,7 +49,7 @@ function sendComment() {
 <template>
   <div class="flex">
     <img
-      :src="avatar == '' ? '/no-icon.png' : avatar"
+      :src="avatarUrl"
       style="height: 50px; width: 50px; object-fit: cover"
     />
     <div class="ml-3" style="max-width: 500px; width: 100%">

@@ -82,7 +82,7 @@ async function deleteComment() {
     <a :href="`/profile/${authorId}`"
       ><img
         :src="avatar == '' ? '/no-icon.png' : avatar"
-        style="height: 50px; width: 50px"
+        style="height: 50px; min-width: 50px; object-fit: cover"
     /></a>
     <div
       class="ml-3 rounded-b-xl rounded-tr-xl dark:bg-neutral-800 bg-neutral-100"
@@ -107,7 +107,7 @@ async function deleteComment() {
         {{ DOMPurify.sanitize(content) }}
       </p>
       <div style="height: 2px" class="dark:bg-neutral-700 bg-neutral-400 m-3" />
-      <div class="flex ml-2 mb-2">
+      <div class="flex ml-2 mb-2 flex-wrap gap-1">
         <button
           class="flex items-center dark:hover:bg-neutral-700 hover:bg-neutral-300 rounded-lg mr-2"
           @click="utils.toggleModal('replyModal' + customId)"

@@ -5,6 +5,10 @@ import { eventBus } from "../event-bus";
 const props = defineProps({
   data: Object,
   avatar: Object,
+  startRandom: {
+    type: Boolean,
+    default: false,
+  },
   editor: {
     type: Boolean,
     default: true,
@@ -174,7 +178,7 @@ onMounted(() => {
       tattoos: tattoos[0],
       backgroundcolor: current_backgroundcolors,
     };
-    currentData = props.avatar;
+    if (props.avatar) currentData = props.avatar;
     if (props.data) currentData = props.data;
 
     function load(config) {
@@ -604,7 +608,7 @@ onMounted(() => {
         $("#accesories g").hide();
         $("#accesories #a_" + id).show();
       });
-      //random();
+      if (props.startRandom) random();
       load(currentData);
     });
     function random() {
@@ -1815,7 +1819,12 @@ onMounted(() => {
         </g>
       </svg>
     </div>
-    <div id="footer" class="rounded-bl-xl dark:bg-neutral-900" v-if="editor">
+    <div
+      id="footer"
+      class="rounded-bl-xl dark:bg-neutral-900"
+      v-if="editor"
+      :style="finalStyle"
+    >
       <div id="menu" class="dark:bg-neutral-900 rounded-xl">
         <div
           id="random"

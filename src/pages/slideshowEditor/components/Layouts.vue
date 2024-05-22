@@ -63,12 +63,13 @@ function select() {
         </button>
       </div>
     </div>
-    <p class="mt-3 mb-1">Quiz</p>
+    <p class="mt-3 mb-1">Quiz - <i class="opacity-50">in arrivo</i></p>
     <div class="grid grid-cols-5 w-full gap-6">
       <div class="none">
         <button
+          disabled
           style="width: 150px; height: 107px"
-          class="hover:border-2 p-2 pb-5 rounded-xl"
+          class="hover:boorder-2 p-2 pb-5 rounded-xl"
           @click="selectSlide('quiz_1')"
         >
           <SvgLoader src="/slideshowLayouts/quiz_1.svg" />
@@ -76,8 +77,9 @@ function select() {
       </div>
       <div class="none">
         <button
+          disabled
           style="width: 150px; height: 107px"
-          class="hover:border-2 p-2 pb-5 rounded-xl"
+          class="hover:boorder-2 p-2 pb-5 rounded-xl"
           @click="selectSlide('quiz_2')"
         >
           <SvgLoader src="/slideshowLayouts/quiz_2.svg" />
@@ -85,8 +87,9 @@ function select() {
       </div>
       <div class="none">
         <button
+          disabled
           style="width: 150px; height: 107px"
-          class="hover:border-2 p-2 pb-5 rounded-xl"
+          class="hover:boorder-2 p-2 pb-5 rounded-xl"
           @click="selectSlide('quiz_3')"
         >
           <SvgLoader src="/slideshowLayouts/quiz_3.svg" />

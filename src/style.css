@@ -23,9 +23,6 @@
   }
 } */
 
-.htmlBG {
-  background-color: var(--light-bg);
-}
 div:not([class]):not([style]) {
   background-color: var(--light-bg);
 }

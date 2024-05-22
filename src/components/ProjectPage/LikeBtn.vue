@@ -11,7 +11,7 @@ const store = useLikesStore();
 
 <template>
   <button
-    class="opacity-75 ml-3 dark:bg-neutral-700 bg-white rounded-xl hover:opacity-30"
+    class="opacity-75 ml-1 dark:bg-neutral-700 bg-white rounded-xl hover:opacity-30"
   >
     <div class="flex justify-center items-center ml-3 mr-3 mt-1 mb-1">
       <svg

@@ -56,17 +56,19 @@ function sortProjects(filter) {
 
 <template>
   <div
-    class="flex dark:bg-neutral-900 bg-neutral-200"
+    class="lg:flex md:flex dark:bg-neutral-900 bg-neutral-200"
     style="height: calc(100vh - 70px)"
   >
-    <div class="dark:bg-neutral-900 bg-neutral-200 h-full" style="width: 300px">
-      <div class="ml-3 mr-3">
+    <div
+      class="dark:bg-neutral-900 bg-neutral-200 lg:h-full overflow-x-auto lg:block md:block flex lg:w-[300px] md:w-[300px]"
+    >
+      <div class="ml-3 mr-3 lg:block md:block flex lg:gap-0 gap-2">
         <button
           style="width: 100%; height: 50px"
-          class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2"
+          class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2 p-3"
           @click="sortProjects('all')"
         >
-          <p class="ml-3 flex items-center">
+          <p class="flex items-center">
             <svg
               width="20"
               height="20"
@@ -90,9 +92,9 @@ function sortProjects(filter) {
         <button
           @click="sortProjects('forked')"
           style="width: 100%; height: 50px"
-          class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2"
+          class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2 p-3"
         >
-          <p class="ml-3 flex items-center">
+          <p class="flex items-center">
             <svg
               width="20"
               height="20"
@@ -112,9 +114,9 @@ function sortProjects(filter) {
         <button
           style="width: 100%; height: 50px"
           @click="sortProjects('public')"
-          class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2"
+          class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2 p-3"
         >
-          <p class="ml-3 flex items-center">
+          <p class="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -134,9 +136,9 @@ function sortProjects(filter) {
         <button
           @click="sortProjects('private')"
           style="width: 100%; height: 50px"
-          class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2"
+          class="text-left dark:bg-neutral-800 bg-neutral-100 rounded-xl hover:opacity-75 mb-2 p-3"
         >
-          <p class="ml-3 flex items-center">
+          <p class="flex items-center">
             <svg
               width="20"
               height="20"

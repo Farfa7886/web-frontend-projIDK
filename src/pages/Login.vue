@@ -28,10 +28,13 @@ function login() {
         JSON.stringify({
           username: response.data.data.username,
           id: response.data.data.userId,
+          avatarUrl: response.data.data.avatarUrl,
         })
       );
       if (!response.data.data.completedSetup) {
         window.location.href = "/firstSetup";
+      } else {
+        window.location.href = "/projects";
       }
     })
     .catch((err) => {
@@ -48,13 +51,13 @@ function login() {
     class="flex justify-center"
   >
     <div class="dark:bg-neutral-800 bg-white flex h-full items-center py-16">
-      <main class="w-full max-w-md mx-auto p-6">
+      <main class="w-full lg:max-w-md mx-auto p-6">
         <div
           class="mt-7 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-zinc-800 dark:border-gray-700"
         >
           <div
-            class="p-4 sm:p-7 rounded-xl"
-            style="border: 2px solid white; width: 400px"
+            class="p-4 sm:p-7 rounded-xl lg:w-[400px] w-full"
+            style="border: 2px solid white"
           >
             <div class="text-center">
               <h1

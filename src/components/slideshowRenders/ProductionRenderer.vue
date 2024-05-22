@@ -70,15 +70,16 @@ function next() {
   forceRender();
   setTimeout(() => {
     loadSlide(currentIndex);
-  }, 20);
+  }, 5);
 }
-function previus() {
+async function previus() {
   currentIndex--;
   currentSlideType = props.slides[currentIndex].layoutType;
   forceRender();
+  await nextTick();
   setTimeout(() => {
     loadSlide(currentIndex);
-  }, 20);
+  }, 5);
 }
 </script>
 

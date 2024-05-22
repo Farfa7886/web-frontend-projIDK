@@ -11,6 +11,8 @@ import Projects from "./pages/Projects.vue";
 import ProjectPage from "./pages/ProjectPage.vue";
 import Notifications from "./pages/Notifications.vue";
 import Settings from "./pages/Settings.vue";
+import Privacy from "./pages/Privacy.vue";
+import ToS from "./pages/ToS.vue";
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -29,6 +31,9 @@ export const router = createRouter({
     },
     { path: "/notifications", component: Notifications, name: "Notifications" },
     { path: "/settings", component: Settings, name: "Settings" },
+    { path: "/privacy", component: Privacy, name: "Privacy" },
+    { path: "/tos", component: ToS, name: "ToS" },
+
     { path: "/:pathMatch(.*)*", component: NotFoundPage, name: "Not Found" },
   ],
 });

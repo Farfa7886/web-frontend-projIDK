@@ -1,4 +1,4 @@
 export default {
-  name: "IDK",
+  name: "CampFire Hub",
   baseAPIUrl: "http://localhost:3000",
 };

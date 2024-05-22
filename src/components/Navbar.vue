@@ -94,11 +94,7 @@ onMounted(() => {
       class="max-w-screen flex flex-wrap items-center justify-between mx-auto p-4"
     >
       <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-        <img
-          src="https://flowbite.com/docs/images/logo.svg"
-          class="h-8"
-          alt="Flowbite Logo"
-        />
+        <img src="/icon.png" class="h-8" alt="Flowbite Logo" />
         <span
           class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
           >{{ config.name }}</span
@@ -152,7 +148,7 @@ onMounted(() => {
             </label>
           </li>
           <li>
-            <button id="theme-toggle" type="button" class="btn sm">
+            <button id="theme-toggle" type="button" class="btn sm lg:mt-0 mt-2">
               <svg
                 id="theme-toggle-dark-icon"
                 class="hidden w-5 h-5"
@@ -182,7 +178,7 @@ onMounted(() => {
           <li>
             <RouterLink
               to="/"
-              class="block py-2 px-3 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
+              class="block lg:mb-0 mb-2 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
               style="height: 35px; width: 70px; line-height: 35px"
               aria-current="page"
               >Home</RouterLink
@@ -191,25 +187,25 @@ onMounted(() => {
           <li>
             <RouterLink
               to="/explore"
-              class="block py-2 px-3 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
+              class="block lg:mb-0 mb-2 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
               style="height: 35px; width: 80px; line-height: 35px"
               aria-current="page"
-              >Explore</RouterLink
+              >Esplora</RouterLink
             >
           </li>
           <li>
             <RouterLink
               to="/editor/new"
-              class="block py-2 px-3 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
+              class="block lg:mb-0 mb-2 lg:text-center text-left text-gray-900 rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
               style="height: 35px; width: 80px; line-height: 35px"
               aria-current="page"
-              >Create</RouterLink
+              ><p class="lg:ml-0 ml-[14px]">Crea</p></RouterLink
             >
           </li>
           <li id="acc-login">
             <RouterLink
               to="/login"
-              class="block py-2 px-3 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
+              class="block lg:mb-0 mb-2 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
               style="height: 35px; width: 80px; line-height: 35px"
               aria-current="page"
             >
@@ -234,7 +230,7 @@ onMounted(() => {
           </li>
           <li id="acc-opts" class="hidden">
             <button
-              class="block cursor-pointer py-2 px-3 text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
+              class="block cursor-pointer text-gray-900 text-center rounded hover:bg-gray-100 md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-gray-100"
               style="height: 35px; width: 120px; line-height: 35px"
               aria-current="page"
               data-dropdown-toggle="dropdownHover"
@@ -248,7 +244,11 @@ onMounted(() => {
                   viewBox="0 0 48 48"
                   xmlns="http://www.w3.org/2000/svg"
                   class="mt-2 mr-2"
-                  style="margin-left: 0.35rem"
+                  style="
+                    margin-left: 0.35rem;
+                    min-width: 18px;
+                    min-height: 18px;
+                  "
                 >
                   <path d="M0 0h48v48H0z" fill="none" />
                   <path

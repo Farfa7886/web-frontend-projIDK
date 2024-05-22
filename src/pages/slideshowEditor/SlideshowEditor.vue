@@ -305,7 +305,10 @@ function doRenderPreview() {
       />
     </div>
     <div class="flex h-full items-center">
-      <button class="btn solid sm danger mr-2" @click="doRenderPreview()">
+      <button
+        class="btn solid sm danger mr-2 hidden"
+        @click="doRenderPreview()"
+      >
         Anteprima
       </button>
       <button class="btn solid sm info" id="save-btn" @click="save()">

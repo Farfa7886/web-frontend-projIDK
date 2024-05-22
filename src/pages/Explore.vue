@@ -26,18 +26,15 @@ onMounted(async () => {
   <div
     id="loader"
     class="flex w-full items-center justify-center dark:bg-neutral-800"
-    style="height: calc(100vh - 70px)"
+    style="min-height: calc(100vh - 70px)"
   >
     <div class="loader bw">
       <div class="bar-bounce" />
     </div>
   </div>
-  <div
-    class="w-full h-[calc(100vh-70px)] hidden dark:bg-neutral-800"
-    id="bgContainer"
-  >
+  <div class="w-full min-h-[calc(100vh-70px)] hidden" id="bgContainer">
     <div
-      class="grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 xl:w-full w-[calc(100%-2.5rem)] hidden dark:bg-neutral-800"
+      class="grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 xl:w-full w-[calc(100%-2.5rem)] hidden"
       id="mainDIV"
     >
       <Card

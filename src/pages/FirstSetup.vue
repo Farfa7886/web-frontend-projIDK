@@ -2,6 +2,10 @@
 import checkAuth from "../helpers/checkAuth";
 import { DotLottie } from "@lottiefiles/dotlottie-web";
 import utils from "../helpers/utils";
+import AvatarMaker from "../components/AvatarMaker.vue";
+import { eventBus } from "../event-bus";
+import axios from "axios";
+import html2canvas from "html2canvas";
 checkAuth();
 
 const lottieSteps = [
@@ -10,6 +14,27 @@ const lottieSteps = [
 ];
 
 let animationPlayer;
+let avatarData = {};
+let base64Avatar = "";
+
+eventBus.addEventListener("avatarData", (event) => {
+  avatarData = event.detail;
+});
+
+async function uploadAvatar(base64) {
+  const response = await axios.post(
+    `/image/upload`,
+    {
+      image: base64.replace("data:image/png;base64,", ""),
+    },
+    {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response.data.data;
+}
 
 utils.onLoad(() => {
   animationPlayer = new DotLottie({
@@ -20,7 +45,42 @@ utils.onLoad(() => {
   });
 });
 
-function nextStep(currentStep) {
+async function apply(imgData) {
+  let lStorage = JSON.parse(localStorage.getItem("userData"));
+  lStorage.avatarUrl = imgData;
+  localStorage.setItem("userData", JSON.stringify(lStorage));
+  const avatarURL = await uploadAvatar(imgData);
+  axios
+    .post(
+      `/user/update`,
+      {
+        avatar: avatarData,
+        avatarUrl: avatarURL,
+        completedSetup: true,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
+    .then(() => {
+      window.open("/", "_self");
+    })
+    .catch((err) => {
+      utils.notyf(err.response?.data?.error || "Errore", "error");
+    });
+}
+
+async function nextStep(currentStep) {
+  if (currentStep == 2) {
+    document.getElementById("dotlottie-canvas").classList.add("hidden");
+    document.getElementById("applying-spinner").classList.remove("hidden");
+    document.getElementById("hair_back").classList.remove("rounded-t-xl");
+    const canvas = await html2canvas(document.getElementById("avatarSvgs"));
+    const imgData = canvas.toDataURL("image/png");
+    apply(imgData);
+  }
   document.getElementById("sep" + currentStep).classList.add("hidden");
   document.getElementById("sep" + (currentStep + 1)).classList.remove("hidden");
   animationPlayer.destroy();
@@ -39,8 +99,11 @@ function nextStep(currentStep) {
     style="height: calc(100vh - 70px)"
   >
     <div>
-      <div class="flex justify-center mb-2">
+      <div class="flex justify-center items-center mb-2">
         <canvas id="dotlottie-canvas" style="height: 150px"></canvas>
+        <div class="loader bw hidden mt-5 mb-5" id="applying-spinner">
+          <div class="spin" />
+        </div>
       </div>
 
       <div id="sep1" class="w-full" style="height: 250px">
@@ -64,17 +127,20 @@ function nextStep(currentStep) {
           </div>
         </div>
       </div>
-      <div id="sep2" class="w-full hidden" style="height: 250px">
-        <div class="flex justify-center w-full">
-          <div>
-            <h1 class="text-3xl font-bold text-center">Profilo</h1>
-            <p class="text-lg">‎</p>
-            <input
-              type="range"
-              class="w-full bg-transparent cursor-pointer appearance-none disabled:opacity-50 disabled:pointer-events-none focus:outline-none [&::-webkit-slider-thumb]:w-2.5 [&::-webkit-slider-thumb]:h-2.5 [&::-webkit-slider-thumb]:-mt-0.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(37,99,235,1)] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:transition-all [&::-webkit-slider-thumb]:duration-150 [&::-webkit-slider-thumb]:ease-in-out [&::-webkit-slider-thumb]:dark:bg-slate-700 [&::-moz-range-thumb]:w-2.5 [&::-moz-range-thumb]:h-2.5 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-blue-600 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:transition-all [&::-moz-range-thumb]:duration-150 [&::-moz-range-thumb]:ease-in-out [&::-webkit-slider-runnable-track]:w-full [&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:bg-gray-100 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:dark:bg-gray-700 [&::-moz-range-track]:w-full [&::-moz-range-track]:h-2 [&::-moz-range-track]:bg-gray-100 [&::-moz-range-track]:rounded-full"
-              id="basic-range-slider-usage"
-            />
-            <div class="w-full flex justify-center mt-4">
+      <div
+        id="sep2"
+        class="w-full hidden dark:bg-neutral-800 h-[100vh]"
+        style="height: 250px"
+      >
+        <div class="flex justify-center w-full dark:bg-neutral-800">
+          <div
+            class="grid lg:grid-cols-2 grid-cols-1 gap-6 dark:bg-neutral-800 w-full"
+          >
+            <div>
+              <h1 class="text-3xl font-bold text-center">Avatar</h1>
+              <p class="text-lg">‎</p>
+              <p>Crea il tuo avatar</p>
+              <p class="text-sm">Potrai cambiarlo in qualsiasi momento</p>
               <button
                 class="btn light bw"
                 style="width: 300px"
@@ -83,8 +149,13 @@ function nextStep(currentStep) {
                 Prossimo
               </button>
             </div>
+            <div><AvatarMaker :startRandom="true" /></div>
           </div>
         </div>
+      </div>
+      <div id="sep3" class="w-full hidden" style="height: 250px">
+        <h1 class="text-3xl font-bold text-center">Applicando i cambiamenti</h1>
+        <p class="text-center">Non richiederà molto</p>
       </div>
     </div>
   </div>

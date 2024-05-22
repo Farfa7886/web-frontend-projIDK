@@ -222,6 +222,12 @@ function loadProject() {
   } else if (projectInfo.type == "slideshow") {
     renderRenderer.value = true;
     document.getElementById("cover").classList.add("hidden");
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key == "ArrowRight") document.getElementById("nextBTN").click();
+      else if (event.key == "ArrowLeft")
+        document.getElementById("prevBTN").click();
+    });
   }
 }
 
@@ -392,17 +398,17 @@ function setThumbnail() {
   >
     <div>
       <div
-        class="dark:bg-neutral-900 bg-neutral-200 h-[60px] w-full rounded-xl flex items-center"
+        class="dark:bg-neutral-900 bg-neutral-200 min-h-[60px] w-full rounded-xl flex items-center lg:flex-nowrap flex-wrap"
       >
-        <div class="flex items-center w-full">
+        <div class="flex items-center lg:w-full">
           <img
             class="ml-3"
             ref="avatarElem"
             style="object-fit: cover; height: 42px; width: 42px"
           />
 
-          <div class="ml-2 w-full">
-            <h2 class="font-bold text-xl w-full" id="projectName">
+          <div class="ml-2 lg:w-full">
+            <h2 class="font-bold text-xl lg:w-full" id="projectName">
               Project name
             </h2>
             <p id="projectAuthor">Author</p>
@@ -410,12 +416,8 @@ function setThumbnail() {
         </div>
 
         <div
-          style="
-            display: flex;
-            align-items: center;
-            justify-content: right;
-            width: 100%;
-          "
+          style="display: flex; align-items: center; justify-content: right"
+          class="lg:flex-nowrap md:flex-nowrap flex-wrap gap-1 lg:w-full lg:ml-0 ml-10"
         >
           <button
             class="btn solid info mr-3 hidden"
@@ -497,36 +499,40 @@ function setThumbnail() {
           </div>
 
           <div
-            class="dark:bg-neutral-900 bg-neutral-200 rounded-xl h-[60px] mt-3 flex items-center"
+            class="dark:bg-neutral-900 bg-neutral-200 rounded-xl min-h-[60px] mt-3 flex items-center p-2"
           >
-            <div class="w-full flex items-center">
+            <div
+              class="w-full flex items-center lg:flex-nowrap flex-wrap gap-1"
+            >
               <LikeBtn
                 :count="likesCounter"
                 :liked="store.liked"
                 @click="like()"
               />
               <ForkBtn />
-              <svg
-                height="35"
-                width="35"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                xml:space="preserve"
-                fill="currentColor"
-                class="opacity-65 ml-5"
-              >
-                <path
-                  d="M12 21C7 21 3.2 18.2.2 12.5L0 12l.2-.5C3.2 5.8 7 3 12 3s8.8 2.8 11.8 8.5l.2.5-.2.5C20.8 18.2 17 21 12 21m-9.7-9c2.5 4.7 5.7 7 9.7 7s7.2-2.3 9.7-7C19.2 7.3 16 5 12 5s-7.2 2.3-9.7 7"
-                />
-                <path
-                  d="M12 17c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5m0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3"
-                />
-              </svg>
-              <p class="ml-2 font-bold text-lg opacity-65" id="viewsCounter">
-                0
-              </p>
+              <div class="flex items-center">
+                <svg
+                  height="35"
+                  width="35"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  xml:space="preserve"
+                  fill="currentColor"
+                  class="opacity-65 ml-2"
+                >
+                  <path
+                    d="M12 21C7 21 3.2 18.2.2 12.5L0 12l.2-.5C3.2 5.8 7 3 12 3s8.8 2.8 11.8 8.5l.2.5-.2.5C20.8 18.2 17 21 12 21m-9.7-9c2.5 4.7 5.7 7 9.7 7s7.2-2.3 9.7-7C19.2 7.3 16 5 12 5s-7.2 2.3-9.7 7"
+                  />
+                  <path
+                    d="M12 17c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5m0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3"
+                  />
+                </svg>
+                <p class="ml-2 font-bold text-lg opacity-65" id="viewsCounter">
+                  0
+                </p>
+              </div>
             </div>
-            <div class="mr-3 flex items-center">
+            <div class="mr-1 flex items-center">
               <button
                 class="hover:opacity-30"
                 @click="reloadIframe()"

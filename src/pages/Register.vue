@@ -52,6 +52,7 @@ function login() {
     .post("/login", userData)
     .then((response) => {
       localStorage.setItem("token", response.data.token);
+      window.location.href = "/firstSetup";
     })
     .catch((err) => {
       showAlert(err.response.data.error);
@@ -64,13 +65,13 @@ function login() {
     class="flex justify-center"
   >
     <div class="dark:bg-neutral-800 bg-white flex h-full items-center py-16">
-      <main class="w-full max-w-md mx-auto p-6">
+      <main class="w-full lg:max-w-md mx-auto p-6">
         <div
           class="mt-7 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-zinc-800 dark:border-gray-700"
         >
           <div
-            class="p-4 sm:p-7 rounded-xl"
-            style="border: 2px solid white; width: 400px"
+            class="p-4 sm:p-7 rounded-xl lg:w-[400px] w-full"
+            style="border: 2px solid white"
           >
             <div class="text-center">
               <h1
@@ -102,7 +103,7 @@ function login() {
                     <label
                       for="email"
                       class="block text-sm mb-2 dark:text-white"
-                      >Username</label
+                      >Username (non la tua email / vero nome)</label
                     >
                     <div class="relative">
                       <input
@@ -200,23 +201,47 @@ function login() {
                   </div>
                   <!-- End Form Group -->
 
+                  <div class="hidden">
+                    <label
+                      for="minmax-range"
+                      class="block text-sm mb-2 dark:text-white"
+                      >Età</label
+                    >
+                    <input
+                      id="minmax-range"
+                      type="range"
+                      min="11"
+                      max="13"
+                      value="5"
+                      class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                    />
+                    <p>11</p>
+                  </div>
+
                   <!-- Checkbox -->
                   <div class="flex items-center">
                     <div class="flex">
                       <input
                         id="accepted"
                         type="checkbox"
-                        class="bw checkbox"
+                        class="checkbox"
                         required
                       />
                     </div>
+
                     <div class="ms-3">
                       <label for="accepted" class="text-sm dark:text-white"
                         >Accetto i
                         <a
                           class="text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                          href="#"
-                          >termini di servizio</a
+                          href="/tos"
+                          >Termini di servizio</a
+                        >
+                        &
+                        <a
+                          class="text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                          href="/privacy"
+                          >Politica sulla privacy</a
                         ></label
                       >
                     </div>

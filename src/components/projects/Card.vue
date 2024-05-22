@@ -178,7 +178,10 @@ export default {
         class="modal-overlay"
         @click="toggleModal(randId + '-del')"
       ></label>
-      <div class="modal flex flex-col gap-5" :id="randId + '-del'">
+      <div
+        class="modal flex flex-col gap-5 w-full max-w-xl"
+        :id="randId + '-del'"
+      >
         <button
           class="absolute right-4 top-3"
           @click="toggleModal(randId + '-del')"
