@@ -34,7 +34,8 @@ function register() {
       login();
     })
     .catch((err) => {
-      showAlert(err.response.data.error);
+      console.error(err);
+      showAlert(err.response?.data?.error || "Errore");
       document.getElementById("register-btn").classList.remove("is-loading");
     });
 }
@@ -51,7 +52,15 @@ function login() {
   axios
     .post("/login", userData)
     .then((response) => {
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.data.token);
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          username: response.data.data.username,
+          id: response.data.data.userId,
+          avatarUrl: response.data.data.avatarUrl,
+        })
+      );
       window.location.href = "/firstSetup";
     })
     .catch((err) => {
