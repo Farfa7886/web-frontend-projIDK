@@ -180,6 +180,7 @@ onMounted(() => {
     };
     if (props.avatar) currentData = props.avatar;
     if (props.data) currentData = props.data;
+    let data_attr = document.getElementById("options_div").attributes["2"].name;
 
     function load(config) {
       current_skincolor = config.skinColor;
@@ -324,7 +325,7 @@ onMounted(() => {
             case "skincolor":
               for (var i = 0; i < skins.length; i++) {
                 let skin = skins[i];
-                html += `<div class="skins" id="s_${skin}" style="background-color:#${skin};" data-v-5778c730></div>`;
+                html += `<div class="skins" id="s_${skin}" style="background-color:#${skin};" ${data_attr}></div>`;
               }
               break;
             case "eyes":
@@ -332,7 +333,7 @@ onMounted(() => {
                 let eye = eyes[i];
                 html += `<div class="eyes" id="e_${eye}" style="background-color:#${current_skincolor};background-position:${
                   i * -53
-                }px 0px;" data-v-5778c730></div>`;
+                }px 0px;" ${data_attr}></div>`;
               }
               break;
             case "eyebrows":
@@ -340,7 +341,7 @@ onMounted(() => {
                 let eyebrow = eyebrows[i];
                 html += `<div class='eyebrows' id='eb_${eyebrow}' style='background-color:#${current_skincolor};background-position:${
                   i * -53
-                }px -53px;' data-v-5778c730></div>`;
+                }px -53px;' ${data_attr}></div>`;
               }
               break;
             case "mouths":
@@ -348,7 +349,7 @@ onMounted(() => {
                 let mouth = mouths[i];
                 html += `<div class='mouths' id='m_${mouth}' style='background-color:#${current_skincolor};background-position:${
                   i * -53
-                }px -106px;' data-v-5778c730></div>`;
+                }px -106px;' ${data_attr}></div>`;
               }
               break;
             case "hairstyles":
@@ -356,14 +357,14 @@ onMounted(() => {
                 let hairstyle = hairstyles[i];
                 html += `<div class='hairstyles' id='h_${hairstyle}' style='background-color:#ffffff;background-position:${
                   i * -53
-                }px -159px;' data-v-5778c730></div>`;
+                }px -159px;' ${data_attr}></div>`;
               }
               break;
             case "haircolors":
               for (i = 0; i < haircolors.length; i++) {
                 let haircolor = haircolors[i];
                 let haircolor_front = haircolor.split("_");
-                html += `<div class='haircolors' id='hc_${haircolor}' style='background-color:#${haircolor_front[0]};' data-v-5778c730></div>`;
+                html += `<div class='haircolors' id='hc_${haircolor}' style='background-color:#${haircolor_front[0]};' ${data_attr}></div>`;
               }
               break;
             case "facialhairs":
@@ -371,7 +372,7 @@ onMounted(() => {
                 let facialhair = facialhairs[i];
                 html += `<div class='facialhairs' id='f_${facialhair}' style='background-color:#ffffff;background-position:${
                   i * -53
-                }px -212px;' data-v-5778c730></div>`;
+                }px -212px;' ${data_attr}></div>`;
               }
               break;
             case "clothes":
@@ -379,19 +380,19 @@ onMounted(() => {
                 let clothe = clothes[i];
                 html += `<div class='clothes' id='c_${clothe}' style='background-color:#ffffff;background-position:${
                   i * -53
-                }px -265px;' data-v-5778c730></div>`;
+                }px -265px;' ${data_attr}></div>`;
               }
               break;
             case "fabriccolors":
               for (var i = 0; i < fabriccolors.length; i++) {
                 let fabriccolor = fabriccolors[i];
-                html += `<div class='fabriccolors' id='f_${fabriccolor}' style='background-color:#${fabriccolor};' data-v-5778c730></div>`;
+                html += `<div class='fabriccolors' id='f_${fabriccolor}' style='background-color:#${fabriccolor};' ${data_attr}></div>`;
               }
               break;
             case "backgroundcolors":
               for (var i = 0; i < backgroundcolors.length; i++) {
                 let backgroundcolor = backgroundcolors[i];
-                html += `<div class='backgroundcolors' id='g_${backgroundcolor}' style='background-color:#${backgroundcolor};' data-v-5778c730></div>`;
+                html += `<div class='backgroundcolors' id='g_${backgroundcolor}' style='background-color:#${backgroundcolor};' ${data_attr}></div>`;
               }
               break;
             case "glasses":
@@ -399,13 +400,13 @@ onMounted(() => {
                 let glass = glasses[i];
                 html += `<div class='glasses' id='g_${glass}' style='background-color:#ffffff;background-position:${
                   i * -53
-                }px -313px;' data-v-5778c730></div>`;
+                }px -313px;' ${data_attr}></div>`;
               }
               break;
             case "glassopacity":
               for (var i = 0; i < glassopacities.length; i++) {
                 let glassopacity = glassopacities[i];
-                html += `<div class='glassopacity' id='o_${glassopacity}' style='background-color:#ffffff;' data-v-5778c730>${glassopacity}%</div>`;
+                html += `<div class='glassopacity' id='o_${glassopacity}' style='background-color:#ffffff;' ${data_attr}>${glassopacity}%</div>`;
               }
               break;
             case "tattoos":
@@ -413,7 +414,7 @@ onMounted(() => {
                 let tattoo = tattoos[i];
                 html += `<div class='tattoos' id='t_${tattoo}' style='background-color:#ffffff;background-position:${
                   i * -53
-                }px -419px;' data-v-5778c730></div>`;
+                }px -419px;' ${data_attr}></div>`;
               }
               break;
             case "accesories":
@@ -421,7 +422,7 @@ onMounted(() => {
                 let accesory = accesories[i];
                 html += `<div class='accesories' id='a_${accesory}' style='background-color:#ffffff;background-position:${
                   i * -53
-                }px -369px;' data-v-5778c730></div>`;
+                }px -369px;' ${data_attr}></div>`;
               }
               break;
           }
