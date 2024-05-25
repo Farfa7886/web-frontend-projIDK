@@ -40,7 +40,7 @@ import Layouts from "./Layouts.vue";
       @click="utils.toggleModal('modal-new-slide')"
     ></label>
     <div
-      class="modal flex flex-col gap-5 w-full max-w-4xl"
+      class="modal flex flex-col gap-5 w-full customStyle max-w-4xl"
       id="modal-new-slide"
     >
       <button

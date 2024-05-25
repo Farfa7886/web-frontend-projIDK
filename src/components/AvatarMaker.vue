@@ -1961,7 +1961,7 @@ svg {
   height: 99px;
   background-color: #ffffff;
   border-right: 1px solid #707070;
-  z-index: 200;
+  z-index: 20;
   overflow: hidden;
 }
 #menu_lines div {

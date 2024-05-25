@@ -332,8 +332,7 @@ function doRenderPreview() {
       <CreateSlide />
     </div>
     <div
-      class="bg-neutral-200 dark:bg-neutral-950 lg:col-span-5 lg:h-calc(100vh-70px-1rem) h-full max-h-[900px] rounded-xl dropzone overflow-y-auto"
-      style="min-height: 500px"
+      class="bg-neutral-200 dark:bg-neutral-950 lg:col-span-5 lg:h-[calc(93vh-68px-1rem)] h-[930px] rounded-xl dropzone overflow-y-auto"
     >
       <InfoRenders :type="currentSlideType" v-if="renderComponentPreview" />
     </div>

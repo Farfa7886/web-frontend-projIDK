@@ -571,7 +571,7 @@ function setThumbnail() {
         </div>
 
         <div
-          class="dark:bg-neutral-900 bg-neutral-200 rounded-xl lg:w-full w-[100vw] min-h-[433px] hover:cursor-text"
+          class="dark:bg-neutral-900 bg-neutral-200 rounded-xl lg:w-full min-h-[433px] hover:cursor-text w-full"
           style="height: 100%"
           id="projDescDIV"
         >
@@ -585,7 +585,6 @@ function setThumbnail() {
               white-space: pre-wrap;
               overflow-y: auto;
               max-height: calc((100vh + 20px) / 2);
-              max-width: calc(100vw / 3);
             "
           >
             [Clicca per cambiare la descrizione]
@@ -593,12 +592,11 @@ function setThumbnail() {
           <textarea
             style="
               height: calc(100% - 0.75rem * 2);
-              width: calc(100% - 0.75rem * 2);
               background: transparent;
               border: none;
               outline: none;
             "
-            class="w-full resize-none rounded-xl m-3 hidden"
+            class="w-full resize-none rounded-xl m-3 hidden w-full"
             id="textareaModify"
             @blur="modifyDesc()"
           >

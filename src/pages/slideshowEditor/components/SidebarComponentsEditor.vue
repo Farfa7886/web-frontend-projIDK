@@ -43,7 +43,7 @@ function applyElementInput(id, iteration, elements) {
   } else if (document.getElementById(id).value == "iframe") {
     document.getElementById(
       id + "-div"
-    ).innerHTML = `<input id="${id}_value" style="width: 100%; height: 30px" placeholder="URL iframe qui" class="rounded-xl"></input>`;
+    ).innerHTML = `<input id="${id}_value" style="width: 100%; height: 30px" placeholder="URL iframe qui" class="rounded-xl input"></input>`;
   }
   document
     .getElementById(id + "_value")

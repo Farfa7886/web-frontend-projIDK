@@ -16,7 +16,10 @@ function select() {
 <template>
   <form @click="select()">
     <p class="mb-1">Sezioni informative</p>
-    <div class="grid grid-cols-5 w-full gap-6">
+    <div
+      class="grid w-full gap-10"
+      style="grid-template-columns: repeat(auto-fit, minmax(100px, 1fr))"
+    >
       <div class="none">
         <button
           style="width: 150px; height: 107px"
@@ -64,7 +67,10 @@ function select() {
       </div>
     </div>
     <p class="mt-3 mb-1">Quiz - <i class="opacity-50">in arrivo</i></p>
-    <div class="grid grid-cols-5 w-full gap-6">
+    <div
+      class="grid w-full gap-6 opacity-70"
+      style="grid-template-columns: repeat(auto-fit, minmax(100px, 1fr))"
+    >
       <div class="none">
         <button
           disabled

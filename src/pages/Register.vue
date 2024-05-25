@@ -118,7 +118,9 @@ function login() {
                       <input
                         id="username"
                         name="username"
-                        class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 bg-gray-200 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+                        maxlength="24"
+                        onkeydown="return /[a-z]|[0-9]/i.test(event.key)"
+                        class="py-3 lowercase px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 bg-gray-200 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
                         required
                         placeholder="farter84"
                       />

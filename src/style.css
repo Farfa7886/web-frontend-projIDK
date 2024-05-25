@@ -83,3 +83,7 @@ svg[display="none"] {
 
 .none {
 }
+
+.modal:not(.customStyle) {
+  @apply w-full lg:max-w-xl;
+}
