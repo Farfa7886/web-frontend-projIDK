@@ -509,8 +509,8 @@ function setThumbnail() {
                 :liked="store.liked"
                 @click="like()"
               />
-              <ForkBtn />
-              <div class="flex items-center">
+              <!-- <ForkBtn /> -->
+              <div class="flex items-center hidden">
                 <svg
                   height="35"
                   width="35"
