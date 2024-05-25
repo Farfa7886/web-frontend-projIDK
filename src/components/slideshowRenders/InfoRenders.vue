@@ -164,7 +164,7 @@ onMounted(() => {
 
 .slideshowIMG {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   max-height: 200px;
   object-fit: cover;
 }
